@@ -18,7 +18,7 @@ import { Label } from '@/components/ui/label';
 
 
 
-function TODOForm({ addTodo }: TODOFormProps) {
+function TODOForm({ addTodo,setSearchText }: TODOFormProps) {
     const [value, setValue] = useState<string>("");
     const [level, setLevel] = useState<number>(0);
 
@@ -83,7 +83,7 @@ function TODOForm({ addTodo }: TODOFormProps) {
 }
 
 
-function Navbar({ addTodo, TodoList, setTODOList }: TODOFormProps) {
+function Navbar({ addTodo, TodoList, setTODOList,setSearchText }: TODOFormProps) {
 
     const { setTheme } = useTheme()
     const [fileContent, setFileContent] = useState<string>('')
@@ -124,19 +124,7 @@ function Navbar({ addTodo, TodoList, setTODOList }: TODOFormProps) {
             </div>
             <div className="flex items-center space-x-10">
 
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <MagnifyingGlassIcon />
-                    </PopoverTrigger>
-                    <PopoverContent className="pt-5 pb-5 pl-3 pr-3 space-y-5 bg-white rounded shadow-md mr-1">
-                        <div className="flex space-x-2 items-center">
-                            <Input id='search_input' placeholder='Search Task...' />
-                        </div>
-                        <div className="flex justify-center">
-                            <Button variant="outline">Search</Button>
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                            <Input id='search_input' placeholder='Search Task...' onChange={(e)=>{setSearchText(e.target.value)}}/>
 
                 <Drawer>
                     <DrawerTrigger asChild>

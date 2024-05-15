@@ -18,11 +18,10 @@ import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 import { Droppable } from 'react-beautiful-dnd';
 
 
-function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions }: TodoProps) {
+function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions}: TodoProps) {
   const handleAddTag = (e: Option[]) => {
     addTag(index, e)
     // setTags(e)
-    // setTagOptions(e)
     // localStorage.setItem("tagOptions", JSON.stringify(objectsArray))
   }
 
@@ -34,7 +33,6 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
       </div>
       <div className="flex items-center ml-3 mr-3 mt-2 mb-2 space-x-2">
         <Checkbox checked={todo.completed} onCheckedChange={() => completedTODO(index)} />
-        {/* <Textarea rows={3} cols={50} className="break-words max-h-20 max-w-200 border-none resize-none h-[3rem]" readOnly={todo.completed} value={value} style={{ textDecoration: todo.completed ? 'line-through' : "" }} onChange={(e) => setValue(e.target.value)} /> */}
         <Textarea rows={3} cols={50} className="break-words max-h-20 max-w-200 border-none resize-none h-[3rem]" readOnly={todo.completed} value={todo.text} style={{ textDecoration: todo.completed ? 'line-through' : "" }} onChange={(e) =>
           reviseTodo(index, e.target.value)
         } />
@@ -122,6 +120,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
 const Home: React.FC = () => {
 
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);
+  const [searchText,setSearchText] = useState<string>("");
 
   const AreaCard = [
     { level: 2, Title: "Important but Not Urgent", des: "Schedule it !", color: "bg-[#DD813C]" },
@@ -175,7 +174,7 @@ const Home: React.FC = () => {
     newTodoList[index].tags = tags;
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
-  }
+  } 
 
 
   useEffect(() => {
@@ -229,7 +228,7 @@ const Home: React.FC = () => {
   return (
     <>
       <div className=' absolute z-10'>
-        <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} />
+        <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} setSearchText={setSearchText} />
       </div>
 
       <div className="justify-items-center items-center grid grid-cols-2 grid-rows-2 pt-16 ">
@@ -249,7 +248,11 @@ const Home: React.FC = () => {
                   {
                     TODOList.map((todo, index) => {
                       if (todo.level == item.level) {
+                          if (todo.text.indexOf(searchText)!=-1)
+                          {
+
                         return <Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo>
+                          }
                       }
                     })
                   }

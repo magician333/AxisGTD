@@ -366,11 +366,11 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
             >
                 <div
                     className={cn(
-                        'group rounded-md border border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
+                        'group rounded-md border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
                         className,
                     )}
                 >
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-nowrap overflow-x-auto gap-1 tagselect">
                         {selected.map((option) => {
                             return (
                                 <Badge
@@ -382,6 +382,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                                     )}
                                     data-fixed={option.fixed}
                                     data-disabled={disabled}
+                                    variant="outline"
                                 >
                                     {option.label}
                                     <button
@@ -425,7 +426,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                                 triggerSearchOnFocus && onSearch?.(debouncedSearchTerm);
                                 inputProps?.onFocus?.(event);
                             }}
-                            placeholder={hidePlaceholderWhenSelected && selected.length !== 0 ? '' : placeholder}
+                            placeholder={hidePlaceholderWhenSelected || selected.length !== 0 ? '' : placeholder}
                             className={cn(
                                 'ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground',
                                 inputProps?.className,
