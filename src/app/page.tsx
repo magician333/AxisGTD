@@ -235,9 +235,7 @@ const Home: React.FC = () => {
       <div className="justify-items-center items-center grid grid-cols-2 grid-rows-2 pt-16 ">
         {
           AreaCard.map((item, index) => (
-
             <div key={index} className="w-[49.5vw] h-[44vh]  m-1 rounded shadow-md">
-              {/* {provided.placeholder} */}
               <div className={item.color + " w-[49.5vw] h-[5vh] rounded-t "}>
                 <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between">
                   <div className="flex justify-center flex-col mt-1">
@@ -257,6 +255,7 @@ const Home: React.FC = () => {
                   }
                 </div>
               </ScrollArea>
+              <p className="text-gray-300 text-xs mr-5 flex justify-end">Total {TODOList.filter((todo)=>todo.level===item.level).length} Task(s). Completed {TODOList.filter((todo) => todo.level === item.level && todo.completed === true).length} Task(s)</p>
             </div>
           ))
         }

@@ -10,8 +10,7 @@ import { toast } from 'sonner';
 import { TODOFormProps, TodoItem } from './interface';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Popover, PopoverTrigger } from '@/components/ui/popover';
-import { PopoverContent } from '@radix-ui/react-popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
 
@@ -183,6 +182,21 @@ function Navbar({ addTodo, TodoList, setTODOList }: TODOFormProps) {
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
+                            </div>
+
+                            <div>
+      <p className='text-l font-semibold' >Set layout</p>
+      <p className='text-xs font-thin mb-2'>Set the layout of the interface</p>
+      <Select defaultValue='22'>
+      <SelectTrigger>
+        <SelectValue placeholder="Set layout"></SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+      <SelectItem value='22'>Axis Default (2*2)</SelectItem>
+      <SelectItem value='41'>Kanban mode (4*1)</SelectItem>
+      <SelectItem value='14'>Big Board (1*4)</SelectItem>
+      </SelectContent>
+      </Select>
                             </div>
 
                             <div>
