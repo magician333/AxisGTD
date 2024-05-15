@@ -7,10 +7,9 @@ import { Crosshair1Icon, HamburgerMenuIcon, MagnifyingGlassIcon, MoonIcon, PlusC
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { TODOFormProps, TodoItem } from './interface';
+import { NavProps, TODOFormProps, TodoItem } from './interface';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
 
@@ -18,7 +17,7 @@ import { Label } from '@/components/ui/label';
 
 
 
-function TODOForm({ addTodo,setSearchText }: TODOFormProps) {
+function TODOForm({ addTodo }: TODOFormProps) {
     const [value, setValue] = useState<string>("");
     const [level, setLevel] = useState<number>(0);
 
@@ -28,6 +27,7 @@ function TODOForm({ addTodo,setSearchText }: TODOFormProps) {
         { name: 'Urgent but Not Important', code: '3' },
         { name: 'Not Urgent and Not Important', code: '4' },
     ];
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!value) return;
@@ -83,7 +83,7 @@ function TODOForm({ addTodo,setSearchText }: TODOFormProps) {
 }
 
 
-function Navbar({ addTodo, TodoList, setTODOList,setSearchText }: TODOFormProps) {
+function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, layoutType }: NavProps) {
 
     const { setTheme } = useTheme()
     const [fileContent, setFileContent] = useState<string>('')
@@ -124,23 +124,21 @@ function Navbar({ addTodo, TodoList, setTODOList,setSearchText }: TODOFormProps)
             </div>
             <div className="flex items-center space-x-10">
 
-                            <Input id='search_input' placeholder='Search Task...' onChange={(e)=>{setSearchText(e.target.value)}}/>
+                <Input id='search_input' placeholder='Search Task...' onChange={(e) => { setSearchText(e.target.value) }} />
 
                 <Drawer>
                     <DrawerTrigger asChild>
-                        <PlusCircledIcon />
+                        <PlusCircledIcon className="size-5" />
                     </DrawerTrigger>
                     <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
                         <p className="text-2xl font-bold mb-10">Add new Task</p>
-                        <TODOForm addTodo={addTodo} TodoList={[]} setTODOList={function (value: React.SetStateAction<TodoItem[]>): void {
-                            throw new Error('Function not implemented.');
-                        }}></TODOForm>
+                        <TODOForm addTodo={addTodo}></TODOForm>
                     </DrawerContent>
                 </Drawer>
 
                 <Sheet>
                     <SheetTrigger asChild>
-                        <HamburgerMenuIcon />
+                        <HamburgerMenuIcon className="size-5" />
                     </SheetTrigger>
                     <SheetContent>
                         <SheetHeader className="text-2xl">Setting</SheetHeader>
@@ -173,18 +171,18 @@ function Navbar({ addTodo, TodoList, setTODOList,setSearchText }: TODOFormProps)
                             </div>
 
                             <div>
-      <p className='text-l font-semibold' >Set layout</p>
-      <p className='text-xs font-thin mb-2'>Set the layout of the interface</p>
-      <Select defaultValue='22'>
-      <SelectTrigger>
-        <SelectValue placeholder="Set layout"></SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-      <SelectItem value='22'>Axis Default (2*2)</SelectItem>
-      <SelectItem value='41'>Kanban mode (4*1)</SelectItem>
-      <SelectItem value='14'>Big Board (1*4)</SelectItem>
-      </SelectContent>
-      </Select>
+                                <p className='text-l font-semibold' >Set layout</p>
+                                <p className='text-xs font-thin mb-2'>Set the layout of the interface</p>
+                                <Select defaultValue='axis' onValueChange={(e) => setLayoutType(e)} value={layoutType}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Set layout"></SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value='axis'>Axis Default (2*2) </SelectItem>
+                                        <SelectItem value='kanban'>Kanban Mode (4*1) </SelectItem>
+                                        <SelectItem value='board'>Big Board (1*4) </SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div>
@@ -231,7 +229,6 @@ function Navbar({ addTodo, TodoList, setTODOList,setSearchText }: TODOFormProps)
                                 }}>Clear</Button>
                             </div>
 
-
                             <div>
                                 <p className="text-l font-semibold mb-2">About</p>
                                 <p className="break-words font-light text-sm">
@@ -239,8 +236,6 @@ function Navbar({ addTodo, TodoList, setTODOList,setSearchText }: TODOFormProps)
                                     It should be viewed as a mere component of your efficient office setup. Simply capture your tasks within the app, set AxisGTD aside, and return to it later to mark off completed items once your work is finished.
                                 </p>
                             </div>
-
-
                         </div>
                     </SheetContent>
                 </Sheet>

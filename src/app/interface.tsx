@@ -6,6 +6,7 @@ export interface TodoItem {
     completed: boolean;
     level: number;
     tags: Option[];
+
 }
 
 export interface TodoProps {
@@ -20,9 +21,24 @@ export interface TodoProps {
 }
 
 
-export interface TODOFormProps {
+export interface NavProps {
     addTodo: (text: string, level: number) => void;
     TodoList: TodoItem[];
+    layoutType: string;
     setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    setLayoutType: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface TODOFormProps {
+    addTodo: (text: string, level: number) => void;
+}
+
+export interface LayoutClasses {
+    boardGird: string;
+    boardSize: string;
+    scrollareaHeight: string;
+    todoSize: string;
+    todoGrid: string;
+    colorbrandWidth: string;
 }
