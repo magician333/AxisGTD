@@ -5,6 +5,7 @@ import "@fontsource/poppins";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./ThemeProvider";
 
+
 // const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,11 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en">
       <body >
         {children}
-
       </body>
     </html>
+
   );
 }

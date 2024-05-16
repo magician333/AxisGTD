@@ -2,12 +2,12 @@ import { Option } from '@/components/ui/MultipleSelector';
 
 
 export interface TodoItem {
-    index:number;
+    index: number;
     text: string;
     completed: boolean;
     level: number;
     tags: string[];
-    completedtime:number;
+    completedtime: number;
 }
 
 export interface TodoProps {
@@ -18,15 +18,15 @@ export interface TodoProps {
     removeTODO: (index: number) => void;
     reviseTodo: (index: number, text: string) => void;
     addTag: (index: number, tags: string[]) => void;
-
+    reLevel: (index: number, targetLevel: number) => void;
 }
 
 
 export interface NavProps {
-    addTodo: (index:number,text: string, level: number) => void;
+    addTodo: (index: number, text: string, level: number) => void;
     TodoList: TodoItem[];
     layoutType: string;
-    displayCompleted:boolean;
+    displayCompleted: boolean;
     setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     setLayoutType: React.Dispatch<React.SetStateAction<string>>;
@@ -34,7 +34,7 @@ export interface NavProps {
 }
 
 export interface TODOFormProps {
-    addTodo: (index:number,text: string, level: number) => void;
+    addTodo: (index: number, text: string, level: number) => void;
     TodoList: TodoItem[];
 }
 

@@ -4,7 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { CalendarIcon, LapTimerIcon, Link2Icon, TokensIcon, TrashIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, LapTimerIcon, Link2Icon, TokensIcon, TrashIcon, UpdateIcon } from '@radix-ui/react-icons';
 import React, { useEffect, useState } from 'react';
 import { Toaster } from 'sonner';
 
@@ -16,7 +16,7 @@ import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 import { Droppable } from 'react-beautiful-dnd';
 
 
-function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions }: TodoProps) {
+function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel }: TodoProps) {
 
   return (
     <div className="shadow-md rounded bg-white mb-2 ml-1 mr-1" style={{ opacity: todo.completed ? '0.2' : "1" }}>
@@ -51,6 +51,19 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
       </div>
       <Separator className="opacity-40" />
       <div className="flex items-center justify-between ml-3 mr-3 mt-2 mb-2 pb-2">
+
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <UpdateIcon onClick={() => reLevel(index, 4)} />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Set Level</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
 
         <TooltipProvider>
           <Tooltip>
@@ -218,6 +231,18 @@ const Home: React.FC = () => {
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   }
 
+  const reLevel = (index: number, targetLevel: number) => {
+    const newTodoList = [...TODOList];
+    if (newTodoList[index].level < 4) {
+      newTodoList[index].level = newTodoList[index].level + 1;
+    }
+    else {
+      newTodoList[index].level = 1;
+    }
+    setTODOList(newTodoList);
+    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+  }
+
 
 
 
@@ -268,7 +293,7 @@ const Home: React.FC = () => {
 
                         if (todo.level === item.level) {
                           if (hasSearchText) {
-                            return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
+                            return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel}></Todo></div>
                           }
                         }
                       } else {
@@ -276,7 +301,7 @@ const Home: React.FC = () => {
 
                           if (todo.level === item.level) {
                             if (hasSearchText) {
-                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
+                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel}></Todo></div>
                             }
                           }
                         }
