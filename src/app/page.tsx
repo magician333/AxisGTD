@@ -14,6 +14,8 @@ import Navbar from './Navbar';
 import { LayoutClasses, TodoItem, TodoProps } from './interface';
 import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 import { Droppable } from 'react-beautiful-dnd';
+import { DateTimePicker } from '@/components/ui/DatetimePicker';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 
 function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel }: TodoProps) {
@@ -50,6 +52,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
         </form>
       </div>
       <Separator className="opacity-40" />
+
       <div className="flex items-center justify-between ml-3 mr-3 mt-2 mb-2 pb-2">
 
 
@@ -79,7 +82,13 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <CalendarIcon />
+              <Popover>
+                <PopoverTrigger><CalendarIcon /></PopoverTrigger>
+                <PopoverContent>
+                  <DateTimePicker granularity="second" />
+                </PopoverContent>
+              </Popover>
+
             </TooltipTrigger>
             <TooltipContent>
               <p>Deadline</p>
