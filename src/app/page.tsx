@@ -40,7 +40,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
               };
             })}
             creatable
-            onChange={(e) => addTag(index, e.map((item)=>item.value))}
+            onChange={(e) => addTag(index, e.map((item) => item.value))}
             placeholder="Select tags..."
             emptyIndicator={
               <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
@@ -116,7 +116,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
 const Home: React.FC = () => {
 
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);
-  const [displayCompleted,setDisplayCompleted] = useState<boolean>(true);
+  const [displayCompleted, setDisplayCompleted] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
   const [layoutModeClass, setlayoutModeClass] = useState<LayoutClasses>({
@@ -177,8 +177,8 @@ const Home: React.FC = () => {
     ]
   )
 
-  const addTodo = (index:number,text: string, level: number) => {
-    const data: TodoItem = { index:index,text: text, completed: false, level: level, tags: [],completedtime:0 };
+  const addTodo = (index: number, text: string, level: number) => {
+    const data: TodoItem = { index: index, text: text, completed: false, level: level, tags: [], completedtime: 0 };
     const newTodoList = [...TODOList, data];
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
@@ -195,7 +195,7 @@ const Home: React.FC = () => {
   const completedTODO = (index: number) => {
     const newTodoList = [...TODOList];
 
-    if (newTodoList[index].completed===false){
+    if (newTodoList[index].completed === false) {
       newTodoList[index].completedtime = Date.now();
     }
     // new Notification("Todo is complete!",{body:"completed",icon:"/logo.svg"})
@@ -245,7 +245,7 @@ const Home: React.FC = () => {
   return (
     <>
       <div className='absolute z-10'>
-        <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} setSearchText={setSearchText} setLayoutType={setLayoutType} layoutType={layoutType} setDisplayCompleted={setDisplayCompleted} displayCompleted={displayCompleted}/>
+        <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} setSearchText={setSearchText} setLayoutType={setLayoutType} layoutType={layoutType} setDisplayCompleted={setDisplayCompleted} displayCompleted={displayCompleted} />
       </div>
       <div className={layoutModeClass.boardGird + " grid justify-items-center pt-16 "}>
         {
@@ -264,21 +264,21 @@ const Home: React.FC = () => {
                   {
                     TODOList.map((todo, index) => {
                       const hasSearchText = todo.text.indexOf(searchText) !== -1 || todo.tags.indexOf(searchText) !== -1;
-                      if (displayCompleted){
+                      if (displayCompleted) {
 
                         if (todo.level === item.level) {
-                        if (hasSearchText) {
-                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
+                          if (hasSearchText) {
+                            return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
+                          }
                         }
-                      }
-                      }else{
-                        if (todo.completed === false){
+                      } else {
+                        if (todo.completed === false) {
 
-                        if (todo.level === item.level) {
-                        if (hasSearchText) {
+                          if (todo.level === item.level) {
+                            if (hasSearchText) {
                               return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
-                        }
-                      }
+                            }
+                          }
                         }
                       }
                     })
