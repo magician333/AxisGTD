@@ -111,6 +111,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
 const Home: React.FC = () => {
 
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);
+  const [displayCompleted,setDisplayCompleted] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
   const [layoutModeClass, setlayoutModeClass] = useState<LayoutClasses>({
@@ -171,8 +172,8 @@ const Home: React.FC = () => {
     ]
   )
 
-  const addTodo = (text: string, level: number) => {
-    const data: TodoItem = { text: text, completed: false, level: level, tags: [] };
+  const addTodo = (index:number,text: string, level: number) => {
+    const data: TodoItem = { index:index,text: text, completed: false, level: level, tags: [] };
     const newTodoList = [...TODOList, data];
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
@@ -232,17 +233,12 @@ const Home: React.FC = () => {
     }
   }, [TODOList]);
 
-
-
-
-
-
   return (
     <>
       <div className='absolute z-10'>
-        <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} setSearchText={setSearchText} setLayoutType={setLayoutType} layoutType={layoutType} />
+        <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} setSearchText={setSearchText} setLayoutType={setLayoutType} layoutType={layoutType} setDisplayCompleted={setDisplayCompleted} displayCompleted={displayCompleted}/>
       </div>
-      <div className={layoutModeClass.boardGird + " grid justify-items-center items-center pt-16 "}>
+      <div className={layoutModeClass.boardGird + " grid justify-items-center pt-16 "}>
         {
           AreaCard.map((item, index) => (
             <div key={index} className={layoutModeClass.boardSize + " grid m-1 rounded shadow-md"}>
@@ -258,9 +254,21 @@ const Home: React.FC = () => {
                 <div className={layoutModeClass.todoGrid + " grid mt-2 ml-2 mr-2 mb-2 justify-items-center"}>
                   {
                     TODOList.map((todo, index) => {
-                      if (todo.level == item.level) {
-                        if (todo.text.indexOf(searchText) != -1) {
-                          return <div className={layoutModeClass.todoSize}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
+                      if (displayCompleted){
+
+                        if (todo.level === item.level) {
+                        if (todo.text.indexOf(searchText) != -1 || todo.tags.map((item)=>item.value).indexOf(searchText) != -1) {
+                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
+                        }
+                      }
+                      }else{
+                        if (todo.completed === false){
+
+                        if (todo.level === item.level) {
+                        if (todo.text.indexOf(searchText) != -1 || todo.tags.map((item)=>item.value).indexOf(searchText) != -1) {
+                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
+                        }
+                      }
                         }
                       }
                     })

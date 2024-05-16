@@ -12,12 +12,13 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 
 
 
-function TODOForm({ addTodo }: TODOFormProps) {
+function TODOForm({ addTodo,TodoList }: TODOFormProps) {
     const [value, setValue] = useState<string>("");
     const [level, setLevel] = useState<number>(0);
 
@@ -29,6 +30,7 @@ function TODOForm({ addTodo }: TODOFormProps) {
     ];
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        let lastindex = 0;
         e.preventDefault();
         if (!value) return;
         if (level === 0) {
@@ -43,7 +45,13 @@ function TODOForm({ addTodo }: TODOFormProps) {
             nolevel();
             return
         };
-        addTodo(value, level);
+        if (TodoList.length===0){
+          lastindex = 1;
+        }
+        else{
+          lastindex=TodoList[TodoList.length-1].index+1;
+        }
+        addTodo(lastindex,value, level);
         setValue("");
     }
     return (
@@ -83,7 +91,7 @@ function TODOForm({ addTodo }: TODOFormProps) {
 }
 
 
-function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, layoutType }: NavProps) {
+function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, layoutType, setDisplayCompleted,displayCompleted}: NavProps) {
 
     const { setTheme } = useTheme()
     const [fileContent, setFileContent] = useState<string>('')
@@ -118,11 +126,11 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
     }
 
     return (
-        <div className="w-screen h-[6vh] shadow pl-5 pr-10 flex items-center justify-between">
-            <div className="w-1/12">
+        <div className="w-screen h-[6vh] shadow flex items-center justify-between">
+            <div className="w-1/12 ml-5">
                 <img src="/logo.svg" alt="Logo" />
             </div>
-            <div className="flex items-center space-x-10">
+            <div className="flex items-center space-x-10 mr-10">
 
                 <Input id='search_input' placeholder='Search Task...' onChange={(e) => { setSearchText(e.target.value) }} />
 
@@ -132,7 +140,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                     </DrawerTrigger>
                     <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
                         <p className="text-2xl font-bold mb-10">Add new Task</p>
-                        <TODOForm addTodo={addTodo}></TODOForm>
+                        <TODOForm addTodo={addTodo} TodoList={TodoList}></TODOForm>
                     </DrawerContent>
                 </Drawer>
 
@@ -143,6 +151,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                     <SheetContent>
                         <SheetHeader className="text-2xl">Setting</SheetHeader>
                         <SheetDescription>You can make some settings for AxisGTD here</SheetDescription>
+                        <ScrollArea className="h-screen overflow-y-hidden">
                         <div className="mt-5 space-y-5 flex flex-col items-baseline">
                             <div>
                                 <p className="text-l font-semibold">Theme</p>
@@ -188,8 +197,25 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                             <div>
                                 <p className="text-l font-semibold">Enable System Notifications</p>
                                 <p className="text-xs font-thin mb-2">Make sure you have turned on notification permissions</p>
-                                <Switch />
+                                <Switch onCheckedChange={
+                                  (e)=>{
+                                    console.log(e)
+                                  }
+                                } />
                             </div>
+
+                            <div>
+                                <p className="text-l font-semibold">Display Completed Task</p>
+                                <p className="text-xs font-thin mb-2">If you want to focus only on completed tasks, you can turn this switch on</p>
+
+                                <Switch checked={displayCompleted} 
+                                onCheckedChange={
+                                  (e)=>{
+                                    setDisplayCompleted(e)
+                                  }
+                                } />
+                            </div>
+
 
                             <div>
                                 <p className="text-l font-semibold">Data Export</p>
@@ -237,6 +263,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                                 </p>
                             </div>
                         </div>
+                        </ScrollArea>
                     </SheetContent>
                 </Sheet>
             </div>
