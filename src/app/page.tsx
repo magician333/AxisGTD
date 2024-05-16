@@ -33,9 +33,14 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
           <MultipleSelector
             className="break-normal"
             options={tagOptions}
-            value={todo.tags}
+            value={todo.tags.map((item) => {
+              return {
+                label: item,
+                value: item
+              };
+            })}
             creatable
-            onChange={(e) => addTag(index, e)}
+            onChange={(e) => addTag(index, e.map((item)=>item.value))}
             placeholder="Select tags..."
             emptyIndicator={
               <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
@@ -173,7 +178,7 @@ const Home: React.FC = () => {
   )
 
   const addTodo = (index:number,text: string, level: number) => {
-    const data: TodoItem = { index:index,text: text, completed: false, level: level, tags: [] };
+    const data: TodoItem = { index:index,text: text, completed: false, level: level, tags: [],completedtime:0 };
     const newTodoList = [...TODOList, data];
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
@@ -189,6 +194,11 @@ const Home: React.FC = () => {
 
   const completedTODO = (index: number) => {
     const newTodoList = [...TODOList];
+
+    if (newTodoList[index].completed===false){
+      newTodoList[index].completedtime = Date.now();
+    }
+    // new Notification("Todo is complete!",{body:"completed",icon:"/logo.svg"})
     newTodoList[index].completed = !newTodoList[index].completed;
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
@@ -201,8 +211,7 @@ const Home: React.FC = () => {
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   };
 
-
-  const addTag = (index: number, tags: Option[]) => {
+  const addTag = (index: number, tags: string[]) => {
     const newTodoList = [...TODOList];
     newTodoList[index].tags = tags;
     setTODOList(newTodoList);
@@ -254,10 +263,11 @@ const Home: React.FC = () => {
                 <div className={layoutModeClass.todoGrid + " grid mt-2 ml-2 mr-2 mb-2 justify-items-center"}>
                   {
                     TODOList.map((todo, index) => {
+                      const hasSearchText = todo.text.indexOf(searchText) !== -1 || todo.tags.indexOf(searchText) !== -1;
                       if (displayCompleted){
 
                         if (todo.level === item.level) {
-                        if (todo.text.indexOf(searchText) != -1 || todo.tags.map((item)=>item.value).indexOf(searchText) != -1) {
+                        if (hasSearchText) {
                               return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
                         }
                       }
@@ -265,7 +275,7 @@ const Home: React.FC = () => {
                         if (todo.completed === false){
 
                         if (todo.level === item.level) {
-                        if (todo.text.indexOf(searchText) != -1 || todo.tags.map((item)=>item.value).indexOf(searchText) != -1) {
+                        if (hasSearchText) {
                               return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions}></Todo></div>
                         }
                       }

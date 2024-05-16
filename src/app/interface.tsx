@@ -6,8 +6,8 @@ export interface TodoItem {
     text: string;
     completed: boolean;
     level: number;
-    tags: Option[];
-
+    tags: string[];
+    completedtime:number;
 }
 
 export interface TodoProps {
@@ -17,7 +17,7 @@ export interface TodoProps {
     completedTODO: (index: number) => void;
     removeTODO: (index: number) => void;
     reviseTodo: (index: number, text: string) => void;
-    addTag: (index: number, tags: Option[]) => void;
+    addTag: (index: number, tags: string[]) => void;
 
 }
 

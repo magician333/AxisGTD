@@ -15,9 +15,6 @@ import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 
-
-
-
 function TODOForm({ addTodo,TodoList }: TODOFormProps) {
     const [value, setValue] = useState<string>("");
     const [level, setLevel] = useState<number>(0);
@@ -197,11 +194,30 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                             <div>
                                 <p className="text-l font-semibold">Enable System Notifications</p>
                                 <p className="text-xs font-thin mb-2">Make sure you have turned on notification permissions</p>
-                                <Switch onCheckedChange={
+                                <Button variant="outline" onClick={
                                   (e)=>{
-                                    console.log(e)
+                                    Notification.requestPermission().then((result)=>{
+                                      if (result==="granted"){
+                                        const hadPermission = () =>{
+                                          toast("Permissions are already available",{
+                                            description:"AxisGTD has been granted system notification permissions"
+                                            })
+                                        }
+                                        hadPermission()
+                                      }
+                                      else if (result==="denied"){
+                                        const NoPermission = () =>{
+                                          toast("The request was denied",{
+                                            description:"Please check your browser settings for AxisGTD to get notification permissions"
+                                            })
+                                        }
+                                        NoPermission()
+                                      }
+                                      console.log((result))
+                                      })
+                                    
                                   }
-                                } />
+                                }>Enable</Button>
                             </div>
 
                             <div>
