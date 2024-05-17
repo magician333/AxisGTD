@@ -5,20 +5,22 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { CalendarIcon, LapTimerIcon, Link2Icon, TokensIcon, TrashIcon, UpdateIcon } from '@radix-ui/react-icons';
-import React, { useEffect, useState } from 'react';
-import { Toaster } from 'sonner';
+import React, { useEffect, useRef, useState } from 'react';
+import { Toaster, toast } from 'sonner';
 
 import MultipleSelector, { Option } from '@/components/ui/MultipleSelector';
 import Footer from './Footer';
 import Navbar from './Navbar';
 import { LayoutClasses, TodoItem, TodoProps } from './interface';
-import { DragDropContext, Draggable } from 'react-beautiful-dnd';
-import { Droppable } from 'react-beautiful-dnd';
-import { DateTimePicker } from '@/components/ui/DatetimePicker';
+import { DateTimePicker, DateTimePickerRef } from '@/components/ui/DatetimePicker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
+function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline }: TodoProps) {
+  const datetimePicker = useRef<DateTimePickerRef>(null)
 
-function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel }: TodoProps) {
+  const [deadlinePopoverStatus, setDeadlinePopoverStatus] = useState<boolean>(false)
 
   return (
     <div className="shadow-md rounded bg-white mb-2 ml-1 mr-1" style={{ opacity: todo.completed ? '0.2' : "1" }}>
@@ -71,42 +73,60 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <LapTimerIcon />
+              <Link href={{
+                pathname: "/zen",
+                query: { index: todo.index }
+              }}
+              >
+                <LapTimerIcon />
+              </Link>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Focus</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Popover>
-                <PopoverTrigger><CalendarIcon /></PopoverTrigger>
-                <PopoverContent>
-                  <DateTimePicker granularity="second" />
-                </PopoverContent>
-              </Popover>
-
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Deadline</p>
+              <p>Zen Mode</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link2Icon />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Dependence</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+
+        <Popover open={deadlinePopoverStatus} onOpenChange={() => { setDeadlinePopoverStatus(true) }}>
+          <PopoverTrigger>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <CalendarIcon />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{todo.deadline === "" ? "Deadline" : todo.deadline}</p>
+                </TooltipContent>
+              </Tooltip>
+
+            </TooltipProvider>
+          </PopoverTrigger>
+          <PopoverContent className='flex flex-col space-y-5 items-center'>
+            <p>Select Dealine</p>
+            <DateTimePicker granularity="second" ref={datetimePicker} jsDate={todo.deadline === "" ? null : new Date(JSON.parse(todo.deadline))} />
+            <Button variant="outline" onClick={() => {
+              if (datetimePicker.current?.jsDate) {
+                if ((datetimePicker.current?.jsDate?.getTime() as number) - (new Date().getTime()) >= 0) {
+                  setDeadline(index, JSON.stringify(datetimePicker.current?.jsDate?.toLocaleString()));
+                }
+                else {
+                  toast("The time is illegal", { description: "Must be set after the current date!" })
+                }
+              } else {
+                setDeadline(index, "")
+              }
+
+              setDeadlinePopoverStatus(false)
+            }
+            }>
+              Confirm
+            </Button>
+          </PopoverContent>
+        </Popover>
+
 
         <TooltipProvider>
           <Tooltip>
@@ -200,7 +220,7 @@ const Home: React.FC = () => {
   )
 
   const addTodo = (index: number, text: string, level: number) => {
-    const data: TodoItem = { index: index, text: text, completed: false, level: level, tags: [], completedtime: 0 };
+    const data: TodoItem = { index: index, text: text, completed: false, level: level, deadline: "", tags: [], completedtime: 0 };
     const newTodoList = [...TODOList, data];
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
@@ -211,7 +231,6 @@ const Home: React.FC = () => {
     newTodoList[index].text = text
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
-
   }
 
   const completedTODO = (index: number) => {
@@ -253,6 +272,12 @@ const Home: React.FC = () => {
   }
 
 
+  const setDeadline = (index: number, deadline: string) => {
+    const newTodoList = [...TODOList];
+    newTodoList[index].deadline = deadline;
+    setTODOList(newTodoList);
+    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+  }
 
 
   useEffect(() => {
@@ -275,6 +300,8 @@ const Home: React.FC = () => {
       setTODOList(todoItemsFromStorage);
     }
   }, [TODOList]);
+
+
 
   return (
     <>
@@ -302,7 +329,7 @@ const Home: React.FC = () => {
 
                         if (todo.level === item.level) {
                           if (hasSearchText) {
-                            return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel}></Todo></div>
+                            return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel} setDeadline={setDeadline}></Todo></div>
                           }
                         }
                       } else {
@@ -310,7 +337,7 @@ const Home: React.FC = () => {
 
                           if (todo.level === item.level) {
                             if (hasSearchText) {
-                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel}></Todo></div>
+                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel} setDeadline={setDeadline}></Todo></div>
                             }
                           }
                         }
