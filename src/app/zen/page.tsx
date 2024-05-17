@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Cross1Icon, HomeIcon, PauseIcon, PlayIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { CaretDownIcon, CaretUpIcon, Cross1Icon, HomeIcon, PauseIcon, PlayIcon, ReloadIcon } from "@radix-ui/react-icons"
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import { TodoItem } from "../interface";
 
@@ -18,7 +17,6 @@ function Zen() {
     const todolist = JSON.parse(localStorage.getItem("TODOList") as string)
     const todo: TodoItem = todolist.find((item: any) => item.index.toString() === router.get("index"))
     setTodo(todo)
-    console.log(todo)
   })
 
   useEffect(() => {
@@ -31,7 +29,6 @@ function Zen() {
         } else {
           clearInterval(timerId)
           timerId = null;
-          alert('倒计时结束!');
         }
       }, 1000);
     };
@@ -69,7 +66,7 @@ function Zen() {
           <div className={LevelColor[todo?.level as number - 1] + " w-full h-[1vh]"}>
           </div>
         </div>
-        <div className="mt-28"><p className="text-[15rem] font-extrabold">{minutes}:{seconds}</p></div>
+        <div className="mt-28 flex space-x-32 items-center w-[40vw] justify-between"><CaretUpIcon className="size-10" onClick={() => setCountdownTime(countdownTime + 10000)} /><p className="text-[15rem] font-extrabold">{minutes}:{seconds}</p><CaretDownIcon /></div>
         <div className="flex space-x-32">
 
           <ReloadIcon className="size-5 opacity-25 hover:opacity-100" onClick={resetCountdown} />
