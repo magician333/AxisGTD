@@ -31,15 +31,9 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
         e.preventDefault();
         if (!value) return;
         if (level === 0) {
-            const nolevel = () =>
-                toast("No task type", {
-                    description: "You must select a task type",
-                    action: {
-                        label: "Ok",
-                        onClick: () => console.log("Ok"),
-                    },
-                })
-            nolevel();
+            toast("No Todo type", {
+                description: "You must select a todo type",
+            })
             return
         };
         if (TodoList.length === 0) {
@@ -54,16 +48,16 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
     return (
         <form onSubmit={handleSubmit} className="flex flex-col space-y-3">
             <div className="flex space-y-2 justify-between flex-col items-baseline ">
-                <Label htmlFor="entry_task" className="break-normal w-[14vh]">Task Content: </Label>
-                <Input id='entry_task' className="w-[30vh]" type="text" value={value} onChange={(e) => setValue(e.target.value)} placeholder='Add a task here...' />
+                <Label htmlFor="entry_todo" className="break-normal w-[14vh]">Todo Content: </Label>
+                <Input id='entry_todo' className="w-[30vh]" type="text" value={value} onChange={(e) => setValue(e.target.value)} placeholder='Add a Todo here...' />
             </div>
             <div className="flex space-y-2 justify-between flex-col items-baseline ">
-                <Label htmlFor="task_select" className="break-normal w-[14vh]">Task Type: </Label>
-                <div id='task_select' className="w-10/12">
+                <Label htmlFor="todo_select" className="break-normal w-[14vh]">Todo Type: </Label>
+                <div id='todo_select' className="w-10/12">
                     <Select onValueChange={(e) => setLevel(Number(e))}>
                         <SelectTrigger className="space-x-2 w-[30vh]">
                             <Crosshair1Icon />
-                            <SelectValue placeholder="Please select task type" ></SelectValue>
+                            <SelectValue placeholder="Please select Todo type" ></SelectValue>
                         </SelectTrigger>
                         <SelectContent >
                             <SelectGroup>
@@ -129,14 +123,14 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
             </div>
             <div className="flex items-center space-x-10 mr-10">
 
-                <Input id='search_input' placeholder='Search Task...' onChange={(e) => { setSearchText(e.target.value) }} />
+                <Input id='search_input' placeholder='Search Todo...' onChange={(e) => { setSearchText(e.target.value) }} />
 
                 <Drawer>
                     <DrawerTrigger asChild>
                         <PlusCircledIcon className="size-5" />
                     </DrawerTrigger>
                     <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
-                        <p className="text-2xl font-bold mb-10">Add new Task</p>
+                        <p className="text-2xl font-bold mb-10">Add new Todo</p>
                         <TODOForm addTodo={addTodo} TodoList={TodoList}></TODOForm>
                     </DrawerContent>
                 </Drawer>
@@ -198,22 +192,16 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                                         (e) => {
                                             Notification.requestPermission().then((result) => {
                                                 if (result === "granted") {
-                                                    const hadPermission = () => {
-                                                        toast("Permissions are already available", {
-                                                            description: "AxisGTD has been granted system notification permissions"
-                                                        })
-                                                    }
-                                                    hadPermission()
+                                                    toast("Permissions are already available", {
+                                                        description: "AxisGTD has been granted system notification permissions"
+                                                    })
+
                                                 }
                                                 else if (result === "denied") {
-                                                    const NoPermission = () => {
-                                                        toast("The request was denied", {
-                                                            description: "Please check your browser settings for AxisGTD to get notification permissions"
-                                                        })
-                                                    }
-                                                    NoPermission()
+                                                    toast("The request was denied", {
+                                                        description: "Please check your browser settings for AxisGTD to get notification permissions"
+                                                    })
                                                 }
-                                                console.log((result))
                                             })
 
                                         }
@@ -221,15 +209,14 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                                 </div>
 
                                 <div>
-                                    <p className="text-l font-semibold">Display Completed Task</p>
-                                    <p className="text-xs font-thin mb-2">If you want to focus only on completed tasks, you can turn this switch on</p>
+                                    <p className="text-l font-semibold">Display Completed Todo</p>
+                                    <p className="text-xs font-thin mb-2">If you want to focus only on completed todos, you can turn this switch on</p>
 
                                     <Switch checked={displayCompleted}
                                         onCheckedChange={
                                             (e) => {
                                                 setDisplayCompleted(e)
-                                            }
-                                        } />
+                                            }} />
                                 </div>
 
 
@@ -274,8 +261,8 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                                 <div>
                                     <p className="text-l font-semibold mb-2">About</p>
                                     <p className="break-words font-light text-sm">
-                                        A minimalistic and serene personal office TodoList software that empowers you to prioritize tasks effectively, with AxisGTD serving as a helpful aid. However, don't become overlydependent on AxisGTD.
-                                        It should be viewed as a mere component of your efficient office setup. Simply capture your tasks within the app, set AxisGTD aside, and return to it later to mark off completed items once your work is finished.
+                                        A minimalistic and serene personal office TodoList software that empowers you to prioritize todos effectively, with AxisGTD serving as a helpful aid. However, don't become overlydependent on AxisGTD.
+                                        It should be viewed as a mere component of your efficient office setup. Simply capture your todos within the app, set AxisGTD aside, and return to it later to mark off completed items once your work is finished.
                                     </p>
                                 </div>
                             </div>

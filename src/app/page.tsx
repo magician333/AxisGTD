@@ -11,25 +11,30 @@ import { Toaster, toast } from 'sonner';
 import MultipleSelector, { Option } from '@/components/ui/MultipleSelector';
 import Footer from './Footer';
 import Navbar from './Navbar';
-import { LayoutClasses, TodoItem, TodoProps } from './interface';
+import { AreaProps, LayoutClasses, TodoItem, TodoProps } from './interface';
 import { DateTimePicker, DateTimePickerRef } from '@/components/ui/DatetimePicker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline }: TodoProps) {
+function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null)
 
   const [deadlinePopoverStatus, setDeadlinePopoverStatus] = useState<boolean>(false)
 
   return (
-    <div className="shadow-md rounded bg-white mb-2 ml-1 mr-1" style={{ opacity: todo.completed ? '0.2' : "1" }}>
+    <div className="shadow-md rounded bg-white mb-2 ml-1 mr-1" style={{ opacity: todo.completed ? '0.2' : "1" }} draggable
+      onDragOver={(e) => {
+        e.preventDefault()
+        // console.log(e.target) 
+      }}
+    >
       <div className="w-full h-[1vh] rounded-t" style={{ backgroundColor: todo.completed ? '#39834A' : "#FF3333" }} >
       </div>
       <div className="flex items-center ml-3 mr-3 mt-2 mb-2 space-x-2">
-        <Checkbox checked={todo.completed} onCheckedChange={() => completedTODO(index)} />
+        <Checkbox checked={todo.completed} onCheckedChange={() => completedTODO(todo.index)} />
         <Textarea rows={3} cols={50} className="break-words max-h-20 max-w-200 border-none resize-none h-[3rem]" readOnly={todo.completed} value={todo.text} style={{ textDecoration: todo.completed ? 'line-through' : "" }} onChange={(e) =>
-          reviseTodo(index, e.target.value)
+          reviseTodo(todo.index, e.target.value)
         } />
       </div>
       <div className="ml-3 mr-3">
@@ -44,7 +49,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
               };
             })}
             creatable
-            onChange={(e) => addTag(index, e.map((item) => item.value))}
+            onChange={(e) => addTag(todo.index, e.map((item) => item.value))}
             placeholder="Select tags..."
             emptyIndicator={
               <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
@@ -61,7 +66,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <UpdateIcon onClick={() => reLevel(index, 4)} />
+              <UpdateIcon onClick={() => reLevel(todo.index, 4)} />
             </TooltipTrigger>
             <TooltipContent>
               <p>Set Level</p>
@@ -110,13 +115,13 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
             <Button variant="outline" onClick={() => {
               if (datetimePicker.current?.jsDate) {
                 if ((datetimePicker.current?.jsDate?.getTime() as number) - (new Date().getTime()) >= 0) {
-                  setDeadline(index, JSON.stringify(datetimePicker.current?.jsDate?.toLocaleString()));
+                  setDeadline(todo.index, JSON.stringify(datetimePicker.current?.jsDate?.toLocaleString()));
                 }
                 else {
                   toast("The time is illegal", { description: "Must be set after the current date!" })
                 }
               } else {
-                setDeadline(index, "")
+                setDeadline(todo.index, "")
               }
 
               setDeadlinePopoverStatus(false)
@@ -142,7 +147,7 @@ function Todo({ index, todo, completedTODO, removeTODO, reviseTodo, addTag, tagO
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <TrashIcon onClick={() => removeTODO(index)} />
+              <TrashIcon onClick={() => removeTODO(todo.index)} />
             </TooltipTrigger>
             <TooltipContent>
               <p>Delete</p>
@@ -161,7 +166,8 @@ const Home: React.FC = () => {
   const [displayCompleted, setDisplayCompleted] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
-  const [layoutModeClass, setlayoutModeClass] = useState<LayoutClasses>({
+  const [droppedLevel, setDroppedLevel] = useState<number>(0)
+  const [layoutModeClass, setLayoutModeClass] = useState<LayoutClasses>({
     boardGird: "grid-cols-2 grid-rows-2",
     boardSize: "w-[49.5vw] h-[44vh]",
     scrollareaHeight: "h-[36vh]",
@@ -171,9 +177,10 @@ const Home: React.FC = () => {
   });
 
 
+
   useEffect(() => {
     if (layoutType === "axis") {
-      setlayoutModeClass({
+      setLayoutModeClass({
         boardGird: "grid-cols-2 grid-rows-2",
         boardSize: "w-[49.5vw] h-[44vh]",
         scrollareaHeight: "h-[36vh]",
@@ -182,7 +189,7 @@ const Home: React.FC = () => {
         colorbrandWidth: "w-[49.5vw]"
       });
     } else if (layoutType === "kanban") {
-      setlayoutModeClass({
+      setLayoutModeClass({
         boardGird: "grid-cols-4 grid-rows-1",
         boardSize: "w-[24vw] h-[88vh]",
         scrollareaHeight: "h-[80vh]",
@@ -191,7 +198,7 @@ const Home: React.FC = () => {
         colorbrandWidth: "w-[24vw]"
       });
     } else if (layoutType === "board") {
-      setlayoutModeClass({
+      setLayoutModeClass({
         boardGird: "grid-cols-1 grid-rows-4",
         boardSize: "w-[95vw] h-[90vh]",
         scrollareaHeight: "h-[80vh]",
@@ -202,12 +209,11 @@ const Home: React.FC = () => {
     }
   }, [layoutType]);
 
-  const AreaCard = [
-    { level: 1, Title: "Important and Urgent", des: "Do it !", color: "bg-[#E03B3B]" },
-    { level: 2, Title: "Important but Not Urgent", des: "Schedule it !", color: "bg-[#DD813C]" },
-    { level: 3, Title: "Urgent but Not Important", des: "Eliminate it !", color: "bg-[#3C7EDD]" },
-    { level: 4, Title: "Not Urgent and Not Important", des: "Delegate it !", color: "bg-[#848484]" },
-
+  const AreaCard: AreaProps[] = [
+    { level: 1, title: "Important and Urgent", des: "Do it !", color: "bg-[#E03B3B]" },
+    { level: 2, title: "Important but Not Urgent", des: "Schedule it !", color: "bg-[#DD813C]" },
+    { level: 3, title: "Urgent but Not Important", des: "Eliminate it !", color: "bg-[#3C7EDD]" },
+    { level: 4, title: "Not Urgent and Not Important", des: "Delegate it !", color: "bg-[#848484]" },
   ]
 
   const [tagOptions, setTagOptions] = useState<Option[]>(
@@ -222,51 +228,65 @@ const Home: React.FC = () => {
   const addTodo = (index: number, text: string, level: number) => {
     const data: TodoItem = { index: index, text: text, completed: false, level: level, deadline: "", tags: [], completedtime: 0 };
     const newTodoList = [...TODOList, data];
+
+
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   };
 
   const reviseTodo = (index: number, text: string) => {
-    const newTodoList = [...TODOList];
-    newTodoList[index].text = text
+    const newTodoList: TodoItem[] = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+      todo.text = text
+    }
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   }
 
   const completedTODO = (index: number) => {
     const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index)
 
-    if (newTodoList[index].completed === false) {
-      newTodoList[index].completedtime = Date.now();
+    if (todo) {
+      if (todo.completed === false) {
+        todo.completedtime = Date.now();
+      } else {
+        todo.completedtime = 0;
+      }
+      todo.completed = !todo.completed
     }
-    // new Notification("Todo is complete!",{body:"completed",icon:"/logo.svg"})
-    newTodoList[index].completed = !newTodoList[index].completed;
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   };
 
   const removeTODO = (index: number) => {
     const newTodoList = [...TODOList];
-    newTodoList.splice(index, 1);
+    const delIndex = newTodoList.findIndex((item) => item.index === index)
+    if (delIndex !== -1) {
+      newTodoList.splice(delIndex, 1);
+    }
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   };
 
   const addTag = (index: number, tags: string[]) => {
     const newTodoList = [...TODOList];
-    newTodoList[index].tags = tags;
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+      todo.tags = tags;
+    }
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   }
 
   const reLevel = (index: number, targetLevel: number) => {
     const newTodoList = [...TODOList];
-    if (newTodoList[index].level < 4) {
-      newTodoList[index].level = newTodoList[index].level + 1;
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+      todo.level = targetLevel
     }
-    else {
-      newTodoList[index].level = 1;
-    }
+
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   }
@@ -274,7 +294,10 @@ const Home: React.FC = () => {
 
   const setDeadline = (index: number, deadline: string) => {
     const newTodoList = [...TODOList];
-    newTodoList[index].deadline = deadline;
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+      todo.deadline = deadline
+    }
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   }
@@ -301,6 +324,13 @@ const Home: React.FC = () => {
     }
   }, [TODOList]);
 
+  const shouldRenderTodo = (todo: TodoItem, item: AreaProps, searchText: string, displayCompleted: boolean) => {
+    const hasSearchText = todo.text.includes(searchText) || todo.tags.some(tag => tag.includes(searchText));
+    if (displayCompleted) {
+      return todo.level === item.level && hasSearchText;
+    }
+    return todo.completed === false && todo.level === item.level && hasSearchText;
+  };
 
 
   return (
@@ -311,11 +341,25 @@ const Home: React.FC = () => {
       <div className={layoutModeClass.boardGird + " grid justify-items-center pt-16 "}>
         {
           AreaCard.map((item, index) => (
-            <div key={index} className={layoutModeClass.boardSize + " grid m-1 rounded shadow-md"}>
+            <div key={index} data-level={item.level} className={layoutModeClass.boardSize + " grid m-1 rounded shadow-md"} onDragOver={(e) => { e.preventDefault() }}
+              onDrop={(e) => {
+                e.preventDefault();
+                const dropTarget = e.target;
+                let currentElement = dropTarget;
+                while (currentElement) {
+                  if (currentElement.dataset.level) {
+                    console.log('data-level:', currentElement.dataset.level);
+                    setDroppedLevel(parseInt(currentElement.dataset.level))
+
+                    break;
+                  }
+                  currentElement = currentElement.parentElement;
+                }
+              }}>
               <div className={item.color + " " + layoutModeClass.colorbrandWidth + " h-[5vh] rounded-t "}>
                 <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between">
                   <div className="flex justify-center flex-col mt-1">
-                    <p className=" text-white text-l font-semibold">{item.Title}</p>
+                    <p className=" text-white text-l font-semibold">{item.title}</p>
                     <p className=" text-white text-xs font-light">{item.des}</p>
                   </div>
                 </div>
@@ -324,29 +368,38 @@ const Home: React.FC = () => {
                 <div className={layoutModeClass.todoGrid + " grid mt-2 ml-2 mr-2 mb-2 justify-items-center"}>
                   {
                     TODOList.map((todo, index) => {
-                      const hasSearchText = todo.text.indexOf(searchText) !== -1 || todo.tags.indexOf(searchText) !== -1;
-                      if (displayCompleted) {
+                      const renderTodo = shouldRenderTodo(todo, item, searchText, displayCompleted);
+                      if (renderTodo) {
+                        return (
+                          <div className={layoutModeClass.todoSize} key={index} draggable
+                            onDragOver={(e) => { e.preventDefault() }}
+                            onDragStart={(e) => { e.dataTransfer.setData('text/plain', todo.index); }}
+                            onDragEnd={(e) => {
 
-                        if (todo.level === item.level) {
-                          if (hasSearchText) {
-                            return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel} setDeadline={setDeadline}></Todo></div>
-                          }
-                        }
-                      } else {
-                        if (todo.completed === false) {
+                              e.preventDefault();
 
-                          if (todo.level === item.level) {
-                            if (hasSearchText) {
-                              return <div className={layoutModeClass.todoSize} key={index}><Todo key={index} todo={todo} index={index} completedTODO={completedTODO} removeTODO={removeTODO} reviseTodo={reviseTodo} addTag={addTag} tagOptions={tagOptions} reLevel={reLevel} setDeadline={setDeadline}></Todo></div>
-                            }
-                          }
-                        }
+                              console.log(e.target)
+                              reLevel(todo.index, droppedLevel)
+                            }} >
+                            <Todo
+                              key={index}
+                              todo={todo}
+                              completedTODO={completedTODO}
+                              removeTODO={removeTODO}
+                              reviseTodo={reviseTodo}
+                              addTag={addTag}
+                              tagOptions={tagOptions}
+                              reLevel={reLevel}
+                              setDeadline={setDeadline}
+                            />
+                          </div>
+                        );
                       }
                     })
                   }
                 </div>
               </ScrollArea>
-              <p className="text-gray-300 text-xs mr-5 flex justify-end">Total {TODOList.filter((todo) => todo.level === item.level).length} Task(s). Completed {TODOList.filter((todo) => todo.level === item.level && todo.completed === true).length} Task(s)</p>
+              <p className="text-gray-300 text-xs mr-5 flex justify-end">Total {TODOList.filter((todo) => todo.level === item.level).length} Todo(s). Completed {TODOList.filter((todo) => todo.level === item.level && todo.completed === true).length} Todo(s)</p>
             </div>
           ))
         }

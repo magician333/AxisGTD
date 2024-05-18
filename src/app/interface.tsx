@@ -12,7 +12,6 @@ export interface TodoItem {
 }
 
 export interface TodoProps {
-  index: number;
   todo: TodoItem;
   tagOptions: Option[];
   completedTODO: (index: number) => void;
@@ -47,4 +46,11 @@ export interface LayoutClasses {
   todoSize: string;
   todoGrid: string;
   colorbrandWidth: string;
+}
+
+export interface AreaProps {
+  level: number;
+  title: string;
+  des: string;
+  color: string;
 }
