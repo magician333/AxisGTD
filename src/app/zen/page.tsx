@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { CaretDownIcon, CaretUpIcon, Cross1Icon, HomeIcon, PauseIcon, PlayIcon, ReloadIcon } from "@radix-ui/react-icons"
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -27,7 +27,7 @@ function Zen() {
         if (countdownTime > 0) {
           setCountdownTime(prevTime => prevTime - 1000);
         } else {
-          clearInterval(timerId)
+          clearInterval(timerId!)
           timerId = null;
         }
       }, 1000);
@@ -59,7 +59,7 @@ function Zen() {
 
 
   return (
-    <>
+    <Suspense>
       <div className="flex items-center pt-20 flex-col">
         <div className=" w-[20vw] justify-center flex flex-col items-center">
           <p className="font-black text-7xl opacity-70 text-nowrap tracking-wide">Zen Mode</p>
@@ -80,7 +80,7 @@ function Zen() {
         <div className="mt-32 flex justify-center items-center"><p className="w-[50vw] text-wrap flex justify-center underline underline-offset-8">{todo?.text}</p>
         </div>
       </div >
-    </>
+    </Suspense>
   )
 }
 

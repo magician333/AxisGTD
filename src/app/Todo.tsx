@@ -36,7 +36,7 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
         <Textarea rows={3} cols={50}
           className="break-words border-none resize-none h-[3rem] shadow-none no-scrollbar"
           readOnly={todo.completed} value={todo.text}
-          style={{ textDecoration: todo.completed ? 'line-through' : "" }}
+          style={{ textDecoration: todo.completed ? "line-through" : "" }}
           onChange={(e) =>
             reviseTodo(todo.index, e.target.value)
           } />
@@ -102,7 +102,7 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Set Todo's Deadline</DialogTitle>
+              <DialogTitle>Set Todo&apos;s Deadline</DialogTitle>
               <DialogDescription>Set a deadline and AxisGTD will notify you when the specified time is reached.</DialogDescription>
             </DialogHeader>
             <div className="flex flex-col items-center justify-center space-y-5">

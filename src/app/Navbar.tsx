@@ -110,6 +110,17 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
   useEffect(() => {
   }, [fileContent]);
 
+  useEffect(() => {
+    const layoutStorage = localStorage.getItem("layout")
+    if (layoutStorage) {
+      setLayoutType(layoutStorage)
+    }
+    else {
+      setLayoutType("axis")
+    }
+
+  }, [])
+
   const handleFileupload = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(fileContent)
@@ -177,16 +188,18 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
               <div className="mt-5 space-y-5 flex flex-col items-baseline">
 
                 <div>
-                  <p className='text-l font-semibold' >Set layout</p>
-                  <p className='text-xs font-thin mb-2'>Set the layout of the interface</p>
-                  <Select defaultValue='axis' onValueChange={(e) => setLayoutType(e)} value={layoutType}>
+                  <p className="text-l font-semibold" >Set layout</p>
+                  <p className="text-xs font-thin mb-2">Set the layout of the interface</p>
+                  <Select defaultValue="axis"
+                    value={layoutType}
+                    onValueChange={(e) => { setLayoutType(e); localStorage.setItem("layout", e) }}>
                     <SelectTrigger>
                       <SelectValue placeholder="Set layout"></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='axis'>Axis Default (2*2) </SelectItem>
-                      <SelectItem value='kanban'>Kanban Mode (4*1) </SelectItem>
-                      <SelectItem value='board'>Big Board (1*4) </SelectItem>
+                      <SelectItem value="axis">Axis Default (2*2) </SelectItem>
+                      <SelectItem value="kanban">Kanban Mode (4*1) </SelectItem>
+                      <SelectItem value="board">Big Board (1*4) </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -284,7 +297,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                 <div>
                   <p className="text-l font-semibold mb-2">About</p>
                   <p className="break-words font-light text-sm">
-                    A minimalistic and serene personal office TodoList software that empowers you to prioritize todos effectively, with AxisGTD serving as a helpful aid. However, don't become overlydependent on AxisGTD.
+                    A minimalistic and serene personal office TodoList software that empowers you to prioritize todos effectively, with AxisGTD serving as a helpful aid. However, don&apos;t become overlydependent on AxisGTD.
                     It should be viewed as a mere component of your efficient office setup. Simply capture your todos within the app, set AxisGTD aside, and return to it later to mark off completed items once your work is finished.
                   </p>
                 </div>

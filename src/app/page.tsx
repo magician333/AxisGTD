@@ -199,7 +199,7 @@ const Home: React.FC = () => {
                 onDragOver={(e) => { e.preventDefault() }}
                 onDrop={(e) => {
                   e.preventDefault();
-                  const dropTarget = e.target;
+                  const dropTarget = e.target as HTMLElement;
                   let currentElement = dropTarget;
                   while (currentElement) {
                     if (currentElement.dataset.level) {
@@ -207,7 +207,7 @@ const Home: React.FC = () => {
 
                       break;
                     }
-                    currentElement = currentElement.parentElement;
+                    currentElement = currentElement.parentElement as HTMLElement;
                   }
                 }}>
                 <div className={item.color + " " + layoutModeClass.colorbrandWidth + " h-[5vh] rounded-t "}>
