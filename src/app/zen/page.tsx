@@ -66,7 +66,7 @@ function Zen() {
           <div className={LevelColor[todo?.level as number - 1] + " w-full h-[1vh]"}>
           </div>
         </div>
-        <div className="mt-28 flex space-x-32 items-center w-[40vw] justify-between"><CaretUpIcon className="size-10" onClick={() => setCountdownTime(countdownTime + 10000)} /><p className="text-[15rem] font-extrabold">{minutes}:{seconds}</p><CaretDownIcon /></div>
+        <div className="mt-28 flex space-x-32 w-[40vw]"><p className="w-full text-[15rem] font-extrabold flex justify-center">{minutes}:{seconds}</p></div>
         <div className="flex space-x-32">
 
           <ReloadIcon className="size-5 opacity-25 hover:opacity-100" onClick={resetCountdown} />

@@ -22,7 +22,14 @@ export default function RootLayout({
 
     <html lang="en">
       <body >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
 
