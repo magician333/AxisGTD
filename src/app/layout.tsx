@@ -30,9 +30,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <SpeedInsights />
-          <Analytics />
         </ThemeProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
 
