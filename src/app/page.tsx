@@ -5,7 +5,7 @@ import { Toaster } from 'sonner';
 import { Option } from '@/components/ui/MultipleSelector';
 import Footer from './Footer';
 import Navbar from './Navbar';
-import { AreaProps, LayoutClasses, TodoItem } from './interface';
+import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from './interface';
 import Todo from './Todo';
 
 
@@ -80,10 +80,8 @@ const Home: React.FC = () => {
   )
 
   const addTodo = (index: number, text: string, level: number) => {
-    const data: TodoItem = { index: index, text: text, completed: false, level: level, deadline: "", tags: [], completedtime: 0 };
+    const data: TodoItem = { index: index, text: text, completed: false, level: level, deadline: "", tags: [], completedtime: 0, sub: [] };
     const newTodoList = [...TODOList, data];
-
-
     setTODOList(newTodoList);
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   };
@@ -156,6 +154,58 @@ const Home: React.FC = () => {
     localStorage.setItem("TODOList", JSON.stringify(newTodoList))
   }
 
+  const addSub = (index: number, sub: SubTodoItem) => {
+    const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+      todo.sub.push(sub)
+    }
+    setTODOList(newTodoList);
+    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+  }
+
+  const completedSubTodo = (index: number, subIndex: number, sub: SubTodoItem) => {
+    const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+
+      const subtodo = todo.sub.find((item) => item.index === subIndex)
+      if (subtodo) {
+        subtodo.completed = !subtodo.completed
+      }
+    }
+    setTODOList(newTodoList);
+    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+  }
+
+  const delSubTodo = (index: number, subIndex: number) => {
+    const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+
+      const delIndex = todo.sub.findIndex((i) => i.index === subIndex)
+      if (delIndex !== -1) {
+        todo.sub.splice(delIndex, 1)
+      }
+    }
+    setTODOList(newTodoList);
+    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+  }
+
+
+  const reviseSubTodo = (index: number, subIndex: number, sub: SubTodoItem, text: string) => {
+    const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index)
+    if (todo) {
+
+      const subtodo = todo.sub.find((item) => item.index === subIndex)
+      if (subtodo) {
+        subtodo.text = text
+      }
+    }
+    setTODOList(newTodoList);
+    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+  }
 
   useEffect(() => {
     const loadFromStorage = () => {
@@ -189,7 +239,7 @@ const Home: React.FC = () => {
   return (
     <>
       <div className={'w-screen h-screen overflow-hidden ' + layoutModeClass.mainOverflow}>
-        <div className='absolute z-10'>
+        <div className="absolute z-10">
           <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} setSearchText={setSearchText} setLayoutType={setLayoutType} layoutType={layoutType} setDisplayCompleted={setDisplayCompleted} displayCompleted={displayCompleted} />
         </div>
         <div className={layoutModeClass.boardGird + " grid justify-items-center pt-16 "}>
@@ -238,6 +288,10 @@ const Home: React.FC = () => {
                                 tagOptions={tagOptions}
                                 reLevel={reLevel}
                                 setDeadline={setDeadline}
+                                addSub={addSub}
+                                completedSubTODO={completedSubTodo}
+                                delSubTodo={delSubTodo}
+                                reviseSubTodo={reviseSubTodo}
                               />
                             </div>
                           );

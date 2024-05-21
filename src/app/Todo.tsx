@@ -4,20 +4,35 @@ import { Toaster, toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { CalendarIcon, LapTimerIcon, Link2Icon, TokensIcon, TrashIcon, UpdateIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, Half1Icon, LapTimerIcon, Link2Icon, TokensIcon, TrashIcon, UpdateIcon } from '@radix-ui/react-icons';
 import MultipleSelector, { Option } from '@/components/ui/MultipleSelector';
 import { DateTimePicker, DateTimePickerRef } from '@/components/ui/DatetimePicker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { TodoProps } from './interface';
+import { SubTodoItem, TodoProps } from './interface';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
-function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline, droppedLevel }: TodoProps) {
+function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline, droppedLevel, addSub, completedSubTODO, delSubTodo, reviseSubTodo }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null)
-
+  const [value, setValue] = useState<string>("")
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!value) return;
+    let lastindex = 0;
+    if (todo.sub.length === 0) {
+      lastindex = 1
+    } else {
+      lastindex = todo.sub[todo.sub.length - 1].index + 1
+    }
+    const newSubTodoItem: SubTodoItem = { index: lastindex, text: value, completed: false }
+    addSub(todo.index, newSubTodoItem)
+    setValue("");
+  }
 
   return (
     <div className="shadow-md rounded bg-white mb-2 ml-1 mr-1 dark:bg-zinc-950 border"
@@ -127,17 +142,46 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
           </DialogContent>
         </Dialog>
 
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <TokensIcon />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Subtasks</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Dialog>
+          <DialogTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <TokensIcon />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{todo.sub.length === 0 ? "SubTodo" : todo.sub.length + " Sub Todos"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Sub-Todo</DialogTitle>
+              <DialogDescription>Create and view your subtasks here.</DialogDescription>
+              <div className="flex flex-col">
+                <div><form onSubmit={handleSubmit} className="flex space-x-3 justify-start mb-2 ml-5 mr-5 mt-3"><Input placeholder='Add sub-Todo here...' value={value} onChange={(e) => { setValue(e.target.value) }} /><Button variant="outline">Add</Button></form></div>
+                <ScrollArea className="h-[36vh]">
+                  {
+                    todo.sub.map((item) => {
+                      return (
+                        <div className="flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2">
+                          <Checkbox checked={item.completed} onCheckedChange={() => completedSubTODO(todo.index, item.index, item)} />
+                          <Input value={item.text}
+                            className="border-none shadow-none overflow-x-auto"
+                            style={{ textDecoration: item.completed ? "line-through" : "" }}
+                            disabled={item.completed}
+                            onChange={(e) => reviseSubTodo(todo.index, item.index, item, e.target.value)} />
+                          <TrashIcon onClick={() => { delSubTodo(todo.index, item.index) }} />
+                        </div>
+                      )
+                    })
+                  }
+                </ScrollArea>
+              </div>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
 
         <TooltipProvider>
           <Tooltip>

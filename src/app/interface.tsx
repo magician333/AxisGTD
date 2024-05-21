@@ -9,6 +9,7 @@ export interface TodoItem {
   tags: string[];
   deadline: string;
   completedtime: number;
+  sub: SubTodoItem[];
 }
 
 export interface TodoProps {
@@ -21,8 +22,17 @@ export interface TodoProps {
   addTag: (index: number, tags: string[]) => void;
   reLevel: (index: number, targetLevel: number) => void;
   setDeadline: (index: number, deadline: string) => void;
+  addSub: (index: number, sub: SubTodoItem) => void;
+  completedSubTODO: (index: number, subIndex: number, sub: SubTodoItem) => void;
+  delSubTodo: (index: number, subIndex: number) => void;
+  reviseSubTodo: (index: number, subIndex: number, sub: SubTodoItem, text: string) => void;
 }
 
+export interface SubTodoItem {
+  index: number;
+  text: string;
+  completed: boolean;
+}
 
 export interface NavProps {
   addTodo: (index: number, text: string, level: number) => void;
