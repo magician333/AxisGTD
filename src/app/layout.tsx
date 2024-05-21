@@ -5,6 +5,7 @@ import "@fontsource/poppins";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./ThemeProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
         >
           {children}
           <SpeedInsights />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
