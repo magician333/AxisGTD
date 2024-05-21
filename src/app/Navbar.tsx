@@ -3,7 +3,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTrigger } from
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { Crosshair1Icon, EnvelopeClosedIcon, FileTextIcon, GitHubLogoIcon, HamburgerMenuIcon, HeartIcon, MagnifyingGlassIcon, MoonIcon, PersonIcon, PlusCircledIcon, SunIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, Crosshair1Icon, EnvelopeClosedIcon, FileTextIcon, GitHubLogoIcon, HamburgerMenuIcon, HeartIcon, MagnifyingGlassIcon, MoonIcon, PersonIcon, PlusCircledIcon, SunIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
@@ -13,8 +13,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import PrivacyPolicy from './text';
+
 
 
 function TODOForm({ addTodo, TodoList }: TODOFormProps) {
@@ -305,14 +308,86 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
               </div>
 
               <div className="flex space-x-5 justify-between pl-2 pr-2 mb-2 mt-2">
-                <HeartIcon className="size-5" />
-                <FileTextIcon className="size-5" />
-                <Link href="mailto:magician33333@gmail.com">
-                  <EnvelopeClosedIcon className="size-5" />
-                </Link>
-                <Link href="https://github.com/magician333/AxisGTD" target="_blank">
-                  <GitHubLogoIcon className="size-5" />
-                </Link>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <HeartIcon className="size-5" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Donate
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+
+
+
+                <Dialog>
+                  <DialogTrigger>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <FileTextIcon className="size-5" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          Contact Me
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Contact Me</DialogTitle>
+                      <DialogDescription>Set a deadline and AxisGTD will notify you when the specified time is reached.</DialogDescription>
+                    </DialogHeader>
+                    <div className="flex flex-col items-start justify-center space-y-5">
+                      <ScrollArea className="h-[30vh] p-2">
+                        <PrivacyPolicy />
+                      </ScrollArea>
+                    </div>
+                    <DialogClose>
+                      <Button variant="outline">Ok</Button>
+                    </DialogClose>
+                  </DialogContent>
+                </Dialog>
+
+
+                <Dialog>
+                  <DialogTrigger>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <EnvelopeClosedIcon />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          Contact Me
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Contact Me</DialogTitle>
+                      <DialogDescription>Set a deadline and AxisGTD will notify you when the specified time is reached.</DialogDescription>
+                    </DialogHeader>
+                    <div className="flex flex-col items-start justify-center space-y-5">
+                      <Link href="mailto:magician33333@gmail.com" className="flex space-x-3 items-center">
+                        <EnvelopeClosedIcon className="size-5" />
+                        <Label>Email : magician333333@gmail.com</Label>
+                      </Link>
+                      <Link href="https://github.com/magician333/AxisGTD" target="_blank" className="flex space-x-3 items-center">
+                        <GitHubLogoIcon className="size-5" />
+                        <Label>Github : https://github.com/magician333/AxisGTD</Label>
+                      </Link>
+                    </div>
+                    <DialogClose>
+                      <Button variant="outline">Ok</Button>
+                    </DialogClose>
+
+                  </DialogContent>
+                </Dialog>
+
               </div>
             </ScrollArea>
           </SheetContent>

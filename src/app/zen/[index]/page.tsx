@@ -72,7 +72,7 @@ function Zen() {
         <div className="opacity-25 hover:opacity-100">
           {isCountdownActive ? <PauseIcon className="size-5" onClick={toggleCountdown} /> : <PlayIcon className="size-5" onClick={toggleCountdown} />}
         </div>
-        <Link href="/" replace>
+        <Link href="/">
           <HomeIcon className="size-5 opacity-25 hover:opacity-100" />
         </Link>
       </div>

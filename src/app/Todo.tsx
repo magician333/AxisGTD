@@ -79,17 +79,12 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
       </div>
       <Separator className="opacity-40" />
 
-      <div className="flex items-center justify-between ml-3 mr-3 mt-2 mb-2 pb-2" style={{ pointerEvents: todo.completed ? "none" : "auto" }} >
+      <div className="flex items-center justify-between ml-3 mr-3 mt-2 mb-2 pb-2" >
 
 
-        <TooltipProvider>
+        <TooltipProvider >
           <Tooltip>
             <TooltipTrigger asChild>
-              {/* <Link href={{
-                pathname: "/zen",
-                query: { index: todo.index }
-              }}
-              >*/}
               <Link href={`/zen/${todo.index}`}>
                 <LapTimerIcon />
               </Link>
@@ -104,7 +99,6 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
 
         <Dialog>
           <DialogTrigger>
-
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -151,7 +145,7 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
                   <TokensIcon />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{todo.sub.length === 0 ? "SubTodo" : todo.sub.length + " Sub Todos"}</p>
+                  <p>{todo.sub?.length === 0 ? "SubTodo" : todo.sub?.length + " Sub Todos"}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -164,7 +158,7 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
                 <div><form onSubmit={handleSubmit} className="flex space-x-3 justify-start mb-2 ml-5 mr-5 mt-3"><Input placeholder='Add sub-Todo here...' value={value} onChange={(e) => { setValue(e.target.value) }} /><Button variant="outline">Add</Button></form></div>
                 <ScrollArea className="h-[36vh]">
                   {
-                    todo.sub.map((item, index) => {
+                    todo.sub?.map((item, index) => {
                       return (
                         <div key={index} className="flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2">
                           <Checkbox checked={item.completed} onCheckedChange={() => completedSubTODO(todo.index, item.index, item)} />
