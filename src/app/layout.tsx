@@ -4,7 +4,7 @@ import "./globals.css";
 import "@fontsource/poppins";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./ThemeProvider";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // const inter = Inter({ subsets: ["latin"] });
 
