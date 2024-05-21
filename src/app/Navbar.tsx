@@ -3,7 +3,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTrigger } from
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { Crosshair1Icon, HamburgerMenuIcon, MagnifyingGlassIcon, MoonIcon, PlusCircledIcon, SunIcon } from '@radix-ui/react-icons';
+import { Crosshair1Icon, EnvelopeClosedIcon, FileTextIcon, GitHubLogoIcon, HamburgerMenuIcon, HeartIcon, MagnifyingGlassIcon, MoonIcon, PersonIcon, PlusCircledIcon, SunIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
@@ -14,6 +14,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTr
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 
 function TODOForm({ addTodo, TodoList }: TODOFormProps) {
@@ -301,6 +302,17 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                     It should be viewed as a mere component of your efficient office setup. Simply capture your todos within the app, set AxisGTD aside, and return to it later to mark off completed items once your work is finished.
                   </p>
                 </div>
+              </div>
+
+              <div className="flex space-x-5 justify-between pl-2 pr-2 mb-2 mt-2">
+                <HeartIcon className="size-5" />
+                <FileTextIcon className="size-5" />
+                <Link href="mailto:magician33333@gmail.com">
+                  <EnvelopeClosedIcon className="size-5" />
+                </Link>
+                <Link href="https://github.com/magician333/AxisGTD" target="_blank">
+                  <GitHubLogoIcon className="size-5" />
+                </Link>
               </div>
             </ScrollArea>
           </SheetContent>
