@@ -10,7 +10,7 @@ import { DateTimePicker, DateTimePickerRef } from '@/components/ui/DatetimePicke
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import { SubTodoItem, TodoProps } from './interface';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -85,11 +85,12 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={{
+              {/* <Link href={{
                 pathname: "/zen",
                 query: { index: todo.index }
               }}
-              >
+              >*/}
+              <Link href={`/zen/${todo.index}`}>
                 <LapTimerIcon />
               </Link>
             </TooltipTrigger>
@@ -163,10 +164,11 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
                 <div><form onSubmit={handleSubmit} className="flex space-x-3 justify-start mb-2 ml-5 mr-5 mt-3"><Input placeholder='Add sub-Todo here...' value={value} onChange={(e) => { setValue(e.target.value) }} /><Button variant="outline">Add</Button></form></div>
                 <ScrollArea className="h-[36vh]">
                   {
-                    todo.sub.map((item) => {
+                    todo.sub.map((item, index) => {
                       return (
-                        <div className="flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2">
+                        <div key={index} className="flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2">
                           <Checkbox checked={item.completed} onCheckedChange={() => completedSubTODO(todo.index, item.index, item)} />
+
                           <Input value={item.text}
                             className="border-none shadow-none overflow-x-auto"
                             style={{ textDecoration: item.completed ? "line-through" : "" }}
