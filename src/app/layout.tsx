@@ -10,8 +10,25 @@ import { Analytics } from "@vercel/analytics/react"
 // const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Axis GTD",
-  description: "Axis GoToDo List",
+  title: "AxisGTD",
+  description: "AxisGTD is Todo list management tool for office workers personal use.",
+  keywords: ["AxisGTD", "Todo", "GTD", "axis", "work", "office", "tools", "todolist", "task"],
+  icons: { icon: "/icon.svg", shortcut: "/icon.png", apple: "/icon.png" },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://www.axisgtd.work",
+    title: "AxisGTD",
+    images: "/logo.png",
+    description: "AxisGTD is Todo list management tool for office workers personal use.",
+    siteName: "AxisGTD",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AxisGTD",
+    description: "AxisGTD is Todo list management tool for office workers personal use.",
+    images: "/logo.png",
+  }
 };
 
 export default function RootLayout({
