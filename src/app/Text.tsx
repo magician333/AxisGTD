@@ -15,7 +15,7 @@ const PrivacyPolicy: React.FC = () => {
             <section>
                 <h2>2. Browser Storage</h2>
                 <p>
-                    To enhance your user experience, AxisGTD utilizes your browser&apos;s local storage to save your tasks and settings. This allows you to access your Todo list and settings across different sessions without the need to re-enter your information.
+                    To enhance your user experience, AxisGTD utilizes your browser&apos;s local storage(indexedDB) to save your tasks and settings. This allows you to access your Todo list and settings across different sessions without the need to re-enter your information.
                 </p>
             </section>
             <section>

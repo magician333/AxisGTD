@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { CaretDownIcon, CaretUpIcon, Cross1Icon, HomeIcon, PauseIcon, PlayIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { HomeIcon, PauseIcon, PlayIcon, ReloadIcon } from "@radix-ui/react-icons"
 import Link from "next/link";
-import { TodoItem } from "../../interface";
+import { TodoItem } from "../../Interface";
 import { useParams } from "next/navigation";
+import localForage from "localforage"
 
 function Zen() {
   const [countdownTime, setCountdownTime] = useState(1800000);
@@ -14,9 +15,20 @@ function Zen() {
   const LevelColor = ["bg-[#E03B3B]", "bg-[#DD813C]", "bg-[#3C7EDD]", "bg-[#848484]"]
 
   useEffect(() => {
-    const todolist = JSON.parse(localStorage.getItem("TODOList") as string)
-    const todo: TodoItem = todolist.find((item: any) => item.index.toString() === router.index)
-    setTodo(todo)
+    localForage.config({
+      driver: localForage.INDEXEDDB,
+      storeName: "AxisGTD",
+      version: 1,
+      description: "database for AisGTD"
+    })
+
+    localForage.getItem("TODOList").then((value) => {
+      const todo = (value as TodoItem[]).find((item: any) => item.index.toString() === router.index)
+      setTodo(todo)
+
+    }).then(() => {
+      console.log("Can't find todo")
+    })
   })
 
   useEffect(() => {

@@ -8,6 +8,17 @@
 
 **Website : [https://www.axisgtd.work](https://www.axisgtd.work)**
 
+
+Self-deploy
+---
+```
+git clone https://github.com/magician333/AxisGTD.git
+cd AxisGTD
+npm install
+npm run dev
+(You can also replace npm with your favorite package manager)
+```
+
 Screenshot
 ---
 ### Homepage
@@ -55,13 +66,27 @@ Feature
 
 - [x] Sub Todo
 
+- [x] Migration to indexdb
+
 - [ ] Time-based notification
 
 - [ ] Deadline notification
 
-- [ ] Migration to indexdb
-
 - [ ] Synchronization
+
+- [ ] Calendar view
+
+- [ ] Support Multi-language
+
+
+Thanks to the following open source projects
+---
+* [React](https://github.com/facebook/react)
+* [Next.js](https://github.com/vercel/next.js)
+* [shadcn/ui](https://github.com/shadcn-ui/ui)
+* [shadcn-ui-expansions](https://github.com/hsuanyi-chou/shadcn-ui-expansions)
+* [localForage](https://github.com/localForage/localForage)
+
 
 
 AxisGTD Privacy Policy
@@ -76,7 +101,7 @@ AxisGTD is a client-side Todo management service that operates entirely within y
 
 2. Browser Storage
 
-To enhance your user experience, AxisGTD utilizes your browser's local storage to save your tasks and settings. This allows you to access your Todo list and settings across different sessions without the need to re-enter your information.
+To enhance your user experience, AxisGTD utilizes your browser's local storage(indexedDB) to save your todos and settings. This allows you to access your Todo list and settings across different sessions without the need to re-enter your information.
 
 3. No Personal Information
 
@@ -99,3 +124,5 @@ We may update this Privacy Policy from time to time to reflect changes in our pr
 If you have any questions or concerns about this Privacy Policy, please feel free to contact us at [insert contact email or method here]. We are committed to ensuring that your privacy is maintained and your rights are respected.
 
 Please note that this is a sample privacy policy and it's important to consult with a legal professional to ensure that it meets all legal requirements and accurately reflects your service's practices. Also, ensure that you include the appropriate contact information for users to reach out to you with any questions or concerns.
+
+

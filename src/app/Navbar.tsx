@@ -3,11 +3,11 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTrigger } from
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { CalendarIcon, Crosshair1Icon, EnvelopeClosedIcon, FileTextIcon, GitHubLogoIcon, HamburgerMenuIcon, HeartIcon, MagnifyingGlassIcon, MoonIcon, PersonIcon, PlusCircledIcon, SunIcon } from '@radix-ui/react-icons';
+import { Crosshair1Icon, EnvelopeClosedIcon, FileTextIcon, GitHubLogoIcon, HamburgerMenuIcon, HeartIcon, MoonIcon, PlusCircledIcon, SunIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { NavProps, TODOFormProps, TodoItem } from './interface';
+import { NavProps, TODOFormProps } from './Interface';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
@@ -16,20 +16,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import PrivacyPolicy from './text';
+import PrivacyPolicy from './Text';
+import localForage from "localforage"
 
 
 
 function TODOForm({ addTodo, TodoList }: TODOFormProps) {
   const [value, setValue] = useState<string>("");
   const [level, setLevel] = useState<number>(0);
-
-  const levels = [
-    { name: 'Important and Urgent', code: '1' },
-    { name: 'Important but Not Urgent', code: '2' },
-    { name: 'Urgent but Not Important', code: '3' },
-    { name: 'Not Urgent and Not Important', code: '4' },
-  ];
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     let lastindex = 0;
@@ -50,6 +44,18 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
     addTodo(lastindex, value, level);
     setValue("");
   }
+
+
+  useEffect(() => {
+    localForage.config({
+      driver: localForage.INDEXEDDB,
+      storeName: "AxisGTD",
+      version: 1,
+      description: "database for AisGTD"
+    })
+  })
+
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-3">
       <div className="flex space-y-2 justify-between flex-col items-baseline ">
@@ -76,13 +82,10 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
         </div>
       </div>
 
-      <div className="flex  items-center justify-center">
-        <DrawerClose>
-          <Button onSubmit={(e) => handleSubmit} variant="outline">Add</Button>
-        </DrawerClose>
-      </div>
+      <DrawerClose className="flex  items-center justify-center" asChild>
+        <Button onSubmit={(e) => handleSubmit} variant="outline">Add</Button>
+      </DrawerClose>
     </form>
-
   );
 }
 
@@ -112,9 +115,6 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
   }
 
   useEffect(() => {
-  }, [fileContent]);
-
-  useEffect(() => {
     const layoutStorage = localStorage.getItem("layout")
     if (layoutStorage) {
       setLayoutType(layoutStorage)
@@ -127,9 +127,8 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
 
   const handleFileupload = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(fileContent)
     setTODOList(JSON.parse(fileContent))
-    localStorage.setItem("TODOList", fileContent)
+    localForage.setItem("TODOList", JSON.parse(fileContent))
   }
 
   return (
@@ -188,8 +187,8 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
           <SheetContent>
             <SheetHeader className="text-2xl">Setting</SheetHeader>
             <SheetDescription>You can make some settings for AxisGTD here</SheetDescription>
-            <ScrollArea className="h-[90vh] overflow-y-hidden pl-2 pr-2">
-              <div className="mt-5 space-y-5 flex flex-col items-baseline">
+            <ScrollArea className="h-[90vh] overflow-y-hidden">
+              <div className="mt-5 space-y-5 flex flex-col items-baseline ml-4 mr-4">
 
                 <div>
                   <p className="text-l font-semibold" >Set layout</p>
@@ -226,9 +225,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                           })
                         }
                       })
-
-                    }
-                  }>Enable</Button>
+                    }}>Enable</Button>
                 </div>
 
                 <div>
@@ -289,7 +286,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                         <DialogClose>
                           <Button variant="outline" onClick={() => {
                             setTODOList([])
-                            localStorage.setItem("TODOList", "")
+                            localForage.setItem("TODOList", [])
                             toast("Cleaned up", { description: "AxisGTD has cleared all data !" })
                           }}>Clear</Button>
                         </DialogClose>
@@ -304,6 +301,8 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                     A minimalistic and serene personal office TodoList software that empowers you to prioritize todos effectively, with AxisGTD serving as a helpful aid. However, don&apos;t become overlydependent on AxisGTD.
                     It should be viewed as a mere component of your efficient office setup. Simply capture your todos within the app, set AxisGTD aside, and return to it later to mark off completed items once your work is finished.
                   </p>
+                  <br />
+                  <p><b>It is important to note: </b><br />AxisGTD stores all data in the local browser indexedDB, so please back up your data before clearing the browser data for this website!</p>
                 </div>
               </div>
 
@@ -315,13 +314,10 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                       <HeartIcon className="size-5" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      Donate
+                      Donate Me
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-
-
-
 
                 <Dialog>
                   <DialogTrigger>
@@ -331,14 +327,14 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                           <FileTextIcon className="size-5" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          Contact Me
+                          Privacy Policy
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Contact Me</DialogTitle>
+                      <DialogTitle>Privacy Policy</DialogTitle>
                       <DialogDescription>Set a deadline and AxisGTD will notify you when the specified time is reached.</DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col items-start justify-center space-y-5">

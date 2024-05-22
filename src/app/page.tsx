@@ -5,9 +5,9 @@ import { Toaster } from 'sonner';
 import { Option } from '@/components/ui/MultipleSelector';
 import Footer from './Footer';
 import Navbar from './Navbar';
-import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from './interface';
+import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from './Interface';
 import Todo from './Todo';
-
+import localForage from "localforage"
 
 
 const Home: React.FC = () => {
@@ -17,6 +17,9 @@ const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
   const [droppedLevel, setDroppedLevel] = useState<number>(0)
+
+
+
   const [layoutModeClass, setLayoutModeClass] = useState<LayoutClasses>({
     boardGird: "grid-cols-2 grid-rows-2",
     boardSize: "w-[49.5vw] h-[44vh]",
@@ -26,6 +29,30 @@ const Home: React.FC = () => {
     colorbrandWidth: "w-[49.5vw]",
     mainOverflow: ""
   });
+
+  useEffect(() => {
+    localForage.config({
+      driver: localForage.INDEXEDDB,
+      storeName: "AxisGTD",
+      version: 1,
+      description: "database for AisGTD"
+    })
+
+    localForage.getItem("TODOList").then((value) => {
+      let parsedData: TodoItem[] = [];
+      if (value) {
+        if ((value as TodoItem[]).length === 0) {
+          parsedData = []
+        } else {
+          parsedData = value as TodoItem[]
+        }
+        setTODOList(parsedData)
+      }
+
+    }).then((e) => {
+    })
+
+  }, [TODOList]);
 
 
 
@@ -70,20 +97,23 @@ const Home: React.FC = () => {
     { level: 4, title: "Not Urgent and Not Important", des: "Delegate it !", color: "bg-[#848484]" },
   ]
 
-  const [tagOptions, setTagOptions] = useState<Option[]>(
-    [
-      { label: 'Work', value: 'Work' },
-      { label: 'Study', value: 'Study' },
-      { label: 'Life', value: 'Life' },
-      { label: 'Other', value: 'Other' }
-    ]
-  )
+  const tagOptions = [
+    { label: 'Work', value: 'Work' },
+    { label: 'Study', value: 'Study' },
+    { label: 'Life', value: 'Life' },
+    { label: 'Other', value: 'Other' }
+  ]
+
+
+  const UpdateStorge = (dataList: TodoItem[]) => {
+    setTODOList(dataList);
+    localForage.setItem("TODOList", dataList)
+  }
 
   const addTodo = (index: number, text: string, level: number) => {
     const data: TodoItem = { index: index, text: text, completed: false, level: level, deadline: "", tags: [], completedtime: 0, sub: [] };
     const newTodoList = [...TODOList, data];
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   };
 
   const reviseTodo = (index: number, text: string) => {
@@ -92,8 +122,8 @@ const Home: React.FC = () => {
     if (todo) {
       todo.text = text
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
+
   }
 
   const completedTODO = (index: number) => {
@@ -108,8 +138,7 @@ const Home: React.FC = () => {
       }
       todo.completed = !todo.completed
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   };
 
   const removeTODO = (index: number) => {
@@ -118,8 +147,7 @@ const Home: React.FC = () => {
     if (delIndex !== -1) {
       newTodoList.splice(delIndex, 1);
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   };
 
   const addTag = (index: number, tags: string[]) => {
@@ -128,8 +156,7 @@ const Home: React.FC = () => {
     if (todo) {
       todo.tags = tags;
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   }
 
   const reLevel = (index: number, targetLevel: number) => {
@@ -139,8 +166,7 @@ const Home: React.FC = () => {
       todo.level = targetLevel
     }
 
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   }
 
 
@@ -150,8 +176,7 @@ const Home: React.FC = () => {
     if (todo) {
       todo.deadline = deadline
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   }
 
   const addSub = (index: number, sub: SubTodoItem) => {
@@ -160,8 +185,7 @@ const Home: React.FC = () => {
     if (todo) {
       todo.sub.push(sub)
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   }
 
   const completedSubTodo = (index: number, subIndex: number, sub: SubTodoItem) => {
@@ -174,8 +198,7 @@ const Home: React.FC = () => {
         subtodo.completed = !subtodo.completed
       }
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   }
 
   const delSubTodo = (index: number, subIndex: number) => {
@@ -188,8 +211,7 @@ const Home: React.FC = () => {
         todo.sub.splice(delIndex, 1)
       }
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   }
 
 
@@ -203,29 +225,10 @@ const Home: React.FC = () => {
         subtodo.text = text
       }
     }
-    setTODOList(newTodoList);
-    localStorage.setItem("TODOList", JSON.stringify(newTodoList))
+    UpdateStorge(newTodoList)
   }
 
-  useEffect(() => {
-    const loadFromStorage = () => {
-      const storedData = localStorage.getItem("TODOList");
-      let parsedData: TodoItem[] = [];
-      if (storedData !== null) {
-        try {
-          parsedData = JSON.parse(storedData);
-        } catch (error) {
-        }
-      }
-      return parsedData;
-    };
 
-    const todoItemsFromStorage = loadFromStorage();
-
-    if (JSON.stringify(todoItemsFromStorage) !== JSON.stringify(TODOList)) {
-      setTODOList(todoItemsFromStorage);
-    }
-  }, [TODOList]);
 
   const shouldRenderTodo = (todo: TodoItem, item: AreaProps, searchText: string, displayCompleted: boolean) => {
     const hasSearchText = todo.text.includes(searchText) || todo.tags.some(tag => tag.includes(searchText));
