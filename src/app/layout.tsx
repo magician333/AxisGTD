@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://www.axisgtd.work",
     title: "AxisGTD",
-    images: "/logo.png",
+    images: "https://www.axisgtd.work/logo.png",
     description: "AxisGTD is Todo list management tool for office workers personal use.",
     siteName: "AxisGTD",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AxisGTD",
     description: "AxisGTD is Todo list management tool for office workers personal use.",
-    images: "/logo.png",
+    images: "https://www.axisgtd.work/logo.png",
   }
 };
 
