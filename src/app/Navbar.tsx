@@ -83,7 +83,7 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
       </div>
 
       <DrawerClose className="flex  items-center justify-center" asChild>
-        <Button onSubmit={(e) => handleSubmit} variant="outline">Add</Button>
+        <Button onClick={(e) => handleSubmit(e)} variant="outline">Add</Button>
       </DrawerClose>
     </form>
   );
@@ -235,7 +235,8 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                   <Switch checked={displayCompleted}
                     onCheckedChange={
                       (e) => {
-                        setDisplayCompleted(e)
+                        setDisplayCompleted(e);
+                        localStorage.setItem("displayCompleted", (!displayCompleted).toString())
                       }} />
                 </div>
 

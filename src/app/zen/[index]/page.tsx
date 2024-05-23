@@ -29,7 +29,7 @@ function Zen() {
     }).then(() => {
       console.log("Can't find todo")
     })
-  })
+  }, [])
 
   useEffect(() => {
     let timerId: NodeJS.Timeout | null = null;

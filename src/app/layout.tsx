@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
 import "./globals.css";
 import "@fontsource/poppins";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./ThemeProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
+import { Inter as FontSans } from "next/font/google"
 
-// const inter = Inter({ subsets: ["latin"] });
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 export const metadata: Metadata = {
   title: "AxisGTD",
@@ -39,7 +42,10 @@ export default function RootLayout({
   return (
 
     <html lang="en">
-      <body >
+      <body className={cn(
+        "min-h-screen bg-background font-sans antialiased",
+        fontSans.variable
+      )}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

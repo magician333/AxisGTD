@@ -1,6 +1,6 @@
 'use client';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Toaster } from 'sonner';
 import { Option } from '@/components/ui/MultipleSelector';
 import Footer from './Footer';
@@ -17,9 +17,6 @@ const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
   const [droppedLevel, setDroppedLevel] = useState<number>(0)
-
-
-
   const [layoutModeClass, setLayoutModeClass] = useState<LayoutClasses>({
     boardGird: "grid-cols-2 grid-rows-2",
     boardSize: "w-[49.5vw] h-[44vh]",
@@ -50,13 +47,22 @@ const Home: React.FC = () => {
       }
 
     }).then((e) => {
+      console.log("Open database error", e)
     })
 
   }, [TODOList]);
 
 
-
   useEffect(() => {
+    const displayCompletedStorage = localStorage.getItem("displayCompleted")
+    if (displayCompletedStorage === "true") {
+      setDisplayCompleted(true)
+    } else {
+      setDisplayCompleted(false)
+    }
+  }, [])
+
+  useLayoutEffect(() => {
     if (layoutType === "axis") {
       setLayoutModeClass({
         boardGird: "grid-cols-2 grid-rows-2",
