@@ -46,7 +46,7 @@ const Home: React.FC = () => {
         setTODOList(parsedData)
       }
 
-    }).then((e) => {
+    }).catch((e) => {
       console.log("Open database error", e)
     })
 

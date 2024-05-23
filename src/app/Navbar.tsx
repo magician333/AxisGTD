@@ -83,7 +83,7 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
       </div>
 
       <DrawerClose className="flex  items-center justify-center" asChild>
-        <Button onClick={(e) => handleSubmit(e)} variant="outline">Add</Button>
+        <Button type="submit" variant="outline">Add</Button>
       </DrawerClose>
     </form>
   );
