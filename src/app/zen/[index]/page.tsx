@@ -41,6 +41,7 @@ function Zen() {
         } else {
           clearInterval(timerId!)
           timerId = null;
+          new Notification("Zen mode time ends", { body: "AxisGTD 30-minute work countdown is over, so relax!", icon: "/icon.png" })
         }
       }, 1000);
     };

@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import PrivacyPolicy from './Text';
 import localForage from "localforage"
+import Image from 'next/image';
 
 
 
@@ -308,17 +309,47 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
               </div>
 
               <div className="flex space-x-5 justify-between pl-2 pr-2 mb-2 mt-2">
+                <Dialog>
+                  <DialogTrigger>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HeartIcon className="size-5" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          Donate Me
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        Donate Me
+                      </DialogTitle>
+                      <DialogDescription>
+                        If you like this project, you can properly donate the right amount to me according to your financial situation, which will motivate AxisGTD to become better!
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center space-x-5">
+                      <Image
+                        src="/Donate_Paypal.png"
+                        alt="Donate_Paypal"
+                        width={200}
+                        height={200} />
 
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <HeartIcon className="size-5" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      Donate Me
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                      <Image
+                        src="/Donate_Wechat.png"
+                        alt="Donate_Wechat"
+                        width={200}
+                        height={200} />
+
+                    </div>
+                    <DialogClose>
+                      <Button variant="outline">Ok</Button>
+                    </DialogClose>
+                  </DialogContent>
+                </Dialog>
 
                 <Dialog>
                   <DialogTrigger>

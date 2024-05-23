@@ -88,6 +88,13 @@ Thanks to the following open source projects
 * [localForage](https://github.com/localForage/localForage)
 
 
+Donate me
+---
+If you like this project, you can properly donate the right amount to me according to your financial situation, which will motivate AxisGTD to become better!
+![DonatePaypal](./public/Donate_Paypal.png)
+![DonateWechat](./public/Donate_Wechat.png)
+
+
 
 AxisGTD Privacy Policy
 ---
