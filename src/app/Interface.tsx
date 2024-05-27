@@ -8,7 +8,7 @@ export interface TodoItem {
   level: number;
   tags: string[];
   deadline: string;
-  createtime: number;
+  createdtime: number;
   completedtime: number;
   sub: SubTodoItem[];
 }
