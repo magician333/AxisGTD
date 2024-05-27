@@ -117,7 +117,8 @@ const Home: React.FC = () => {
   }
 
   const addTodo = (index: number, text: string, level: number) => {
-    const data: TodoItem = { index: index, text: text, completed: false, level: level, deadline: "", tags: [], completedtime: 0, sub: [] };
+    const nowTime = Date.now()
+    const data: TodoItem = { index: index, text: text, completed: false, level: level, deadline: "", tags: [], createdtime: nowTime, completedtime: 0, sub: [] };
     const newTodoList = [...TODOList, data];
     UpdateStorge(newTodoList)
   };

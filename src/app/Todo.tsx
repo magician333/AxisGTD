@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { CalendarIcon, LapTimerIcon, TokensIcon, TrashIcon } from '@radix-ui/react-icons';
+import { BellIcon, CalendarIcon, LapTimerIcon, TokensIcon, TrashIcon } from '@radix-ui/react-icons';
 import MultipleSelector from '@/components/ui/MultipleSelector';
 import { DateTimePicker, DateTimePickerRef } from '@/components/ui/DatetimePicker';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import { SubTodoItem, TodoProps } from './Interface';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
 
 
 function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline, droppedLevel, addSub, completedSubTODO, delSubTodo, reviseSubTodo }: TodoProps) {
@@ -78,7 +79,7 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
       </div>
       <Separator className="opacity-40" />
 
-      <div className="flex items-center justify-between ml-3 mr-3 mt-2 mb-2 pb-2" >
+      <div className="flex items-center justify-between ml-3 mr-3 mt-2 mb-2" >
 
 
         <TooltipProvider >
@@ -101,7 +102,7 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <CalendarIcon />
+                  <BellIcon />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{todo.deadline === "" ? "Deadline" : todo.deadline}</p>
@@ -154,12 +155,27 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
               <DialogTitle>Sub-Todo</DialogTitle>
               <DialogDescription>Create and view your subtasks here.</DialogDescription>
               <div className="flex flex-col">
-                <div><form onSubmit={handleSubmit} className="flex space-x-3 justify-start mb-2 ml-5 mr-5 mt-3"><Input placeholder='Add sub-Todo here...' value={value} onChange={(e) => { setValue(e.target.value) }} /><Button variant="outline">Add</Button></form></div>
+                <div>
+                  <form onSubmit={handleSubmit} className="flex space-x-3 justify-start mb-2 ml-5 mr-5 mt-3"><Input placeholder='Add sub-Todo here...' value={value} onChange={(e) => { setValue(e.target.value) }} /><Button variant="outline">Add</Button></form></div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Progress value={
+                        ((todo.sub.filter((item) => item.completed === true).length) / todo.sub.length) * 100
+                      } className="w-auto ml-5 mr-5 mb-2" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        Already completed {Math.round(((todo.sub.filter((item) => item.completed === true).length) / todo.sub.length) * 100)} %
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <ScrollArea className="h-[36vh]">
                   {
                     todo.sub?.map((item, index) => {
                       return (
-                        <div key={index} className="flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2">
+                        <div key={index} className="group flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2">
                           <Checkbox checked={item.completed} onCheckedChange={() => completedSubTODO(todo.index, item.index, item)} />
 
                           <Input value={item.text}
@@ -167,7 +183,7 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
                             style={{ textDecoration: item.completed ? "line-through" : "" }}
                             disabled={item.completed}
                             onChange={(e) => reviseSubTodo(todo.index, item.index, item, e.target.value)} />
-                          <TrashIcon onClick={() => { delSubTodo(todo.index, item.index) }} />
+                          <TrashIcon onClick={() => { delSubTodo(todo.index, item.index) }} className='opacity-0 group-hover:opacity-100' />
                         </div>
                       )
                     })
