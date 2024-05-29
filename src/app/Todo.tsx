@@ -123,9 +123,6 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
                     if ((datetimePicker.current?.jsDate?.getTime() as number) - (new Date().getTime()) >= 0) {
                       setDeadline(todo.index, JSON.stringify(datetimePicker.current?.jsDate?.toLocaleString()));
                     }
-                    else {
-                      toast("The time is illegal", { description: "Must be set after the current date!" })
-                    }
                   } else {
                     setDeadline(todo.index, "")
                   }

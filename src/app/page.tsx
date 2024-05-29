@@ -1,13 +1,14 @@
 'use client';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import { Option } from '@/components/ui/MultipleSelector';
 import Footer from './Footer';
 import Navbar from './Navbar';
 import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from './Interface';
 import Todo from './Todo';
 import localForage from "localforage"
+import { ToastAction } from '@/components/ui/toast';
 
 
 const Home: React.FC = () => {
@@ -17,6 +18,7 @@ const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
   const [droppedLevel, setDroppedLevel] = useState<number>(0)
+  const [intervals, setIntervals] = useState<NodeJS.Timeout[]>([]);
   const [layoutModeClass, setLayoutModeClass] = useState<LayoutClasses>({
     boardGird: "grid-cols-2 grid-rows-2",
     boardSize: "w-[49.5vw] h-[44vh]",
@@ -45,13 +47,43 @@ const Home: React.FC = () => {
         }
         setTODOList(parsedData)
       }
-
     }).catch((e) => {
       console.log("Open database error", e)
     })
 
   }, [TODOList]);
 
+  let timers: NodeJS.Timeout[] = [];
+
+  useEffect(() => {
+    const createTimers = () => {
+      timers.forEach(clearTimeout);
+      timers = [];
+      TODOList.forEach((item) => {
+        if (item.deadline !== "") {
+          const remainingTime = Date.parse(JSON.parse(item.deadline)) - Date.now()
+          if (remainingTime <= 0) {
+            //deadline gone
+            return
+          }
+          const intervalId = setTimeout(() => {
+            toast("Deadline " + item.deadline,
+              {
+                description: "The deadline for " + item.text + " has arrived",
+                action: (<ToastAction altText="completed todo" onClick={() => completedTODO(item.index)}>Completed Todo</ToastAction>)
+              })
+            new Notification("Deadline " + item.deadline, { body: "The deadline for " + item.text + " has arrived", icon: "/icon.png" })
+          }, remainingTime)
+          timers.push(intervalId)
+          setIntervals(timers)
+        }
+      })
+    }
+    createTimers()
+    return () => {
+      timers.forEach(clearTimeout)
+    }
+  }, [TODOList])
 
   useEffect(() => {
     const displayCompletedStorage = localStorage.getItem("displayCompleted")
