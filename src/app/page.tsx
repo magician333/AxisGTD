@@ -72,7 +72,7 @@ const Home: React.FC = () => {
                 description: "The deadline for " + item.text + " has arrived",
                 action: (<ToastAction altText="completed todo" onClick={() => completedTODO(item.index)}>Completed Todo</ToastAction>)
               })
-            new Notification("Deadline " + item.deadline, { body: "The deadline for " + item.text + " has arrived", icon: "/icon.png" })
+            new Notification("Deadline " + item.deadline, { body: "The deadline for " + item.text + " has arrived", icon: "/icon-circle.png" })
           }, remainingTime)
           timers.push(intervalId)
           setIntervals(timers)
