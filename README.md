@@ -68,9 +68,7 @@ Feature
 
 - [x] Migration to indexdb
 
-- [ ] Time-based notification
-
-- [ ] Deadline notification
+- [x] Deadline notification
 
 - [ ] Synchronization
 
