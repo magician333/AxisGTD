@@ -17,7 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 
 
-function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline, droppedLevel, addSub, completedSubTODO, delSubTodo, reviseSubTodo }: TodoProps) {
+function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline, droppedLevel, droppedIndex, reSort, addSub, completedSubTODO, delSubTodo, reviseSubTodo }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null)
   const [value, setValue] = useState<string>("")
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,9 +44,11 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
         onDragEnd={(e) => {
           e.preventDefault();
           reLevel(todo.index, droppedLevel)
+          reSort(todo.index, droppedIndex)
         }} >
       </div>
       <div className="flex items-center ml-3 mr-3 mt-2 mb-2 space-x-2">
+        <p>{todo.index}</p>
         <Checkbox checked={todo.completed} onCheckedChange={() => completedTODO(todo.index)} />
         <Textarea rows={3} cols={50}
           className="break-words border-none resize-none h-[3rem] shadow-none no-scrollbar"

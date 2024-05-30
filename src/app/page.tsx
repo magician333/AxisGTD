@@ -18,6 +18,7 @@ const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
   const [droppedLevel, setDroppedLevel] = useState<number>(0)
+  const [droppedIndex, setDroppedIndex] = useState<number>(0)
   const [intervals, setIntervals] = useState<NodeJS.Timeout[]>([]);
   const [layoutModeClass, setLayoutModeClass] = useState<LayoutClasses>({
     boardGird: "grid-cols-2 grid-rows-2",
@@ -184,6 +185,11 @@ const Home: React.FC = () => {
     const newTodoList = [...TODOList];
     const delIndex = newTodoList.findIndex((item) => item.index === index)
     if (delIndex !== -1) {
+      newTodoList.map((item) => {
+        if (item.index > index) {
+          item.index = item.index - 1
+        }
+      })
       newTodoList.splice(delIndex, 1);
     }
     UpdateStorge(newTodoList)
@@ -204,7 +210,37 @@ const Home: React.FC = () => {
     if (todo) {
       todo.level = targetLevel
     }
+    UpdateStorge(newTodoList)
+  }
 
+  const reSort = (index: number, targetIndex: number) => {
+    const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index)
+    const tempIndex = targetIndex
+    if (index === targetIndex) return
+    else if (index > targetIndex) {
+      newTodoList.map((item) => {
+        if (item.index >= targetIndex && item.index < index) {
+          item.index = item.index + 1
+        }
+      })
+      todo!.index = tempIndex
+    }
+    else {
+      newTodoList.map((item) => {
+        if (item.index <= targetIndex && item.index > index) {
+          item.index = item.index - 1
+        }
+      })
+      todo!.index = tempIndex
+    }
+
+    const sortBy = () => {
+      return (a: TodoItem, b: TodoItem) => {
+        return a["index"] - b["index"]
+      }
+    }
+    newTodoList.sort(sortBy())
     UpdateStorge(newTodoList)
   }
 
@@ -296,12 +332,17 @@ const Home: React.FC = () => {
                   while (currentElement) {
                     if (currentElement.dataset.level) {
                       setDroppedLevel(parseInt(currentElement.dataset.level))
-
                       break;
                     }
                     currentElement = currentElement.parentElement as HTMLElement;
                   }
+
                 }}>
+
+
+
+
+
                 <div className={item.color + " " + layoutModeClass.colorbrandWidth + " h-[5vh] rounded-t "}>
                   <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between">
                     <div className="flex justify-center flex-col mt-1">
@@ -317,18 +358,31 @@ const Home: React.FC = () => {
                         const renderTodo = shouldRenderTodo(todo, item, searchText, displayCompleted);
                         if (renderTodo) {
                           return (
-                            <div className={layoutModeClass.todoSize} key={index} >
+                            <div className={layoutModeClass.todoSize} key={index} data-index={todo.index} onDragOver={(e) => { e.preventDefault() }}
+                              onDrop={(e) => {
+                                const dropTodoTarget = e.target as HTMLElement;
+                                let currentTodo = dropTodoTarget;
+                                while (currentTodo) {
+                                  if (currentTodo.dataset.index) {
+                                    setDroppedIndex(parseInt(currentTodo.dataset.index))
+                                    break;
+                                  }
+                                  currentTodo = currentTodo.parentElement as HTMLElement;
+                                }
+                              }}>
 
                               <Todo
                                 key={index}
                                 todo={todo}
                                 droppedLevel={droppedLevel}
+                                droppedIndex={droppedIndex}
                                 completedTODO={completedTODO}
                                 removeTODO={removeTODO}
                                 reviseTodo={reviseTodo}
                                 addTag={addTag}
                                 tagOptions={tagOptions}
                                 reLevel={reLevel}
+                                reSort={reSort}
                                 setDeadline={setDeadline}
                                 addSub={addSub}
                                 completedSubTODO={completedSubTodo}

@@ -17,11 +17,13 @@ export interface TodoProps {
   todo: TodoItem;
   tagOptions: Option[];
   droppedLevel: number;
+  droppedIndex: number;
   completedTODO: (index: number) => void;
   removeTODO: (index: number) => void;
   reviseTodo: (index: number, text: string) => void;
   addTag: (index: number, tags: string[]) => void;
   reLevel: (index: number, targetLevel: number) => void;
+  reSort: (index: number, targetIndex: number) => void;
   setDeadline: (index: number, deadline: string) => void;
   addSub: (index: number, sub: SubTodoItem) => void;
   completedSubTODO: (index: number, subIndex: number, sub: SubTodoItem) => void;
