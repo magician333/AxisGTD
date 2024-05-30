@@ -7,6 +7,7 @@ export interface TodoItem {
   completed: boolean;
   level: number;
   tags: string[];
+  pin: boolean;
   deadline: string;
   createdtime: number;
   completedtime: number;
@@ -20,6 +21,7 @@ export interface TodoProps {
   droppedIndex: number;
   completedTODO: (index: number) => void;
   removeTODO: (index: number) => void;
+  pinTodo: (index: number) => void;
   reviseTodo: (index: number, text: string) => void;
   addTag: (index: number, tags: string[]) => void;
   reLevel: (index: number, targetLevel: number) => void;

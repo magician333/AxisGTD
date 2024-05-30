@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { BellIcon, CalendarIcon, LapTimerIcon, TokensIcon, TrashIcon } from '@radix-ui/react-icons';
+import { BellIcon, CalendarIcon, DrawingPinFilledIcon, DrawingPinIcon, LapTimerIcon, TokensIcon, TrashIcon } from '@radix-ui/react-icons';
 import MultipleSelector from '@/components/ui/MultipleSelector';
 import { DateTimePicker, DateTimePickerRef } from '@/components/ui/DatetimePicker';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 
 
-function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions, reLevel, setDeadline, droppedLevel, droppedIndex, reSort, addSub, completedSubTODO, delSubTodo, reviseSubTodo }: TodoProps) {
+function Todo({ todo, completedTODO, removeTODO, pinTodo, reviseTodo, addTag, tagOptions, reLevel, setDeadline, droppedLevel, droppedIndex, reSort, addSub, completedSubTODO, delSubTodo, reviseSubTodo }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null)
   const [value, setValue] = useState<string>("")
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,7 +48,6 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
         }} >
       </div>
       <div className="flex items-center ml-3 mr-3 mt-2 mb-2 space-x-2">
-        <p>{todo.index}</p>
         <Checkbox checked={todo.completed} onCheckedChange={() => completedTODO(todo.index)} />
         <Textarea rows={3} cols={50}
           className="break-words border-none resize-none h-[3rem] shadow-none no-scrollbar"
@@ -83,6 +82,16 @@ function Todo({ todo, completedTODO, removeTODO, reviseTodo, addTag, tagOptions,
 
       <div className="flex items-center justify-between ml-3 mr-3 mt-2 mb-2" >
 
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {todo?.pin ? <DrawingPinFilledIcon onClick={() => pinTodo(todo.index)} /> : <DrawingPinIcon onClick={() => pinTodo(todo.index)} />}
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>pin Todo</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         <TooltipProvider >
           <Tooltip>
