@@ -181,7 +181,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
   return (
     <div className="w-screen h-[6vh] shadow flex items-center justify-between bg-white dark:bg-zinc-950 dark:border-b">
       <div className="w-1/12 ml-5">
-        <img src="/logo.svg" alt="Logo" />
+        <Image src="/logo.svg" alt="Logo" width={156.317} height={24.1167} />
       </div>
       <div className="flex items-center space-x-2 mr-5">
 

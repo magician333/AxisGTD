@@ -11,10 +11,10 @@ function Zen() {
   const [countdownTime, setCountdownTime] = useState(1800000);
   const [isCountdownActive, setIsCountdownActive] = useState(true);
   const [todo, setTodo] = useState<TodoItem>()
-  const router = useParams<{ index: string }>()
   const LevelColor = ["bg-[#E03B3B]", "bg-[#DD813C]", "bg-[#3C7EDD]", "bg-[#848484]"]
 
   useEffect(() => {
+    const router = useParams<{ index: string }>()
     localForage.config({
       driver: localForage.INDEXEDDB,
       storeName: "AxisGTD",
