@@ -333,8 +333,8 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                               <TabsContent value="original">
                                 <ScrollArea className="h-[30vh]">
                                   {
-                                    TodoList.map((item: TodoItem) => {
-                                      return (<TodoOverview item={item} />)
+                                    TodoList.map((item: TodoItem, index) => {
+                                      return (<div key={index}><TodoOverview item={item} /></div>)
                                     })
                                   }
                                 </ScrollArea>
@@ -343,8 +343,8 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
 
                                 <ScrollArea className="h-[30vh]">
                                   {
-                                    secTodoList.map((item: TodoItem) => {
-                                      return (<TodoOverview item={item} />)
+                                    secTodoList.map((item: TodoItem, index) => {
+                                      return (<div key={index}><TodoOverview item={item} /></div>)
                                     })
                                   }
                                 </ScrollArea>
