@@ -2,12 +2,12 @@
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTrigger } from '@/components/ui/sheet';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-import { Crosshair1Icon, EnvelopeClosedIcon, FileTextIcon, GitHubLogoIcon, HamburgerMenuIcon, HeartIcon, MoonIcon, PlusCircledIcon, SunIcon } from '@radix-ui/react-icons';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { BellIcon, Crosshair1Icon, EnvelopeClosedIcon, FileTextIcon, GitHubLogoIcon, HamburgerMenuIcon, HeartIcon, MoonIcon, PlusCircledIcon, SunIcon, TokensIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { NavProps, TODOFormProps } from './Interface';
+import { NavProps, TODOFormProps, TodoItem, TodoOverviewProps } from './Interface';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
@@ -19,6 +19,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import PrivacyPolicy from './Text';
 import localForage from "localforage"
 import Image from 'next/image';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 
 
 
@@ -90,11 +92,30 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
   );
 }
 
+function TodoOverview({ item }: TodoOverviewProps) {
+  return (
+    <div className="flex space-y-2 flex-col items-baseline p-2 mt-2 mb-3 shadow ml-2 mr-2 dark:border">
+      <div className="flex items-center ml-2">
+        <p>{item.index + "."}</p>
+        <p className="w-96 text-nowrap truncate">{item.text}</p>
+      </div>
+      <div className="flex items-center justify-between space-x-2 ml-2 pr-4 w-full">
+        <Checkbox checked={item.completed} />
+        <div className="flex items-center space-x-1"><BellIcon /> <p>{item.deadline === "" ? "No Deadline" : item.deadline}</p></div>
+        <div className="flex items-center space-x-1"><TokensIcon /><p>{item.sub.length} Sub-Todo(s)</p></div>
+      </div>
+    </div>
+
+  )
+}
 
 function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, layoutType, setDisplayCompleted, displayCompleted }: NavProps) {
 
   const { setTheme } = useTheme()
   const [fileContent, setFileContent] = useState<string>('')
+  const [dataType, setDataType] = useState<string>("import")
+  const [dataImportInfo, setDataImportInfo] = useState<string>("")
+  const [secTodoList, setSecTodoList] = useState<TodoItem[]>([])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -115,7 +136,37 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
     }
   }
 
-  useEffect(() => {
+  const handleFileupload = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+
+      setSecTodoList(JSON.parse(fileContent) as TodoItem[])
+      if (TodoList !== secTodoList) {
+        setDataImportInfo("The original data conflicts with the imported data. Please select the corresponding data to overwrite it.")
+      }
+    }
+    catch {
+      toast("No Upload File", { description: "Please upload data file." })
+    }
+  }
+
+  const ImportData = () => {
+    const UpdateStorge = (dataList: TodoItem[]) => {
+      setTODOList(dataList);
+      localForage.setItem("TODOList", dataList)
+    }
+
+    if (dataType === "original") {
+      UpdateStorge(TodoList)
+    }
+    else {
+      UpdateStorge(secTodoList)
+    }
+    setSecTodoList([])
+
+  }
+
+  useLayoutEffect(() => {
     const layoutStorage = localStorage.getItem("layout")
     if (layoutStorage) {
       setLayoutType(layoutStorage)
@@ -126,11 +177,6 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
 
   }, [])
 
-  const handleFileupload = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setTODOList(JSON.parse(fileContent))
-    localForage.setItem("TODOList", JSON.parse(fileContent))
-  }
 
   return (
     <div className="w-screen h-[6vh] shadow flex items-center justify-between bg-white dark:bg-zinc-950 dark:border-b">
@@ -212,7 +258,7 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                   <p className="text-l font-semibold">Enable System Notifications</p>
                   <p className="text-xs font-thin mb-2">Make sure you have turned on notification permissions</p>
                   <Button variant="outline" onClick={
-                    (e) => {
+                    () => {
                       Notification.requestPermission().then((result) => {
                         if (result === "granted") {
                           toast("Permissions are already available", {
@@ -261,13 +307,56 @@ function Navbar({ addTodo, TodoList, setTODOList, setSearchText, setLayoutType, 
                 </div>
 
                 <div>
-                  <p className="text-l font-semibold">Data Export</p>
+                  <p className="text-l font-semibold">Data Import</p>
                   <p className="text-xs font-thin mb-2">Import previously exported data</p>
                   <div>
-                    <form onSubmit={handleFileupload} className="flex space-x-2">
-                      <Input type="file" accept='.json' onChange={handleFileChange} />
-                      <Button variant="outline" onClick={(e) => handleFileupload}>Upload</Button>
-                    </form>
+                    <div className="flex space-x-2">
+                      <Dialog>
+                        <DialogTrigger>
+                          <Button variant="outline" onClick={() => { setDataType("original"); setSecTodoList([]) }}>Import</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>Import Data</DialogHeader>
+                          <DialogDescription>There may be data inconsistencies, please choose which data to use.</DialogDescription>
+                          <div className="flex flex-col">
+                            <form onSubmit={handleFileupload} className="flex space-x-2">
+                              <Input type="file" accept='.json' onChange={handleFileChange} />
+                              <Button variant="outline" type="submit" onClick={() => { handleFileupload }}>Upload</Button>
+                            </form>
+                            <Tabs onValueChange={(e) => setDataType(e)} defaultValue="original" className="w-full pt-2">
+                              <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="original">Original Data</TabsTrigger>
+                                <TabsTrigger value="import">Import Data</TabsTrigger>
+                              </TabsList>
+
+                              <p className="font-light text-sm">{dataImportInfo}</p>
+                              <TabsContent value="original">
+                                <ScrollArea className="h-[30vh]">
+                                  {
+                                    TodoList.map((item: TodoItem) => {
+                                      return (<TodoOverview item={item} />)
+                                    })
+                                  }
+                                </ScrollArea>
+                              </TabsContent>
+                              <TabsContent value="import">
+
+                                <ScrollArea className="h-[30vh]">
+                                  {
+                                    secTodoList.map((item: TodoItem) => {
+                                      return (<TodoOverview item={item} />)
+                                    })
+                                  }
+                                </ScrollArea>
+                              </TabsContent>
+                            </Tabs>
+                          </div>
+                          <DialogClose asChild>
+                            <Button variant="outline" onClick={() => { ImportData() }}>Confirm</Button>
+                          </DialogClose>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
                 </div>
 

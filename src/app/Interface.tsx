@@ -71,3 +71,7 @@ export interface AreaProps {
   des: string;
   color: string;
 }
+
+export interface TodoOverviewProps {
+  item: TodoItem
+}
