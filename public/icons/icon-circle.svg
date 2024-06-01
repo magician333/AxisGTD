@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_图层_2" data-name="图层 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1843.96 1843.96">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e03b3b;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #3c7edd;
+      }
+
+      .cls-3 {
+        fill: #dd813c;
+      }
+
+      .cls-4 {
+        fill: #232323;
+      }
+
+      .cls-5 {
+        fill: #fff;
+      }
+
+      .cls-6 {
+        fill: #848484;
+      }
+    </style>
+  </defs>
+  <g id="_图层_1-2" data-name="图层 1">
+    <g>
+      <circle class="cls-5" cx="921.98" cy="921.98" r="921.98"/>
+      <g>
+        <rect class="cls-4" x="1228.52" y="385.53" width="350.33" height="350.33" transform="translate(14.66 1156.78) rotate(-45)"/>
+        <rect class="cls-1" x="265.1" y="867.24" width="350.33" height="350.33" transform="translate(-608.14 616.63) rotate(-45)"/>
+        <rect class="cls-3" x="505.96" y="1108.09" width="350.33" height="350.33" transform="translate(-707.9 857.49) rotate(-45)"/>
+        <rect class="cls-6" x="987.67" y="626.38" width="350.33" height="350.33" transform="translate(-226.2 1057.01) rotate(-45)"/>
+        <rect class="cls-2" x="746.81" y="867.24" width="350.33" height="350.33" transform="translate(-467.05 957.25) rotate(-45)"/>
+      </g>
+    </g>
+  </g>
+</svg>

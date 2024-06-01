@@ -1,24 +1,22 @@
-'use client';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Toaster, toast } from 'sonner';
-import { Option } from '@/components/ui/MultipleSelector';
-import Footer from './Footer';
-import Navbar from './Navbar';
-import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from './Interface';
-import Todo from './Todo';
-import localForage from "localforage"
-import { ToastAction } from '@/components/ui/toast';
-
+"use client";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { Toaster, toast } from "sonner";
+import { Option } from "@/components/ui/MultipleSelector";
+import Footer from "./Footer";
+import Navbar from "./Navbar";
+import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from "./Interface";
+import Todo from "./Todo";
+import localForage from "localforage";
+import { ToastAction } from "@/components/ui/toast";
 
 const Home: React.FC = () => {
-
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);
   const [displayCompleted, setDisplayCompleted] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
-  const [droppedLevel, setDroppedLevel] = useState<number>(0)
-  const [droppedIndex, setDroppedIndex] = useState<number>(0)
+  const [droppedLevel, setDroppedLevel] = useState<number>(0);
+  const [droppedIndex, setDroppedIndex] = useState<number>(0);
   const [intervals, setIntervals] = useState<NodeJS.Timeout[]>([]);
   const [layoutModeClass, setLayoutModeClass] = useState<LayoutClasses>({
     boardGird: "grid-cols-2 grid-rows-2",
@@ -27,7 +25,7 @@ const Home: React.FC = () => {
     todoSize: "w-[23vw]",
     todoGrid: "grid-cols-2 grid-rows-2",
     colorbrandWidth: "w-[49.5vw]",
-    mainOverflow: ""
+    mainOverflow: "",
   });
 
   useEffect(() => {
@@ -35,23 +33,25 @@ const Home: React.FC = () => {
       driver: localForage.INDEXEDDB,
       storeName: "AxisGTD",
       version: 1,
-      description: "database for AisGTD"
-    })
+      description: "database for AisGTD",
+    });
 
-    localForage.getItem("TODOList").then((value) => {
-      let parsedData: TodoItem[] = [];
-      if (value) {
-        if ((value as TodoItem[]).length === 0) {
-          parsedData = []
-        } else {
-          parsedData = value as TodoItem[]
+    localForage
+      .getItem("TODOList")
+      .then((value) => {
+        let parsedData: TodoItem[] = [];
+        if (value) {
+          if ((value as TodoItem[]).length === 0) {
+            parsedData = [];
+          } else {
+            parsedData = value as TodoItem[];
+          }
+          setTODOList(parsedData);
         }
-        setTODOList(parsedData)
-      }
-    }).catch((e) => {
-      console.log("Open database error", e)
-    })
-
+      })
+      .catch((e) => {
+        console.log("Open database error", e);
+      });
   }, [TODOList]);
 
   let timers: NodeJS.Timeout[] = [];
@@ -62,38 +62,48 @@ const Home: React.FC = () => {
       timers = [];
       TODOList.forEach((item) => {
         if (item.deadline !== "") {
-          const remainingTime = Date.parse(JSON.parse(item.deadline)) - Date.now()
+          const remainingTime =
+            Date.parse(JSON.parse(item.deadline)) - Date.now();
           if (remainingTime <= 0) {
             //deadline gone
-            return
+            return;
           }
           const intervalId = setTimeout(() => {
-            toast("Deadline " + item.deadline,
-              {
-                description: "The deadline for " + item.text + " has arrived",
-                action: (<ToastAction altText="completed todo" onClick={() => completedTODO(item.index)}>Completed Todo</ToastAction>)
-              })
-            new Notification("Deadline " + item.deadline, { body: "The deadline for " + item.text + " has arrived", icon: "/icon-circle.png" })
-          }, remainingTime)
-          timers.push(intervalId)
-          setIntervals(timers)
+            toast("Deadline " + item.deadline, {
+              description: "The deadline for " + item.text + " has arrived",
+              action: (
+                <ToastAction
+                  altText="completed todo"
+                  onClick={() => completedTODO(item.index)}
+                >
+                  Completed Todo
+                </ToastAction>
+              ),
+            });
+            new Notification("Deadline " + item.deadline, {
+              body: "The deadline for " + item.text + " has arrived",
+              icon: "/icons/icon-circle.png",
+            });
+          }, remainingTime);
+          timers.push(intervalId);
+          setIntervals(timers);
         }
-      })
-    }
-    createTimers()
+      });
+    };
+    createTimers();
     return () => {
-      timers.forEach(clearTimeout)
-    }
-  }, [TODOList])
+      timers.forEach(clearTimeout);
+    };
+  }, [TODOList]);
 
   useEffect(() => {
-    const displayCompletedStorage = localStorage.getItem("displayCompleted")
+    const displayCompletedStorage = localStorage.getItem("displayCompleted");
     if (displayCompletedStorage === "true") {
-      setDisplayCompleted(true)
+      setDisplayCompleted(true);
     } else {
-      setDisplayCompleted(false)
+      setDisplayCompleted(false);
     }
-  }, [])
+  }, []);
 
   useLayoutEffect(() => {
     if (layoutType === "axis") {
@@ -104,7 +114,7 @@ const Home: React.FC = () => {
         todoSize: "w-[23vw]",
         todoGrid: "grid-cols-2 grid-rows-2",
         colorbrandWidth: "w-[49vw]",
-        mainOverflow: ""
+        mainOverflow: "",
       });
     } else if (layoutType === "kanban") {
       setLayoutModeClass({
@@ -114,7 +124,7 @@ const Home: React.FC = () => {
         todoSize: "w-[22vw]",
         todoGrid: "",
         colorbrandWidth: "w-[24vw]",
-        mainOverflow: ""
+        mainOverflow: "",
       });
     } else if (layoutType === "board") {
       setLayoutModeClass({
@@ -124,51 +134,80 @@ const Home: React.FC = () => {
         todoSize: "w-[23vw]",
         todoGrid: "grid-cols-4 grid-rows-1",
         colorbrandWidth: "w-[95vw]",
-        mainOverflow: "overflow-y-auto"
+        mainOverflow: "overflow-y-auto",
       });
     }
   }, [layoutType]);
 
   const AreaCard: AreaProps[] = [
-    { level: 1, title: "Important and Urgent", des: "Do it !", color: "bg-[#E03B3B]" },
-    { level: 2, title: "Important but Not Urgent", des: "Schedule it !", color: "bg-[#DD813C]" },
-    { level: 3, title: "Urgent but Not Important", des: "Eliminate it !", color: "bg-[#3C7EDD]" },
-    { level: 4, title: "Not Urgent and Not Important", des: "Delegate it !", color: "bg-[#848484]" },
-  ]
+    {
+      level: 1,
+      title: "Important and Urgent",
+      des: "Do it !",
+      color: "bg-[#E03B3B]",
+    },
+    {
+      level: 2,
+      title: "Important but Not Urgent",
+      des: "Schedule it !",
+      color: "bg-[#DD813C]",
+    },
+    {
+      level: 3,
+      title: "Urgent but Not Important",
+      des: "Eliminate it !",
+      color: "bg-[#3C7EDD]",
+    },
+    {
+      level: 4,
+      title: "Not Urgent and Not Important",
+      des: "Delegate it !",
+      color: "bg-[#848484]",
+    },
+  ];
 
   const tagOptions = [
-    { label: 'Work', value: 'Work' },
-    { label: 'Study', value: 'Study' },
-    { label: 'Life', value: 'Life' },
-    { label: 'Other', value: 'Other' }
-  ]
-
+    { label: "Work", value: "Work" },
+    { label: "Study", value: "Study" },
+    { label: "Life", value: "Life" },
+    { label: "Other", value: "Other" },
+  ];
 
   const UpdateStorge = (dataList: TodoItem[]) => {
     setTODOList(dataList);
-    localForage.setItem("TODOList", dataList)
-  }
+    localForage.setItem("TODOList", dataList);
+  };
 
   const addTodo = (index: number, text: string, level: number) => {
-    const nowTime = Date.now()
-    const data: TodoItem = { index: index, text: text, completed: false, level: level, pin: false, deadline: "", tags: [], createdtime: nowTime, completedtime: 0, sub: [] };
+    const nowTime = Date.now();
+    const data: TodoItem = {
+      index: index,
+      text: text,
+      completed: false,
+      level: level,
+      pin: false,
+      deadline: "",
+      tags: [],
+      createdtime: nowTime,
+      completedtime: 0,
+      sub: [],
+    };
     const newTodoList = [...TODOList, data];
-    UpdateStorge(newTodoList)
+    UpdateStorge(newTodoList);
   };
 
   const reviseTodo = (index: number, text: string) => {
     const newTodoList: TodoItem[] = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
-      todo.text = text
+      todo.text = text;
     }
-    UpdateStorge(newTodoList)
-
-  }
+    UpdateStorge(newTodoList);
+  };
 
   const completedTODO = (index: number) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
 
     if (todo) {
       if (todo.completed === false) {
@@ -176,289 +215,367 @@ const Home: React.FC = () => {
       } else {
         todo.completedtime = 0;
       }
-      todo.completed = !todo.completed
+      todo.completed = !todo.completed;
     }
-    UpdateStorge(newTodoList)
+    UpdateStorge(newTodoList);
   };
 
   const removeTODO = (index: number) => {
     const newTodoList = [...TODOList];
-    const delIndex = newTodoList.findIndex((item) => item.index === index)
+    const delIndex = newTodoList.findIndex((item) => item.index === index);
     if (delIndex !== -1) {
       newTodoList.map((item) => {
         if (item.index > index) {
-          item.index = item.index - 1
+          item.index = item.index - 1;
         }
-      })
+      });
       newTodoList.splice(delIndex, 1);
     }
-    UpdateStorge(newTodoList)
+    UpdateStorge(newTodoList);
   };
 
   const pinTodo = (index: number) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
       todo.pin = !todo.pin;
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
   const addTag = (index: number, tags: string[]) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
       todo.tags = tags;
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
   const reLevel = (index: number, targetLevel: number) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
-      todo.level = targetLevel
+      todo.level = targetLevel;
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
   const reSort = (index: number, targetIndex: number) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
-    const tempIndex = targetIndex
-    if (index === targetIndex) return
+    const todo = newTodoList.find((item) => item.index === index);
+    const tempIndex = targetIndex;
+    if (index === targetIndex) return;
     else if (index > targetIndex) {
       newTodoList.map((item) => {
         if (item.index >= targetIndex && item.index < index) {
-          item.index = item.index + 1
+          item.index = item.index + 1;
         }
-      })
-      todo!.index = tempIndex
-    }
-    else {
+      });
+      todo!.index = tempIndex;
+    } else {
       newTodoList.map((item) => {
         if (item.index <= targetIndex && item.index > index) {
-          item.index = item.index - 1
+          item.index = item.index - 1;
         }
-      })
-      todo!.index = tempIndex
+      });
+      todo!.index = tempIndex;
     }
 
     const sortBy = () => {
       return (a: TodoItem, b: TodoItem) => {
-        return a["index"] - b["index"]
-      }
-    }
-    newTodoList.sort(sortBy())
-    UpdateStorge(newTodoList)
-  }
-
+        return a["index"] - b["index"];
+      };
+    };
+    newTodoList.sort(sortBy());
+    UpdateStorge(newTodoList);
+  };
 
   const setDeadline = (index: number, deadline: string) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
-      todo.deadline = deadline
+      todo.deadline = deadline;
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
   const addSub = (index: number, sub: SubTodoItem) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
-      todo.sub.push(sub)
+      todo.sub.push(sub);
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
-  const completedSubTodo = (index: number, subIndex: number, sub: SubTodoItem) => {
+  const completedSubTodo = (
+    index: number,
+    subIndex: number,
+    sub: SubTodoItem
+  ) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
-
-      const subtodo = todo.sub.find((item) => item.index === subIndex)
+      const subtodo = todo.sub.find((item) => item.index === subIndex);
       if (subtodo) {
-        subtodo.completed = !subtodo.completed
+        subtodo.completed = !subtodo.completed;
       }
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
   const delSubTodo = (index: number, subIndex: number) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
-
-      const delIndex = todo.sub.findIndex((i) => i.index === subIndex)
+      const delIndex = todo.sub.findIndex((i) => i.index === subIndex);
       if (delIndex !== -1) {
-        todo.sub.splice(delIndex, 1)
+        todo.sub.splice(delIndex, 1);
       }
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
-
-  const reviseSubTodo = (index: number, subIndex: number, sub: SubTodoItem, text: string) => {
+  const reviseSubTodo = (
+    index: number,
+    subIndex: number,
+    sub: SubTodoItem,
+    text: string
+  ) => {
     const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index)
+    const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
-
-      const subtodo = todo.sub.find((item) => item.index === subIndex)
+      const subtodo = todo.sub.find((item) => item.index === subIndex);
       if (subtodo) {
-        subtodo.text = text
+        subtodo.text = text;
       }
     }
-    UpdateStorge(newTodoList)
-  }
+    UpdateStorge(newTodoList);
+  };
 
-
-
-  const shouldRenderTodo = (todo: TodoItem, item: AreaProps, searchText: string, displayCompleted: boolean) => {
-    const hasSearchText = todo.text.includes(searchText) || todo.tags.some(tag => tag.includes(searchText));
+  const shouldRenderTodo = (
+    todo: TodoItem,
+    item: AreaProps,
+    searchText: string,
+    displayCompleted: boolean
+  ) => {
+    const hasSearchText =
+      todo.text.includes(searchText) ||
+      todo.tags.some((tag) => tag.includes(searchText));
     if (displayCompleted) {
       return todo.level === item.level && hasSearchText;
     }
-    return todo.completed === false && todo.level === item.level && hasSearchText;
+    return (
+      todo.completed === false && todo.level === item.level && hasSearchText
+    );
   };
-
-
-
 
   return (
     <>
-      <div className={'w-screen h-screen overflow-hidden ' + layoutModeClass.mainOverflow}>
+      <div
+        className={
+          "w-screen h-screen overflow-hidden " + layoutModeClass.mainOverflow
+        }
+      >
         <div className="absolute z-10">
-          <Navbar addTodo={addTodo} TodoList={TODOList} setTODOList={setTODOList} setSearchText={setSearchText} setLayoutType={setLayoutType} layoutType={layoutType} setDisplayCompleted={setDisplayCompleted} displayCompleted={displayCompleted} />
+          <Navbar
+            addTodo={addTodo}
+            TodoList={TODOList}
+            setTODOList={setTODOList}
+            setSearchText={setSearchText}
+            setLayoutType={setLayoutType}
+            layoutType={layoutType}
+            setDisplayCompleted={setDisplayCompleted}
+            displayCompleted={displayCompleted}
+          />
         </div>
-        <div className={layoutModeClass.boardGird + " grid justify-items-center pt-16 "}>
-          {
-            AreaCard.map((item, index) => (
-              <div key={index} data-level={item.level} className={layoutModeClass.boardSize + " grid m-1 rounded shadow-md border"}
-                onDragOver={(e) => { e.preventDefault() }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  const dropTarget = e.target as HTMLElement;
-                  let currentElement = dropTarget;
-                  while (currentElement) {
-                    if (currentElement.dataset.level) {
-                      setDroppedLevel(parseInt(currentElement.dataset.level))
-                      break;
-                    }
-                    currentElement = currentElement.parentElement as HTMLElement;
+        <div
+          className={
+            layoutModeClass.boardGird + " grid justify-items-center pt-16 "
+          }
+        >
+          {AreaCard.map((item, index) => (
+            <div
+              key={index}
+              data-level={item.level}
+              className={
+                layoutModeClass.boardSize + " grid m-1 rounded shadow-md border"
+              }
+              onDragOver={(e) => {
+                e.preventDefault();
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                const dropTarget = e.target as HTMLElement;
+                let currentElement = dropTarget;
+                while (currentElement) {
+                  if (currentElement.dataset.level) {
+                    setDroppedLevel(parseInt(currentElement.dataset.level));
+                    break;
                   }
-
-                }}>
-
-                <div className={item.color + " " + layoutModeClass.colorbrandWidth + " h-[5vh] rounded-t "}>
-                  <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between">
-                    <div className="flex justify-center flex-col mt-1">
-                      <p className=" text-white text-l font-semibold">{item.title}</p>
-                      <p className=" text-white text-xs font-light">{item.des}</p>
-                    </div>
+                  currentElement = currentElement.parentElement as HTMLElement;
+                }
+              }}
+            >
+              <div
+                className={
+                  item.color +
+                  " " +
+                  layoutModeClass.colorbrandWidth +
+                  " h-[5vh] rounded-t "
+                }
+              >
+                <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between">
+                  <div className="flex justify-center flex-col mt-1">
+                    <p className=" text-white text-l font-semibold">
+                      {item.title}
+                    </p>
+                    <p className=" text-white text-xs font-light">{item.des}</p>
                   </div>
                 </div>
-                <ScrollArea className={layoutModeClass.scrollareaHeight + " rounded"}>
-                  {
-
-                    <div className={layoutModeClass.todoGrid + " grid mt-2 ml-2 mr-2 mb-2 justify-items-center"}>
-                      {
-                        TODOList.map((todo, index) => {
-                          const renderTodo = shouldRenderTodo(todo, item, searchText, displayCompleted);
-                          if (renderTodo && todo.pin) {
-                            return (
-                              <div className={layoutModeClass.todoSize} key={index} data-index={todo.index} onDragOver={(e) => { e.preventDefault() }}
-                                onDrop={(e) => {
-                                  const dropTodoTarget = e.target as HTMLElement;
-                                  let currentTodo = dropTodoTarget;
-                                  while (currentTodo) {
-                                    if (currentTodo.dataset.index) {
-                                      setDroppedIndex(parseInt(currentTodo.dataset.index))
-                                      break;
-                                    }
-                                    currentTodo = currentTodo.parentElement as HTMLElement;
-                                  }
-                                }}>
-
-                                <Todo
-                                  key={index}
-                                  todo={todo}
-                                  droppedLevel={droppedLevel}
-                                  droppedIndex={droppedIndex}
-                                  completedTODO={completedTODO}
-                                  removeTODO={removeTODO}
-                                  pinTodo={pinTodo}
-                                  reviseTodo={reviseTodo}
-                                  addTag={addTag}
-                                  tagOptions={tagOptions}
-                                  reLevel={reLevel}
-                                  reSort={reSort}
-                                  setDeadline={setDeadline}
-                                  addSub={addSub}
-                                  completedSubTODO={completedSubTodo}
-                                  delSubTodo={delSubTodo}
-                                  reviseSubTodo={reviseSubTodo}
-                                />
-                              </div>
-                            );
-                          }
-                        })
-                      }
-                      {
-                        TODOList.map((todo, index) => {
-                          const renderTodo = shouldRenderTodo(todo, item, searchText, displayCompleted);
-                          if (renderTodo && !todo.pin) {
-                            return (
-                              <div className={layoutModeClass.todoSize} key={index} data-index={todo.index} onDragOver={(e) => { e.preventDefault() }}
-                                onDrop={(e) => {
-                                  const dropTodoTarget = e.target as HTMLElement;
-                                  let currentTodo = dropTodoTarget;
-                                  while (currentTodo) {
-                                    if (currentTodo.dataset.index) {
-                                      setDroppedIndex(parseInt(currentTodo.dataset.index))
-                                      break;
-                                    }
-                                    currentTodo = currentTodo.parentElement as HTMLElement;
-                                  }
-                                }}>
-
-                                <Todo
-                                  key={index}
-                                  todo={todo}
-                                  droppedLevel={droppedLevel}
-                                  droppedIndex={droppedIndex}
-                                  completedTODO={completedTODO}
-                                  removeTODO={removeTODO}
-                                  pinTodo={pinTodo}
-                                  reviseTodo={reviseTodo}
-                                  addTag={addTag}
-                                  tagOptions={tagOptions}
-                                  reLevel={reLevel}
-                                  reSort={reSort}
-                                  setDeadline={setDeadline}
-                                  addSub={addSub}
-                                  completedSubTODO={completedSubTodo}
-                                  delSubTodo={delSubTodo}
-                                  reviseSubTodo={reviseSubTodo}
-                                />
-                              </div>
-                            );
-                          }
-                        })
-                      }
-                    </div>
-                  }
-                </ScrollArea>
-                <p className="text-gray-300 text-xs mr-5 flex justify-end">Total {TODOList.filter((todo) => todo.level === item.level).length} Todo(s). Completed {TODOList.filter((todo) => todo.level === item.level && todo.completed === true).length} Todo(s)</p>
               </div>
-            ))
-          }
+              <ScrollArea
+                className={layoutModeClass.scrollareaHeight + " rounded"}
+              >
+                {
+                  <div
+                    className={
+                      layoutModeClass.todoGrid +
+                      " grid mt-2 ml-2 mr-2 mb-2 justify-items-center"
+                    }
+                  >
+                    {TODOList.map((todo, index) => {
+                      const renderTodo = shouldRenderTodo(
+                        todo,
+                        item,
+                        searchText,
+                        displayCompleted
+                      );
+                      if (renderTodo && todo.pin) {
+                        return (
+                          <div
+                            className={layoutModeClass.todoSize}
+                            key={index}
+                            data-index={todo.index}
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                            }}
+                            onDrop={(e) => {
+                              const dropTodoTarget = e.target as HTMLElement;
+                              let currentTodo = dropTodoTarget;
+                              while (currentTodo) {
+                                if (currentTodo.dataset.index) {
+                                  setDroppedIndex(
+                                    parseInt(currentTodo.dataset.index)
+                                  );
+                                  break;
+                                }
+                                currentTodo =
+                                  currentTodo.parentElement as HTMLElement;
+                              }
+                            }}
+                          >
+                            <Todo
+                              key={index}
+                              todo={todo}
+                              droppedLevel={droppedLevel}
+                              droppedIndex={droppedIndex}
+                              completedTODO={completedTODO}
+                              removeTODO={removeTODO}
+                              pinTodo={pinTodo}
+                              reviseTodo={reviseTodo}
+                              addTag={addTag}
+                              tagOptions={tagOptions}
+                              reLevel={reLevel}
+                              reSort={reSort}
+                              setDeadline={setDeadline}
+                              addSub={addSub}
+                              completedSubTODO={completedSubTodo}
+                              delSubTodo={delSubTodo}
+                              reviseSubTodo={reviseSubTodo}
+                            />
+                          </div>
+                        );
+                      }
+                    })}
+                    {TODOList.map((todo, index) => {
+                      const renderTodo = shouldRenderTodo(
+                        todo,
+                        item,
+                        searchText,
+                        displayCompleted
+                      );
+                      if (renderTodo && !todo.pin) {
+                        return (
+                          <div
+                            className={layoutModeClass.todoSize}
+                            key={index}
+                            data-index={todo.index}
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                            }}
+                            onDrop={(e) => {
+                              const dropTodoTarget = e.target as HTMLElement;
+                              let currentTodo = dropTodoTarget;
+                              while (currentTodo) {
+                                if (currentTodo.dataset.index) {
+                                  setDroppedIndex(
+                                    parseInt(currentTodo.dataset.index)
+                                  );
+                                  break;
+                                }
+                                currentTodo =
+                                  currentTodo.parentElement as HTMLElement;
+                              }
+                            }}
+                          >
+                            <Todo
+                              key={index}
+                              todo={todo}
+                              droppedLevel={droppedLevel}
+                              droppedIndex={droppedIndex}
+                              completedTODO={completedTODO}
+                              removeTODO={removeTODO}
+                              pinTodo={pinTodo}
+                              reviseTodo={reviseTodo}
+                              addTag={addTag}
+                              tagOptions={tagOptions}
+                              reLevel={reLevel}
+                              reSort={reSort}
+                              setDeadline={setDeadline}
+                              addSub={addSub}
+                              completedSubTODO={completedSubTodo}
+                              delSubTodo={delSubTodo}
+                              reviseSubTodo={reviseSubTodo}
+                            />
+                          </div>
+                        );
+                      }
+                    })}
+                  </div>
+                }
+              </ScrollArea>
+              <p className="text-gray-300 text-xs mr-5 flex justify-end">
+                Total{" "}
+                {TODOList.filter((todo) => todo.level === item.level).length}{" "}
+                Todo(s). Completed{" "}
+                {
+                  TODOList.filter(
+                    (todo) =>
+                      todo.level === item.level && todo.completed === true
+                  ).length
+                }{" "}
+                Todo(s)
+              </p>
+            </div>
+          ))}
         </div>
         <Footer />
         <Toaster />
       </div>
     </>
   );
-}
+};
 
 export default Home;
