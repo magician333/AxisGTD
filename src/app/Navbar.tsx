@@ -187,6 +187,8 @@ function Navbar({
   layoutType,
   setDisplayCompleted,
   displayCompleted,
+  displayLang,
+  setDisplayLang,
 }: NavProps) {
   const { setTheme } = useTheme();
   const [fileContent, setFileContent] = useState<string>("");
@@ -348,6 +350,29 @@ function Navbar({
                       <SelectItem value="axis">Axis Default (2*2) </SelectItem>
                       <SelectItem value="kanban">Kanban Mode (4*1) </SelectItem>
                       <SelectItem value="board">Big Board (1*4) </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <p className="text-l font-semibold">Set language</p>
+                  <p className="text-xs font-thin mb-2">
+                    Set the language of the interface
+                  </p>
+                  <Select
+                    defaultValue="en_us"
+                    value={displayLang}
+                    onValueChange={(e) => {
+                      setDisplayLang(e);
+                      localStorage.setItem("language", e);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Set language"></SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en_us">English</SelectItem>
+                      <SelectItem value="zh_cn">简体中文</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

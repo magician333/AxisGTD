@@ -48,10 +48,12 @@ export interface NavProps {
   addTodo: (index: number, text: string, level: number) => void;
   TodoList: TodoItem[];
   layoutType: string;
+  displayLang: string;
   displayCompleted: boolean;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
+  setDisplayLang: React.Dispatch<React.SetStateAction<string>>;
   setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

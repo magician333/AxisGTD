@@ -1,0 +1,10 @@
+{
+    "axis_name_1":"重要且紧急",
+    "axis_name_2":"重要不紧急",
+    "axis_name_3":"紧急不重要",
+    "axis_name_4":"不紧急不重要",
+    "axis_des_1":"立刻去做",
+    "axis_des_2":"规划去做",
+    "axis_des_3":"安排去做",
+    "axis_des_4":"尽量不做"
+}

@@ -1,0 +1,10 @@
+{
+    "axis_name_1":"Important and Urgent",
+    "axis_name_2":"Important but Not Urgent",
+    "axis_name_3":"Urgent but Not Important",
+    "axis_name_4":"Not Urgent and Not Important",
+    "axis_des_1":"Do it !",
+    "axis_des_2":"Schedule it !",
+    "axis_des_3":"Eliminate it !",
+    "axis_des_4":"Delegate it !"
+}

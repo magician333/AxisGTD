@@ -15,6 +15,7 @@ const Home: React.FC = () => {
   const [displayCompleted, setDisplayCompleted] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
+  const [displayLang, setDisplayLang] = useState<string>("en_us");
   const [droppedLevel, setDroppedLevel] = useState<number>(0);
   const [droppedIndex, setDroppedIndex] = useState<number>(0);
   const [intervals, setIntervals] = useState<NodeJS.Timeout[]>([]);
@@ -27,6 +28,73 @@ const Home: React.FC = () => {
     colorbrandWidth: "w-[49.5vw]",
     mainOverflow: "",
   });
+
+  const [areaCard, setAreaCard] = useState<AreaProps[]>([
+    {
+      level: 1,
+      title: "Important and Urgent",
+      des: "Do it !",
+      color: "bg-[#E03B3B]",
+    },
+    {
+      level: 2,
+      title: "Important but Not Urgent",
+      des: "Schedule it !",
+      color: "bg-[#DD813C]",
+    },
+    {
+      level: 3,
+      title: "Urgent but Not Important",
+      des: "Eliminate it !",
+      color: "bg-[#3C7EDD]",
+    },
+    {
+      level: 4,
+      title: "Not Urgent and Not Important",
+      des: "Delegate it !",
+      color: "bg-[#848484]",
+    },
+  ]);
+
+  const [lang, setLang] = useState<any>();
+
+  useEffect(() => {
+    const setLanguage = async () => {
+      setDisplayLang(localStorage.getItem("language") as string);
+      const langData = await import(
+        "../../public/locales/" + displayLang + ".json"
+      );
+      setLang(langData);
+
+      setAreaCard([
+        {
+          level: 1,
+          title: langData["axis_name_1"],
+          des: langData["axis_des_1"],
+          color: "bg-[#E03B3B]",
+        },
+        {
+          level: 2,
+          title: langData["axis_name_2"],
+          des: langData["axis_des_2"],
+          color: "bg-[#DD813C]",
+        },
+        {
+          level: 3,
+          title: langData["axis_name_3"],
+          des: langData["axis_des_3"],
+          color: "bg-[#3C7EDD]",
+        },
+        {
+          level: 4,
+          title: langData["axis_name_4"],
+          des: langData["axis_des_4"],
+          color: "bg-[#848484]",
+        },
+      ]);
+    };
+    setLanguage();
+  }, [displayLang]);
 
   useEffect(() => {
     localForage.config({
@@ -138,33 +206,6 @@ const Home: React.FC = () => {
       });
     }
   }, [layoutType]);
-
-  const AreaCard: AreaProps[] = [
-    {
-      level: 1,
-      title: "Important and Urgent",
-      des: "Do it !",
-      color: "bg-[#E03B3B]",
-    },
-    {
-      level: 2,
-      title: "Important but Not Urgent",
-      des: "Schedule it !",
-      color: "bg-[#DD813C]",
-    },
-    {
-      level: 3,
-      title: "Urgent but Not Important",
-      des: "Eliminate it !",
-      color: "bg-[#3C7EDD]",
-    },
-    {
-      level: 4,
-      title: "Not Urgent and Not Important",
-      des: "Delegate it !",
-      color: "bg-[#848484]",
-    },
-  ];
 
   const tagOptions = [
     { label: "Work", value: "Work" },
@@ -388,6 +429,8 @@ const Home: React.FC = () => {
             layoutType={layoutType}
             setDisplayCompleted={setDisplayCompleted}
             displayCompleted={displayCompleted}
+            displayLang={displayLang}
+            setDisplayLang={setDisplayLang}
           />
         </div>
         <div
@@ -395,7 +438,7 @@ const Home: React.FC = () => {
             layoutModeClass.boardGird + " grid justify-items-center pt-16 "
           }
         >
-          {AreaCard.map((item, index) => (
+          {areaCard.map((item, index) => (
             <div
               key={index}
               data-level={item.level}
