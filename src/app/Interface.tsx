@@ -1,5 +1,5 @@
-import { Option } from '@/components/ui/MultipleSelector';
-
+import { Option } from "@/components/ui/MultipleSelector";
+import React from "react";
 
 export interface TodoItem {
   index: number;
@@ -30,7 +30,12 @@ export interface TodoProps {
   addSub: (index: number, sub: SubTodoItem) => void;
   completedSubTODO: (index: number, subIndex: number, sub: SubTodoItem) => void;
   delSubTodo: (index: number, subIndex: number) => void;
-  reviseSubTodo: (index: number, subIndex: number, sub: SubTodoItem, text: string) => void;
+  reviseSubTodo: (
+    index: number,
+    subIndex: number,
+    sub: SubTodoItem,
+    text: string
+  ) => void;
 }
 
 export interface SubTodoItem {
@@ -62,7 +67,7 @@ export interface LayoutClasses {
   todoSize: string;
   todoGrid: string;
   colorbrandWidth: string;
-  mainOverflow: string
+  mainOverflow: string;
 }
 
 export interface AreaProps {
@@ -73,5 +78,5 @@ export interface AreaProps {
 }
 
 export interface TodoOverviewProps {
-  item: TodoItem
+  item: TodoItem;
 }
