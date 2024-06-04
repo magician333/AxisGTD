@@ -72,13 +72,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import PrivacyPolicy from "./Text";
 import localForage from "localforage";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 
-function TODOForm({ addTodo, TodoList }: TODOFormProps) {
+function TODOForm({ addTodo, TodoList, lang }: TODOFormProps) {
   const [value, setValue] = useState<string>("");
   const [level, setLevel] = useState<number>(0);
 
@@ -87,8 +86,8 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
     e.preventDefault();
     if (!value) return;
     if (level === 0) {
-      toast("No Todo type", {
-        description: "You must select a todo type",
+      toast(lang["toast_notodotype_title"], {
+        description: lang["toast_notodotype_content"],
       });
       return;
     }
@@ -114,7 +113,7 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
     <form onSubmit={handleSubmit} className="flex flex-col space-y-3">
       <div className="flex space-y-2 justify-between flex-col items-baseline ">
         <Label htmlFor="entry_todo" className="break-normal w-[14vh]">
-          Todo Content:{" "}
+          {lang["addtodo_content_label"]}:{" "}
         </Label>
         <Input
           id="entry_todo"
@@ -122,25 +121,25 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Add a Todo here..."
+          placeholder={lang["addtodo_content_placeholder"]}
         />
       </div>
       <div className="flex space-y-2 justify-between flex-col items-baseline ">
         <Label htmlFor="todo_select" className="break-normal w-[14vh]">
-          Todo Type:{" "}
+          {lang["addtodo_type_label"]}:{" "}
         </Label>
         <div id="todo_select" className="w-10/12">
           <Select onValueChange={(e) => setLevel(Number(e))}>
             <SelectTrigger className="space-x-2 w-[30vh]">
               <Crosshair1Icon />
-              <SelectValue placeholder="Please select Todo type"></SelectValue>
+              <SelectValue placeholder={lang["addtodo_type_placeholder"]}></SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="1">Important and Urgent</SelectItem>
-                <SelectItem value="2">Important but Not Urgent</SelectItem>
-                <SelectItem value="3">Urgent but Not Important</SelectItem>
-                <SelectItem value="4">Not Urgent and Not Important</SelectItem>
+                <SelectItem value="1">{lang["addtodo_type_name_1"]}</SelectItem>
+                <SelectItem value="2">{lang["addtodo_type_name_2"]}</SelectItem>
+                <SelectItem value="3">{lang["addtodo_type_name_3"]}</SelectItem>
+                <SelectItem value="4">{lang["addtodo_type_name_4"]}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -149,14 +148,14 @@ function TODOForm({ addTodo, TodoList }: TODOFormProps) {
 
       <DrawerClose className="flex  items-center justify-center" asChild>
         <Button type="submit" variant="outline">
-          Add
+          {lang["addtodo_button"]}
         </Button>
       </DrawerClose>
     </form>
   );
 }
 
-function TodoOverview({ item }: TodoOverviewProps) {
+function TodoOverview({ item, lang }: TodoOverviewProps) {
   return (
     <div className="flex space-y-2 flex-col items-baseline p-2 mt-2 mb-3 shadow ml-2 mr-2 dark:border">
       <div className="flex items-center ml-2">
@@ -167,11 +166,11 @@ function TodoOverview({ item }: TodoOverviewProps) {
         <Checkbox checked={item.completed} />
         <div className="flex items-center space-x-1">
           <BellIcon />{" "}
-          <p>{item.deadline === "" ? "No Deadline" : item.deadline}</p>
+          <p>{item.deadline === "" ? lang["setting_importdata_dialog_todo_deadline"] : item.deadline}</p>
         </div>
         <div className="flex items-center space-x-1">
           <TokensIcon />
-          <p>{item.sub.length} Sub-Todo(s)</p>
+          <p>{item.sub.length}{lang["setting_importdata_dialog_todo_subtodo"]}</p>
         </div>
       </div>
     </div>
@@ -189,6 +188,7 @@ function Navbar({
   displayCompleted,
   displayLang,
   setDisplayLang,
+  lang
 }: NavProps) {
   const { setTheme } = useTheme();
   const [fileContent, setFileContent] = useState<string>("");
@@ -220,11 +220,11 @@ function Navbar({
       setSecTodoList(JSON.parse(fileContent) as TodoItem[]);
       if (TodoList !== secTodoList) {
         setDataImportInfo(
-          "The original data conflicts with the imported data. Please select the corresponding data to overwrite it."
+          lang["setting_importdata_dialog_info"]
         );
       }
     } catch {
-      toast("No Upload File", { description: "Please upload data file." });
+      toast(lang["toast_nouploadfile_title"], { description: lang["toast_nouploadfile_content"] });
     }
   };
 
@@ -264,7 +264,7 @@ function Navbar({
       <div className="flex items-center space-x-2 mr-5">
         <Input
           id="search_input"
-          placeholder="Search Todo or tag ..."
+          placeholder={lang["search_placeholder"]}
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
@@ -275,7 +275,7 @@ function Navbar({
             <Button variant="outline" className="border-none shadow-none">
               <SunIcon className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <MoonIcon className="absolute h-[1rem] w-[1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
+              <span className="sr-only">{lang["theme_label"]}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -284,21 +284,21 @@ function Navbar({
                 setTheme("light");
               }}
             >
-              Light
+              {lang["theme_light"]}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 setTheme("dark");
               }}
             >
-              Dark
+              {lang["theme_dark"]}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 setTheme("system");
               }}
             >
-              System
+              {lang["theme_system"]}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -311,9 +311,9 @@ function Navbar({
           </DrawerTrigger>
           <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
             <DrawerHeader>
-              <DrawerTitle>Add New Todo</DrawerTitle>
+              <DrawerTitle>{lang["addtodo_title"]}</DrawerTitle>
             </DrawerHeader>
-            <TODOForm addTodo={addTodo} TodoList={TodoList}></TODOForm>
+            <TODOForm addTodo={addTodo} TodoList={TodoList} lang={lang}></TODOForm>
           </DrawerContent>
         </Drawer>
 
@@ -324,16 +324,16 @@ function Navbar({
             </Button>
           </SheetTrigger>
           <SheetContent>
-            <SheetHeader className="text-2xl">Setting</SheetHeader>
+            <SheetHeader className="text-2xl">{lang["setting_title"]}</SheetHeader>
             <SheetDescription>
-              You can make some settings for AxisGTD here
+              {lang["setting_des"]}
             </SheetDescription>
             <ScrollArea className="h-[90vh] overflow-y-hidden">
               <div className="mt-5 space-y-5 flex flex-col items-baseline ml-4 mr-4">
                 <div>
-                  <p className="text-l font-semibold">Set layout</p>
+                  <p className="text-l font-semibold">{lang["setting_setlayout_label"]}</p>
                   <p className="text-xs font-thin mb-2">
-                    Set the layout of the interface
+                    {lang["setting_setlayout_des"]}
                   </p>
                   <Select
                     defaultValue="axis"
@@ -347,17 +347,17 @@ function Navbar({
                       <SelectValue placeholder="Set layout"></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="axis">Axis Default (2*2) </SelectItem>
-                      <SelectItem value="kanban">Kanban Mode (4*1) </SelectItem>
-                      <SelectItem value="board">Big Board (1*4) </SelectItem>
+                      <SelectItem value="axis">{lang["setting_setlayout_name_1"]}</SelectItem>
+                      <SelectItem value="kanban">{lang["setting_setlayout_name_2"]}</SelectItem>
+                      <SelectItem value="board">{lang["setting_setlayout_name_3"]}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <p className="text-l font-semibold">Set language</p>
+                  <p className="text-l font-semibold">{lang["setting_setlanguage_label"]}</p>
                   <p className="text-xs font-thin mb-2">
-                    Set the language of the interface
+                    {lang["setting_setlanguage_des"]}
                   </p>
                   <Select
                     defaultValue="en_us"
@@ -368,7 +368,7 @@ function Navbar({
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Set language"></SelectValue>
+                      <SelectValue placeholder={lang["setting_setlanguage_label"]}></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="en_us">English</SelectItem>
@@ -379,38 +379,37 @@ function Navbar({
 
                 <div>
                   <p className="text-l font-semibold">
-                    Enable System Notifications
+                    {lang["setting_notification_label"]}
                   </p>
                   <p className="text-xs font-thin mb-2">
-                    Make sure you have turned on notification permissions
+                    {lang["setting_notification_des"]}
                   </p>
                   <Button
                     variant="outline"
                     onClick={() => {
                       Notification.requestPermission().then((result) => {
                         if (result === "granted") {
-                          toast("Permissions are already available", {
+                          toast(lang["toast_notification_premission_available_title"], {
                             description:
-                              "AxisGTD has been granted system notification permissions",
+                              lang["toast_notification_premission_available_content"],
                           });
                         } else if (result === "denied") {
-                          toast("The request was denied", {
+                          toast(lang["toast_notification_premission_denied_title"], {
                             description:
-                              "Please check your browser settings for AxisGTD to get notification permissions",
+                              lang["toast_notification_premission_denied_content"]
                           });
                         }
                       });
                     }}
                   >
-                    Enable
+                    {lang["setting_notification_button"]}
                   </Button>
                 </div>
 
                 <div>
-                  <p className="text-l font-semibold">Display Completed Todo</p>
+                  <p className="text-l font-semibold">{lang["setting_displaycompleted_label"]}</p>
                   <p className="text-xs font-thin mb-2">
-                    If you want to focus only on completed todos, you can turn
-                    this switch on
+                    {lang["setting_displaycompleted_des"]}
                   </p>
 
                   <Switch
@@ -426,9 +425,9 @@ function Navbar({
                 </div>
 
                 <div>
-                  <p className="text-l font-semibold">Data Export</p>
+                  <p className="text-l font-semibold">{lang["setting_exportdata_label"]}</p>
                   <p className="text-xs font-thin mb-2">
-                    You can export data to other browsers or devices for use
+                    {lang["setting_exportdata_des"]}
                   </p>
 
                   <Button
@@ -448,14 +447,14 @@ function Navbar({
                       URL.revokeObjectURL(url);
                     }}
                   >
-                    Download
+                    {lang["setting_exportdata_button"]}
                   </Button>
                 </div>
 
                 <div>
-                  <p className="text-l font-semibold">Data Import</p>
+                  <p className="text-l font-semibold">{lang["setting_importdata_label"]}</p>
                   <p className="text-xs font-thin mb-2">
-                    Import previously exported data
+                    {lang["setting_importdata_des"]}
                   </p>
                   <div>
                     <div className="flex space-x-2">
@@ -468,14 +467,13 @@ function Navbar({
                               setSecTodoList([]);
                             }}
                           >
-                            Import
+                            {lang["setting_importdata_button"]}
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
-                          <DialogHeader>Import Data</DialogHeader>
+                          <DialogHeader>{lang["setting_importdata_dialog_title"]}</DialogHeader>
                           <DialogDescription>
-                            There may be data inconsistencies, please choose
-                            which data to use.
+                            {lang["setting_importdata_dialog_des"]}
                           </DialogDescription>
                           <div className="flex flex-col">
                             <form
@@ -494,7 +492,7 @@ function Navbar({
                                   handleFileupload;
                                 }}
                               >
-                                Upload
+                                {lang["setting_importdata_dialog_upload_button"]}
                               </Button>
                             </form>
                             <Tabs
@@ -504,10 +502,10 @@ function Navbar({
                             >
                               <TabsList className="grid w-full grid-cols-2">
                                 <TabsTrigger value="original">
-                                  Original Data
+                                  {lang["setting_importdata_dialog_tab_original"]}
                                 </TabsTrigger>
                                 <TabsTrigger value="import">
-                                  Import Data
+                                  {lang["setting_importdata_dialog_tab_import"]}
                                 </TabsTrigger>
                               </TabsList>
 
@@ -519,7 +517,7 @@ function Navbar({
                                   {TodoList.map((item: TodoItem, index) => {
                                     return (
                                       <div key={index}>
-                                        <TodoOverview item={item} />
+                                        <TodoOverview item={item} lang={lang} />
                                       </div>
                                     );
                                   })}
@@ -530,7 +528,7 @@ function Navbar({
                                   {secTodoList.map((item: TodoItem, index) => {
                                     return (
                                       <div key={index}>
-                                        <TodoOverview item={item} />
+                                        <TodoOverview item={item} lang={lang} />
                                       </div>
                                     );
                                   })}
@@ -545,7 +543,7 @@ function Navbar({
                                 ImportData();
                               }}
                             >
-                              Confirm
+                              {lang["setting_importdata_dialog_button"]}
                             </Button>
                           </DialogClose>
                         </DialogContent>
@@ -555,27 +553,24 @@ function Navbar({
                 </div>
 
                 <div>
-                  <p className="text-l font-semibold">Data Clear</p>
+                  <p className="text-l font-semibold">{lang["setting_cleardata_label"]}</p>
                   <p className="text-xs font-thin mb-2">
-                    It is important to note that this operation is not
-                    reversible
+                    {lang["setting_cleardata_des"]}
                   </p>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline">Clear Data</Button>
+                      <Button variant="outline">{lang["setting_cleardata_button"]}</Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        Are you sure you want to clear the data?
+                        {lang["setting_cleardata_dialog_title"]}
                       </DialogHeader>
                       <DialogDescription>
-                        The data is very important and cannot be recovered once
-                        it is cleaned. It is recommended that you back up the
-                        data in the settings before cleaning.
+                        {lang["setting_cleardata_dialog_des"]}
                       </DialogDescription>
                       <DialogFooter>
                         <DialogClose>
-                          <Button>Cancel</Button>
+                          <Button>{lang["setting_cleardata_dialog_cancelbutton"]}</Button>
                         </DialogClose>
                         <DialogClose asChild>
                           <Button
@@ -583,12 +578,12 @@ function Navbar({
                             onClick={() => {
                               setTODOList([]);
                               localForage.setItem("TODOList", []);
-                              toast("Cleaned up", {
-                                description: "AxisGTD has cleared all data !",
+                              toast(lang["toast_clean_title"], {
+                                description: lang["toast_clean_content"],
                               });
                             }}
                           >
-                            Clear
+                            {lang["setting_cleardata_dialog_clearbutton"]}
                           </Button>
                         </DialogClose>
                       </DialogFooter>
@@ -597,24 +592,15 @@ function Navbar({
                 </div>
 
                 <div>
-                  <p className="text-l font-semibold mb-2">About</p>
-                  <p className="break-words font-light text-sm">
-                    A minimalistic and serene personal office TodoList software
-                    that empowers you to prioritize todos effectively, with
-                    AxisGTD serving as a helpful aid. However, don&apos;t become
-                    overlydependent on AxisGTD. It should be viewed as a mere
-                    component of your efficient office setup. Simply capture
-                    your todos within the app, set AxisGTD aside, and return to
-                    it later to mark off completed items once your work is
-                    finished.
+                  <p className="text-l font-semibold mb-2">{lang["setting_about_label"]}</p>
+                  <p className="break-words font-light text-sm whitespace-pre-wrap">
+                    {lang["setting_about_des"]}
                   </p>
                   <br />
                   <p>
-                    <b>It is important to note: </b>
+                    <b>{lang["setting_note_label"]}</b>
                     <br />
-                    AxisGTD stores all data in the local browser indexedDB, so
-                    please back up your data before clearing the browser data
-                    for this website!
+                    {lang["setting_note_des"]}
                   </p>
                 </div>
               </div>
@@ -627,17 +613,15 @@ function Navbar({
                         <TooltipTrigger asChild>
                           <HeartIcon className="size-5" />
                         </TooltipTrigger>
-                        <TooltipContent>Donate Me</TooltipContent>
+                        <TooltipContent>{lang["setting_donate_dialog_title"]}</TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Donate Me</DialogTitle>
+                      <DialogTitle>{lang["setting_donate_dialog_title"]}</DialogTitle>
                       <DialogDescription>
-                        If you like this project, you can properly donate the
-                        right amount to me according to your financial
-                        situation, which will motivate AxisGTD to become better!
+                        {lang["setting_donate_dialog_des"]}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="flex items-center space-x-5">
@@ -656,7 +640,7 @@ function Navbar({
                       />
                     </div>
                     <DialogClose>
-                      <Button variant="outline">Ok</Button>
+                      <Button variant="outline">{lang["setting_donate_dialog_button"]}</Button>
                     </DialogClose>
                   </DialogContent>
                 </Dialog>
@@ -668,25 +652,26 @@ function Navbar({
                         <TooltipTrigger asChild>
                           <FileTextIcon className="size-5" />
                         </TooltipTrigger>
-                        <TooltipContent>Privacy Policy</TooltipContent>
+                        <TooltipContent>{lang["setting_privacypolicy_dialog_title"]}</TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Privacy Policy</DialogTitle>
+                      <DialogTitle>{lang["setting_privacypolicy_dialog_title"]}</DialogTitle>
                       <DialogDescription>
-                        Set a deadline and AxisGTD will notify you when the
-                        specified time is reached.
+                        {lang["setting_privacypolicy_dialog_des"]}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col items-start justify-center space-y-5">
                       <ScrollArea className="h-[30vh] p-2">
-                        <PrivacyPolicy />
+                        <p className="whitespace-pre-wrap">
+                          {lang["setting_privacypolicy_dialog_content"]}
+                        </p>
                       </ScrollArea>
                     </div>
                     <DialogClose>
-                      <Button variant="outline">Ok</Button>
+                      <Button variant="outline">{lang["setting_privacypolicy_dialog_button"]}</Button>
                     </DialogClose>
                   </DialogContent>
                 </Dialog>
@@ -698,16 +683,15 @@ function Navbar({
                         <TooltipTrigger asChild>
                           <EnvelopeClosedIcon />
                         </TooltipTrigger>
-                        <TooltipContent>Contact Me</TooltipContent>
+                        <TooltipContent>{lang["setting_contact_dialog_title"]}</TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Contact Me</DialogTitle>
+                      <DialogTitle>{lang["setting_contact_dialog_title"]}</DialogTitle>
                       <DialogDescription>
-                        Set a deadline and AxisGTD will notify you when the
-                        specified time is reached.
+                        {lang["setting_contact_dialog_des"]}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col items-start justify-center space-y-5">
@@ -716,7 +700,7 @@ function Navbar({
                         className="flex space-x-3 items-center"
                       >
                         <EnvelopeClosedIcon className="size-5" />
-                        <Label>Email : magician333333@gmail.com</Label>
+                        <Label>{lang["setting_contact_dialog_email"]} : magician333333@gmail.com</Label>
                       </Link>
                       <Link
                         href="https://github.com/magician333/AxisGTD"
@@ -730,7 +714,7 @@ function Navbar({
                       </Link>
                     </div>
                     <DialogClose>
-                      <Button variant="outline">Ok</Button>
+                      <Button variant="outline">{lang["setting_contact_dialog_button"]}</Button>
                     </DialogClose>
                   </DialogContent>
                 </Dialog>

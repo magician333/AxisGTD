@@ -33,9 +33,9 @@ export interface TodoProps {
   reviseSubTodo: (
     index: number,
     subIndex: number,
-    sub: SubTodoItem,
     text: string
   ) => void;
+  lang: any;
 }
 
 export interface SubTodoItem {
@@ -50,6 +50,7 @@ export interface NavProps {
   layoutType: string;
   displayLang: string;
   displayCompleted: boolean;
+  lang: any;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
@@ -60,6 +61,7 @@ export interface NavProps {
 export interface TODOFormProps {
   addTodo: (index: number, text: string, level: number) => void;
   TodoList: TodoItem[];
+  lang: any;
 }
 
 export interface LayoutClasses {
@@ -81,4 +83,5 @@ export interface AreaProps {
 
 export interface TodoOverviewProps {
   item: TodoItem;
+  lang: any;
 }

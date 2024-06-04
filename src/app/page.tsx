@@ -2,7 +2,6 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { Option } from "@/components/ui/MultipleSelector";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from "./Interface";
@@ -29,72 +28,50 @@ const Home: React.FC = () => {
     mainOverflow: "",
   });
 
-  const [areaCard, setAreaCard] = useState<AreaProps[]>([
-    {
-      level: 1,
-      title: "Important and Urgent",
-      des: "Do it !",
-      color: "bg-[#E03B3B]",
-    },
-    {
-      level: 2,
-      title: "Important but Not Urgent",
-      des: "Schedule it !",
-      color: "bg-[#DD813C]",
-    },
-    {
-      level: 3,
-      title: "Urgent but Not Important",
-      des: "Eliminate it !",
-      color: "bg-[#3C7EDD]",
-    },
-    {
-      level: 4,
-      title: "Not Urgent and Not Important",
-      des: "Delegate it !",
-      color: "bg-[#848484]",
-    },
-  ]);
+  const [areaCard, setAreaCard] = useState<AreaProps[]>([]);
 
-  const [lang, setLang] = useState<any>();
+  const [lang, setLang] = useState<any>({});
 
   useEffect(() => {
     const setLanguage = async () => {
-      setDisplayLang(localStorage.getItem("language") as string);
-      const langData = await import(
-        "../../public/locales/" + displayLang + ".json"
-      );
-      setLang(langData);
+      let localLang = localStorage.getItem("language") as string;
+      localLang = localLang || "en_us";
+      setDisplayLang(localLang)
 
-      setAreaCard([
-        {
-          level: 1,
-          title: langData["axis_name_1"],
-          des: langData["axis_des_1"],
-          color: "bg-[#E03B3B]",
-        },
-        {
-          level: 2,
-          title: langData["axis_name_2"],
-          des: langData["axis_des_2"],
-          color: "bg-[#DD813C]",
-        },
-        {
-          level: 3,
-          title: langData["axis_name_3"],
-          des: langData["axis_des_3"],
-          color: "bg-[#3C7EDD]",
-        },
-        {
-          level: 4,
-          title: langData["axis_name_4"],
-          des: langData["axis_des_4"],
-          color: "bg-[#848484]",
-        },
-      ]);
-    };
-    setLanguage();
-  }, [displayLang]);
+      await import(
+        "../../public/locales/" + displayLang + ".json"
+      ).then((langData) => {
+        setLang(langData.default)
+        setAreaCard([
+          {
+            level: 1,
+            title: langData["axis_name_1"],
+            des: langData["axis_des_1"],
+            color: "bg-[#E03B3B]",
+          },
+          {
+            level: 2,
+            title: langData["axis_name_2"],
+            des: langData["axis_des_2"],
+            color: "bg-[#DD813C]",
+          },
+          {
+            level: 3,
+            title: langData["axis_name_3"],
+            des: langData["axis_des_3"],
+            color: "bg-[#3C7EDD]",
+          },
+          {
+            level: 4,
+            title: langData["axis_name_4"],
+            des: langData["axis_des_4"],
+            color: "bg-[#848484]",
+          },
+        ]);
+      })
+    }
+    setLanguage()
+  }, [displayLang])
 
   useEffect(() => {
     localForage.config({
@@ -137,19 +114,19 @@ const Home: React.FC = () => {
             return;
           }
           const intervalId = setTimeout(() => {
-            toast("Deadline " + item.deadline, {
-              description: "The deadline for " + item.text + " has arrived",
+            toast(lang["toast_deadline_title"] + item.deadline, {
+              description: lang["toast_deadline_content_1"] + item.text + lang["toast_deadline_content_2"],
               action: (
                 <ToastAction
-                  altText="completed todo"
+                  altText={lang["toast_deadline_button"]}
                   onClick={() => completedTODO(item.index)}
                 >
-                  Completed Todo
+                  {lang["toast_deadline_button"]}
                 </ToastAction>
               ),
             });
-            new Notification("Deadline " + item.deadline, {
-              body: "The deadline for " + item.text + " has arrived",
+            new Notification(lang["toast_deadline_title"] + item.deadline, {
+              body: lang["toast_deadline_content_1"] + item.text + lang["toast_deadline_content_2"],
               icon: "/icons/icon-circle.png",
             });
           }, remainingTime);
@@ -208,10 +185,10 @@ const Home: React.FC = () => {
   }, [layoutType]);
 
   const tagOptions = [
-    { label: "Work", value: "Work" },
-    { label: "Study", value: "Study" },
-    { label: "Life", value: "Life" },
-    { label: "Other", value: "Other" },
+    { label: lang["tag_name_1"], value: "Work" },
+    { label: lang["tag_name_2"], value: "Study" },
+    { label: lang["tag_name_3"], value: "Life" },
+    { label: lang["tag_name_4"], value: "Other" },
   ];
 
   const UpdateStorge = (dataList: TodoItem[]) => {
@@ -381,7 +358,6 @@ const Home: React.FC = () => {
   const reviseSubTodo = (
     index: number,
     subIndex: number,
-    sub: SubTodoItem,
     text: string
   ) => {
     const newTodoList = [...TODOList];
@@ -431,6 +407,7 @@ const Home: React.FC = () => {
             displayCompleted={displayCompleted}
             displayLang={displayLang}
             setDisplayLang={setDisplayLang}
+            lang={lang}
           />
         </div>
         <div
@@ -537,6 +514,7 @@ const Home: React.FC = () => {
                               completedSubTODO={completedSubTodo}
                               delSubTodo={delSubTodo}
                               reviseSubTodo={reviseSubTodo}
+                              lang={lang}
                             />
                           </div>
                         );
@@ -591,6 +569,7 @@ const Home: React.FC = () => {
                               completedSubTODO={completedSubTodo}
                               delSubTodo={delSubTodo}
                               reviseSubTodo={reviseSubTodo}
+                              lang={lang}
                             />
                           </div>
                         );
@@ -600,21 +579,23 @@ const Home: React.FC = () => {
                 }
               </ScrollArea>
               <p className="text-gray-300 text-xs mr-5 flex justify-end">
-                Total{" "}
+                {lang["axis_total"]}
                 {TODOList.filter((todo) => todo.level === item.level).length}{" "}
-                Todo(s). Completed{" "}
+                {lang["axis_todos"]}. {lang["axis_completed"]}{" "}
                 {
                   TODOList.filter(
                     (todo) =>
                       todo.level === item.level && todo.completed === true
                   ).length
                 }{" "}
-                Todo(s)
+                {lang["axis_todos"]}
               </p>
             </div>
           ))}
         </div>
-        <Footer />
+        <div className="absolute bottom-0">
+          <Footer />
+        </div>
         <Toaster />
       </div>
     </>

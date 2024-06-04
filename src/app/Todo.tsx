@@ -1,6 +1,5 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -11,7 +10,6 @@ import {
 } from "@/components/ui/tooltip";
 import {
   BellIcon,
-  CalendarIcon,
   DrawingPinFilledIcon,
   DrawingPinIcon,
   LapTimerIcon,
@@ -57,6 +55,7 @@ function Todo({
   completedSubTODO,
   delSubTodo,
   reviseSubTodo,
+  lang
 }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null);
   const [value, setValue] = useState<string>("");
@@ -144,10 +143,10 @@ function Todo({
                 e.map((item) => item.value)
               )
             }
-            placeholder="Select tags..."
+            placeholder={lang["todo_tag_add_placeholder"]}
             emptyIndicator={
               <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                no results found.
+                {lang["todo_tag_noresult"]}
               </p>
             }
           />
@@ -166,7 +165,7 @@ function Todo({
               )}
             </TooltipTrigger>
             <TooltipContent>
-              <p>pin Todo</p>
+              <p>{lang["todo_pin"]}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -179,7 +178,7 @@ function Todo({
               </Link>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Zen Mode</p>
+              <p>{lang["todo_zen"]}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -192,17 +191,16 @@ function Todo({
                   <BellIcon />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{todo.deadline === "" ? "Deadline" : todo.deadline}</p>
+                  <p>{todo.deadline === "" ? lang["todo_deadline"] : todo.deadline}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Set Todo&apos;s Deadline</DialogTitle>
+              <DialogTitle>{lang["todo_deadline_dialog_title"]}</DialogTitle>
               <DialogDescription>
-                Set a deadline and AxisGTD will notify you when the specified
-                time is reached.
+                {lang["todo_deadline_dialog_des"]}
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col items-center justify-center space-y-5">
@@ -222,7 +220,7 @@ function Todo({
                     if (datetimePicker.current?.jsDate) {
                       if (
                         (datetimePicker.current?.jsDate?.getTime() as number) -
-                          new Date().getTime() >=
+                        new Date().getTime() >=
                         0
                       ) {
                         setDeadline(
@@ -237,7 +235,7 @@ function Todo({
                     }
                   }}
                 >
-                  Confirm
+                  {lang["todo_deadline_dialog_button"]}
                 </Button>
               </DialogClose>
             </div>
@@ -254,8 +252,8 @@ function Todo({
                 <TooltipContent>
                   <p>
                     {todo.sub?.length === 0
-                      ? "SubTodo"
-                      : todo.sub?.length + " Sub Todos"}
+                      ? lang["todo_subtodo"]
+                      : todo.sub?.length + lang["todo_subtodos"]}
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -263,9 +261,9 @@ function Todo({
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Sub-Todo</DialogTitle>
+              <DialogTitle>{lang["todo_subtodo_dialog_title"]}</DialogTitle>
               <DialogDescription>
-                Create and view your subtasks here.
+                {lang["todo_subtodo_dialog_des"]}
               </DialogDescription>
               <div className="flex flex-col">
                 <div>
@@ -274,13 +272,13 @@ function Todo({
                     className="flex space-x-3 justify-start mb-2 ml-5 mr-5 mt-3"
                   >
                     <Input
-                      placeholder="Add sub-Todo here..."
+                      placeholder={lang["todo_subtodo_dialog_input_placeholder"]}
                       value={value}
                       onChange={(e) => {
                         setValue(e.target.value);
                       }}
                     />
-                    <Button variant="outline">Add</Button>
+                    <Button variant="outline">{lang["todo_subtodo_dialog_add_button"]}</Button>
                   </form>
                 </div>
                 <TooltipProvider>
@@ -298,12 +296,12 @@ function Todo({
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        Already completed{" "}
+                        {lang["todo_subtodo_dialog_progressbar"]}{" "}
                         {Math.round(
                           (todo.sub.filter((item) => item.completed === true)
                             .length /
                             todo.sub.length) *
-                            100
+                          100
                         )}{" "}
                         %
                       </p>
@@ -337,7 +335,6 @@ function Todo({
                             reviseSubTodo(
                               todo.index,
                               item.index,
-                              item,
                               e.target.value
                             )
                           }
@@ -363,7 +360,7 @@ function Todo({
               <TrashIcon onClick={() => removeTODO(todo.index)} />
             </TooltipTrigger>
             <TooltipContent>
-              <p>Delete</p>
+              <p>{lang["todo_delete"]}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
