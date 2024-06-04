@@ -36,42 +36,42 @@ const Home: React.FC = () => {
     const setLanguage = async () => {
       let localLang = localStorage.getItem("language") as string;
       localLang = localLang || "en_us";
-      setDisplayLang(localLang)
+      setDisplayLang(localLang);
 
-      await import(
-        "../../public/locales/" + displayLang + ".json"
-      ).then((langData) => {
-        setLang(langData.default)
-        setAreaCard([
-          {
-            level: 1,
-            title: langData["axis_name_1"],
-            des: langData["axis_des_1"],
-            color: "bg-[#E03B3B]",
-          },
-          {
-            level: 2,
-            title: langData["axis_name_2"],
-            des: langData["axis_des_2"],
-            color: "bg-[#DD813C]",
-          },
-          {
-            level: 3,
-            title: langData["axis_name_3"],
-            des: langData["axis_des_3"],
-            color: "bg-[#3C7EDD]",
-          },
-          {
-            level: 4,
-            title: langData["axis_name_4"],
-            des: langData["axis_des_4"],
-            color: "bg-[#848484]",
-          },
-        ]);
-      })
-    }
-    setLanguage()
-  }, [displayLang])
+      await import("../../public/locales/" + displayLang + ".json").then(
+        (langData) => {
+          setLang(langData.default);
+          setAreaCard([
+            {
+              level: 1,
+              title: langData["axis_name_1"],
+              des: langData["axis_des_1"],
+              color: "bg-[#E03B3B]",
+            },
+            {
+              level: 2,
+              title: langData["axis_name_2"],
+              des: langData["axis_des_2"],
+              color: "bg-[#DD813C]",
+            },
+            {
+              level: 3,
+              title: langData["axis_name_3"],
+              des: langData["axis_des_3"],
+              color: "bg-[#3C7EDD]",
+            },
+            {
+              level: 4,
+              title: langData["axis_name_4"],
+              des: langData["axis_des_4"],
+              color: "bg-[#848484]",
+            },
+          ]);
+        }
+      );
+    };
+    setLanguage();
+  }, [displayLang]);
 
   useEffect(() => {
     localForage.config({
@@ -115,7 +115,10 @@ const Home: React.FC = () => {
           }
           const intervalId = setTimeout(() => {
             toast(lang["toast_deadline_title"] + item.deadline, {
-              description: lang["toast_deadline_content_1"] + item.text + lang["toast_deadline_content_2"],
+              description:
+                lang["toast_deadline_content_1"] +
+                item.text +
+                lang["toast_deadline_content_2"],
               action: (
                 <ToastAction
                   altText={lang["toast_deadline_button"]}
@@ -126,7 +129,10 @@ const Home: React.FC = () => {
               ),
             });
             new Notification(lang["toast_deadline_title"] + item.deadline, {
-              body: lang["toast_deadline_content_1"] + item.text + lang["toast_deadline_content_2"],
+              body:
+                lang["toast_deadline_content_1"] +
+                item.text +
+                lang["toast_deadline_content_2"],
               icon: "/icons/icon-circle.png",
             });
           }, remainingTime);
@@ -185,10 +191,10 @@ const Home: React.FC = () => {
   }, [layoutType]);
 
   const tagOptions = [
-    { label: lang["tag_name_1"], value: "Work" },
-    { label: lang["tag_name_2"], value: "Study" },
-    { label: lang["tag_name_3"], value: "Life" },
-    { label: lang["tag_name_4"], value: "Other" },
+    { label: "Work", value: "Work" },
+    { label: "Study", value: "Study" },
+    { label: "Life", value: "Life" },
+    { label: "Other", value: "Other" },
   ];
 
   const UpdateStorge = (dataList: TodoItem[]) => {
@@ -355,11 +361,7 @@ const Home: React.FC = () => {
     UpdateStorge(newTodoList);
   };
 
-  const reviseSubTodo = (
-    index: number,
-    subIndex: number,
-    text: string
-  ) => {
+  const reviseSubTodo = (index: number, subIndex: number, text: string) => {
     const newTodoList = [...TODOList];
     const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
@@ -580,7 +582,9 @@ const Home: React.FC = () => {
               </ScrollArea>
               <p className="text-gray-300 text-xs mr-5 flex justify-end">
                 {lang["axis_total"]}
-                {TODOList.filter((todo) => todo.level === item.level).length}{" "}
+                {
+                  TODOList.filter((todo) => todo.level === item.level).length
+                }{" "}
                 {lang["axis_todos"]}. {lang["axis_completed"]}{" "}
                 {
                   TODOList.filter(

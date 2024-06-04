@@ -94,6 +94,7 @@
     "todo_subtodo_dialog_input_placeholder":"在这里添加子任务...",
     "todo_subtodo_dialog_add_button":"添加",
     "todo_subtodo_dialog_progressbar":"已完成 ",
+    "todo_subtodo_dialog_progresstip":"查看完成进度",
     "todo_delete":"删除",
 
     "toast_deadline_title":"截止日期",
@@ -111,10 +112,7 @@
     "toast_clean_title":"已清理",
     "toast_clean_content":"AxisGTD已清理所有数据",
 
-
-    "tag_name_1":"工作",
-    "tag_name_2":"学习",
-    "tag_name_3":"生活",
-    "tag_name_4":"其他"
-
+    "zen_title":"专注模式",
+    "zen_notification_title":"专注时间已到",
+    "zen_notification_content":"AxisGTD 30分钟工作时间已到，休息一下吧~"
 }

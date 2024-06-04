@@ -94,6 +94,7 @@
     "todo_subtodo_dialog_input_placeholder":"Add sub Todo here...",
     "todo_subtodo_dialog_add_button":"Add",
     "todo_subtodo_dialog_progressbar":"Already completed ",
+    "todo_subtodo_dialog_progresstip":"View completion progress",
     "todo_delete":"Delete",
 
     "toast_deadline_title":"Deadline ",
@@ -111,8 +112,7 @@
     "toast_clean_title":"Cleaned up",
     "toast_clean_content":"AxisGTD has cleared all data !",
 
-    "tag_name_1":"Work",
-    "tag_name_2":"Study",
-    "tag_name_3":"Life",
-    "tag_name_4":"Other"
+    "zen_title":"Zen Mode",
+    "zen_notification_title":"Zen mode time ends",
+    "zen_notification_content":"AxisGTD 30-minute work countdown is over, so relax!"
 }

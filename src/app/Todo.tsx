@@ -55,7 +55,7 @@ function Todo({
   completedSubTODO,
   delSubTodo,
   reviseSubTodo,
-  lang
+  lang,
 }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null);
   const [value, setValue] = useState<string>("");
@@ -191,7 +191,11 @@ function Todo({
                   <BellIcon />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{todo.deadline === "" ? lang["todo_deadline"] : todo.deadline}</p>
+                  <p>
+                    {todo.deadline === ""
+                      ? lang["todo_deadline"]
+                      : todo.deadline}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -220,7 +224,7 @@ function Todo({
                     if (datetimePicker.current?.jsDate) {
                       if (
                         (datetimePicker.current?.jsDate?.getTime() as number) -
-                        new Date().getTime() >=
+                          new Date().getTime() >=
                         0
                       ) {
                         setDeadline(
@@ -272,13 +276,17 @@ function Todo({
                     className="flex space-x-3 justify-start mb-2 ml-5 mr-5 mt-3"
                   >
                     <Input
-                      placeholder={lang["todo_subtodo_dialog_input_placeholder"]}
+                      placeholder={
+                        lang["todo_subtodo_dialog_input_placeholder"]
+                      }
                       value={value}
                       onChange={(e) => {
                         setValue(e.target.value);
                       }}
                     />
-                    <Button variant="outline">{lang["todo_subtodo_dialog_add_button"]}</Button>
+                    <Button variant="outline">
+                      {lang["todo_subtodo_dialog_add_button"]}
+                    </Button>
                   </form>
                 </div>
                 <TooltipProvider>
@@ -297,12 +305,15 @@ function Todo({
                     <TooltipContent>
                       <p>
                         {lang["todo_subtodo_dialog_progressbar"]}{" "}
-                        {Math.round(
-                          (todo.sub.filter((item) => item.completed === true)
-                            .length /
-                            todo.sub.length) *
-                          100
-                        )}{" "}
+                        {todo.sub.length > 0
+                          ? Math.round(
+                              (todo.sub.filter(
+                                (item) => item.completed === true
+                              ).length /
+                                todo.sub.length) *
+                                100
+                            )
+                          : 0}{" "}
                         %
                       </p>
                     </TooltipContent>

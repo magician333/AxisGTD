@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import {
   HomeIcon,
   PauseIcon,
@@ -23,6 +23,24 @@ function Zen() {
     "bg-[#3C7EDD]",
     "bg-[#848484]",
   ];
+
+  const [lang, setLang] = useState<any>({});
+  useLayoutEffect(() => {
+    const setLanguage = async () => {
+      if (localStorage.getItem("language") === undefined) {
+        localStorage.setItem("language", "en_us");
+      }
+      let localLang = localStorage.getItem("language") as string;
+      localLang = localLang || "en_us";
+
+      await import("../../../../public/locales/" + localLang + ".json").then(
+        (langData) => {
+          setLang(langData.default);
+        }
+      );
+    };
+    setLanguage();
+  });
 
   useEffect(() => {
     localForage.config({
@@ -55,8 +73,8 @@ function Zen() {
         } else {
           clearInterval(timerId!);
           timerId = null;
-          new Notification("Zen mode time ends", {
-            body: "AxisGTD 30-minute work countdown is over, so relax!",
+          new Notification(lang["zen_notification_title"], {
+            body: lang["zen_notification_content"],
             icon: "/icons/icon-circle.png",
           });
         }
@@ -94,8 +112,8 @@ function Zen() {
   return (
     <div className="flex items-center pt-20 flex-col">
       <div className=" w-[20vw] justify-center flex flex-col items-center">
-        <p className="font-black text-7xl opacity-70 text-nowrap tracking-wide">
-          Zen Mode
+        <p className="font-black text-7xl opacity-70 text-nowrap tracking-wide mb-2">
+          {lang["zen_title"]}
         </p>
         <div
           className={
