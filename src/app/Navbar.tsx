@@ -360,7 +360,7 @@ function Navbar({
                     {lang["setting_setlanguage_des"]}
                   </p>
                   <Select
-                    defaultValue="en_us"
+                    defaultValue="en_US"
                     value={displayLang}
                     onValueChange={(e) => {
                       setDisplayLang(e);
@@ -371,8 +371,9 @@ function Navbar({
                       <SelectValue placeholder={lang["setting_setlanguage_label"]}></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="en_us">English</SelectItem>
-                      <SelectItem value="zh_cn">简体中文</SelectItem>
+                      <SelectItem value="en_US">English</SelectItem>
+                      <SelectItem value="zh_CN">简体中文</SelectItem>
+                      <SelectItem value="de_DE">Deutsch</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

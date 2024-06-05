@@ -28,7 +28,7 @@ function Zen() {
   useLayoutEffect(() => {
     const setLanguage = async () => {
       if (localStorage.getItem("language") === undefined) {
-        localStorage.setItem("language", "en_us");
+        localStorage.setItem("language", "en_US");
       }
       let localLang = localStorage.getItem("language") as string;
       localLang = localLang || "en_us";

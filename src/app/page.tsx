@@ -14,7 +14,7 @@ const Home: React.FC = () => {
   const [displayCompleted, setDisplayCompleted] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [layoutType, setLayoutType] = useState<string>("axis");
-  const [displayLang, setDisplayLang] = useState<string>("en_us");
+  const [displayLang, setDisplayLang] = useState<string>("en_US");
   const [droppedLevel, setDroppedLevel] = useState<number>(0);
   const [droppedIndex, setDroppedIndex] = useState<number>(0);
   const [intervals, setIntervals] = useState<NodeJS.Timeout[]>([]);
@@ -32,10 +32,10 @@ const Home: React.FC = () => {
 
   const [lang, setLang] = useState<any>({});
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const setLanguage = async () => {
       let localLang = localStorage.getItem("language") as string;
-      localLang = localLang || "en_us";
+      localLang = localLang || "en_US";
       setDisplayLang(localLang);
 
       await import("../../public/locales/" + displayLang + ".json").then(
@@ -598,7 +598,7 @@ const Home: React.FC = () => {
           ))}
         </div>
         <div className="absolute bottom-0">
-          <Footer />
+          <Footer lang={lang} />
         </div>
         <Toaster />
       </div>

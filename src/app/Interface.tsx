@@ -85,3 +85,7 @@ export interface TodoOverviewProps {
   item: TodoItem;
   lang: any;
 }
+
+export interface FooterProps {
+  lang: any;
+}
