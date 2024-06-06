@@ -597,9 +597,7 @@ const Home: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className="absolute bottom-0">
-          <Footer lang={lang} />
-        </div>
+        <Footer lang={lang} />
         <Toaster />
       </div>
     </>
