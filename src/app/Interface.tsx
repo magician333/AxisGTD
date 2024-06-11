@@ -28,7 +28,7 @@ export interface TodoProps {
   reSort: (index: number, targetIndex: number) => void;
   setDeadline: (index: number, deadline: string) => void;
   addSub: (index: number, sub: SubTodoItem) => void;
-  completedSubTODO: (index: number, subIndex: number, sub: SubTodoItem) => void;
+  completedSubTODO: (index: number, subIndex: number) => void;
   delSubTodo: (index: number, subIndex: number) => void;
   reviseSubTodo: (
     index: number,
@@ -51,6 +51,7 @@ export interface NavProps {
   displayLang: string;
   displayCompleted: boolean;
   lang: any;
+  updateStorage: (todolist: TodoItem[]) => void;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;

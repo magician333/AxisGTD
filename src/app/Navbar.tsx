@@ -180,6 +180,7 @@ function TodoOverview({ item, lang }: TodoOverviewProps) {
 function Navbar({
   addTodo,
   TodoList,
+  updateStorage,
   setTODOList,
   setSearchText,
   setLayoutType,
@@ -229,15 +230,10 @@ function Navbar({
   };
 
   const ImportData = () => {
-    const UpdateStorge = (dataList: TodoItem[]) => {
-      setTODOList(dataList);
-      localForage.setItem("TODOList", dataList);
-    };
-
     if (dataType === "original") {
-      UpdateStorge(TodoList);
+      updateStorage(TodoList);
     } else {
-      UpdateStorge(secTodoList);
+      updateStorage(secTodoList);
     }
     setSecTodoList([]);
   };

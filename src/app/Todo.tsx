@@ -224,7 +224,7 @@ function Todo({
                     if (datetimePicker.current?.jsDate) {
                       if (
                         (datetimePicker.current?.jsDate?.getTime() as number) -
-                          new Date().getTime() >=
+                        new Date().getTime() >=
                         0
                       ) {
                         setDeadline(
@@ -307,12 +307,12 @@ function Todo({
                         {lang["todo_subtodo_dialog_progressbar"]}{" "}
                         {todo.sub.length > 0
                           ? Math.round(
-                              (todo.sub.filter(
-                                (item) => item.completed === true
-                              ).length /
-                                todo.sub.length) *
-                                100
-                            )
+                            (todo.sub.filter(
+                              (item) => item.completed === true
+                            ).length /
+                              todo.sub.length) *
+                            100
+                          )
                           : 0}{" "}
                         %
                       </p>
@@ -329,7 +329,7 @@ function Todo({
                         <Checkbox
                           checked={item.completed}
                           onCheckedChange={() =>
-                            completedSubTODO(todo.index, item.index, item)
+                            completedSubTODO(todo.index, item.index)
                           }
                         />
 
