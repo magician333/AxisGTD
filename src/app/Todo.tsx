@@ -37,6 +37,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
+import { key } from "localforage";
 
 function Todo({
   todo,
@@ -59,8 +60,11 @@ function Todo({
 }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null);
   const [value, setValue] = useState<string>("");
-  const todoText = useRef<HTMLTextAreaElement>(null);
-  const cursorRef = useRef<number>(0);
+  const [reviseText, setReviseText] = useState<string>(todo.text)
+  const [isRevise, setIsRevise] = useState<boolean>(false)
+
+  const [reviseSubText, setReviseSubText] = useState<string[]>(todo.sub.map(sub => sub.text))
+  const [isSubRevise, setIsSubRevise] = useState<boolean>(false)
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!value) return;
@@ -78,15 +82,6 @@ function Todo({
     addSub(todo.index, newSubTodoItem);
     setValue("");
   };
-
-  useEffect(() => {
-    if (todo.text.length > 0) {
-      const textarea = todoText.current;
-      if (textarea) {
-        textarea.setSelectionRange(cursorRef.current, cursorRef.current);
-      }
-    }
-  }, [todo.text]);
 
   return (
     <div
@@ -116,12 +111,20 @@ function Todo({
           cols={50}
           className="break-words border-none resize-none h-[3rem] shadow-none no-scrollbar"
           readOnly={todo.completed}
-          value={todo.text}
-          ref={todoText}
-          style={{ textDecoration: todo.completed ? "line-through" : "" }}
+          value={reviseText}
+          style={{
+            textDecoration: todo.completed ? "line-through" : "",
+            boxShadow: isRevise ? "0 1px 2px 0 #ff3333" : ""
+          }}
           onChange={(e) => {
-            cursorRef.current = e.target.selectionStart;
-            reviseTodo(todo.index, e.target.value);
+            setReviseText(e.target.value)
+            if (e.target.value !== todo.text) {
+              setIsRevise(true)
+            }
+          }}
+          onBlur={() => {
+            reviseTodo(todo.index, reviseText)
+            setIsRevise(false)
           }}
         />
       </div>
@@ -169,6 +172,7 @@ function Todo({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
 
         <TooltipProvider>
           <Tooltip>
@@ -320,45 +324,53 @@ function Todo({
                   </Tooltip>
                 </TooltipProvider>
                 <ScrollArea className="h-[36vh]">
-                  {todo.sub?.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="group flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2"
-                      >
-                        <Checkbox
-                          checked={item.completed}
-                          onCheckedChange={() =>
-                            completedSubTODO(todo.index, item.index)
-                          }
-                        />
+                  {
+                    todo.sub?.map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="group flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2"
+                        >
+                          <Checkbox
+                            checked={item.completed}
+                            onCheckedChange={() =>
+                              completedSubTODO(todo.index, item.index)
+                            }
+                          />
 
-                        <Input
-                          value={item.text}
-                          className="border-none shadow-none overflow-x-auto"
-                          style={{
-                            textDecoration: item.completed
-                              ? "line-through"
-                              : "",
-                          }}
-                          disabled={item.completed}
-                          onChange={(e) =>
-                            reviseSubTodo(
-                              todo.index,
-                              item.index,
-                              e.target.value
-                            )
-                          }
-                        />
-                        <TrashIcon
-                          onClick={() => {
-                            delSubTodo(todo.index, item.index);
-                          }}
-                          className="opacity-0 group-hover:opacity-100"
-                        />
-                      </div>
-                    );
-                  })}
+                          <Input
+                            value={reviseSubText[index]}
+                            className="border-none shadow-none overflow-x-auto"
+                            style={{
+                              textDecoration: item.completed
+                                ? "line-through"
+                                : "",
+                            }}
+                            disabled={item.completed}
+                            onChange={(e) => {
+                              const tmp = [...reviseSubText]
+                              tmp[index] = e.target.value
+                              setReviseSubText(tmp)
+                              setIsSubRevise(true)
+                            }}
+                            onBlur={() => {
+                              reviseSubTodo(
+                                todo.index,
+                                item.index,
+                                reviseSubText[index]
+                              )
+                              setIsSubRevise(false)
+                            }}
+                          />
+                          <TrashIcon
+                            onClick={() => {
+                              delSubTodo(todo.index, item.index);
+                            }}
+                            className="opacity-0 group-hover:opacity-100"
+                          />
+                        </div>
+                      );
+                    })}
                 </ScrollArea>
               </div>
             </DialogHeader>

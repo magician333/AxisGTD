@@ -146,6 +146,9 @@ const Home: React.FC = () => {
     }
   }, []);
 
+  const displayTodo = useMemo(() => {
+    return TODOList
+  }, [TODOList])
 
   const layoutModeClass = useMemo(() => {
     const baseClass: LayoutClasses = {
@@ -474,7 +477,7 @@ const Home: React.FC = () => {
                     }
                   >
                     {
-                      TODOList.map((todo, index) => {
+                      displayTodo.map((todo, index) => {
                         const renderTodo = shouldRenderTodo(
                           todo,
                           item,
@@ -529,7 +532,7 @@ const Home: React.FC = () => {
                           );
                         }
                       })}
-                    {TODOList.map((todo, index) => {
+                    {displayTodo.map((todo, index) => {
                       const renderTodo = shouldRenderTodo(
                         todo,
                         item,

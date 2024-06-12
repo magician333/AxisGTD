@@ -96,7 +96,7 @@
   "todo_subtodo_dialog_title": "Sub-Aufgaben verwalten",
   "todo_subtodo_dialog_des": "Unterteile dein Todo in handhabare Sub-Aufgaben.",
   "todo_subtodo_dialog_input_placeholder": "Füge ein Sub-Todo hinzu...",
-  "todo_subtodo_dialog_add_button": "Sub-Task erstellen",
+  "todo_subtodo_dialog_add_button": "Erstellen",
   "todo_subtodo_dialog_progressbar": "Fortschritt: ",
   "todo_subtodo_dialog_progresstip": "Sieh dir deinen Fortschritt an",
   "todo_delete": "Todo löschen",

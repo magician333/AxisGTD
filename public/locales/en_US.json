@@ -96,7 +96,7 @@
   "todo_subtodo_dialog_title": "Manage Sub Tasks",
   "todo_subtodo_dialog_des": "Break down your todo into manageable sub tasks.",
   "todo_subtodo_dialog_input_placeholder": "Add a sub task...",
-  "todo_subtodo_dialog_add_button": "Create Sub Task",
+  "todo_subtodo_dialog_add_button": "Create",
   "todo_subtodo_dialog_progressbar": "Progress: ",
   "todo_subtodo_dialog_progresstip": "View how much you've accomplished",
   "todo_delete": "Delete Todo",
