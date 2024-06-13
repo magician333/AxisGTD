@@ -30,6 +30,13 @@
   "addtodo_type_name_4": "Neither Urgent nor Important",
   "addtodo_button": "Add Todo",
 
+  "calendar_title":"Calendar View",
+  "calendar_des":"View Todo information in calendar view",
+  "calendar_week":["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "calendar_tab1":"Created",
+  "calendar_tab2":"Completed",
+  "calendar_tab3":"Deadline",
+
   "setting_title": "Settings",
   "setting_des": "Customize AxisGTD to your preference",
   "setting_setlayout_label": "Layout Configuration",
@@ -55,8 +62,6 @@
   "setting_importdata_dialog_upload_button": "Upload Data",
   "setting_importdata_dialog_tab_original": "Original Data",
   "setting_importdata_dialog_tab_import": "Uploaded Data",
-  "setting_importdata_dialog_todo_deadline": "No Deadline",
-  "setting_importdata_dialog_todo_subtodo": " Sub-Todo(s)",
   "setting_importdata_dialog_info": "Choose the data you wish to keep",
   "setting_importdata_dialog_button": "Confirm",
   "setting_cleardata_label": "Clear Data",
@@ -66,7 +71,6 @@
   "setting_cleardata_dialog_des": "This will permanently delete all data. Please ensure you have backed up any important information.",
   "setting_cleardata_dialog_cancelbutton": "Cancel",
   "setting_cleardata_dialog_clearbutton": "Clear Data",
-
   "setting_about_label": "About AxisGTD",
   "setting_about_des": "AxisGTD is a minimalistic and serene TodoList app designed to help you effectively prioritize your todos. It is a powerful tool in your personal productivity suite. Remember to use it as part of a balanced workflow, capturing todos within the app and returning to mark them complete as you finish your tasks.",
   "setting_note_label": "Important Note:",
@@ -100,6 +104,11 @@
   "todo_subtodo_dialog_progressbar": "Progress: ",
   "todo_subtodo_dialog_progresstip": "View how much you've accomplished",
   "todo_delete": "Delete Todo",
+
+  "todooverview_uncompleted":"Uncompleted",
+  "todooverview_completed":"Completed",
+  "todooverview_deadline": "No Deadline",
+  "todooverview_subtodo": " Sub-Todo(s)",
 
   "toast_deadline_title": "Deadline Alert",
   "toast_deadline_content_1": "The deadline for your ",

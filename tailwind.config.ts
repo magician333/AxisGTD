@@ -20,6 +20,9 @@ const config = {
     },
     extend: {
       colors: {
+        "TodoUnCompleted": "#FF3333",
+        "TodoCompleted": "#22c55e",
+        "TodoDeadline": "#3C7EDD",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -37,7 +37,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
-import { key } from "localforage";
+import { TodoColor } from "./DeafultProps";
 
 function Todo({
   todo,
@@ -64,7 +64,6 @@ function Todo({
   const [isRevise, setIsRevise] = useState<boolean>(false)
 
   const [reviseSubText, setReviseSubText] = useState<string[]>(todo.sub.map(sub => sub.text))
-  const [isSubRevise, setIsSubRevise] = useState<boolean>(false)
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!value) return;
@@ -90,7 +89,7 @@ function Todo({
     >
       <div
         className="w-full h-[1vh] rounded-t"
-        style={{ backgroundColor: todo.completed ? "#39834A" : "#FF3333" }}
+        style={{ backgroundColor: todo.completed ? TodoColor.get("completed") : TodoColor.get("uncompleted") }}
         draggable
         onDragOver={(e) => {
           e.preventDefault();
@@ -123,7 +122,9 @@ function Todo({
             }
           }}
           onBlur={() => {
-            reviseTodo(todo.index, reviseText)
+            if (reviseText !== todo.text) {
+              reviseTodo(todo.index, reviseText)
+            }
             setIsRevise(false)
           }}
         />
@@ -351,15 +352,15 @@ function Todo({
                               const tmp = [...reviseSubText]
                               tmp[index] = e.target.value
                               setReviseSubText(tmp)
-                              setIsSubRevise(true)
                             }}
                             onBlur={() => {
-                              reviseSubTodo(
-                                todo.index,
-                                item.index,
-                                reviseSubText[index]
-                              )
-                              setIsSubRevise(false)
+                              if (reviseSubText[index] !== item.text) {
+                                reviseSubTodo(
+                                  todo.index,
+                                  item.index,
+                                  reviseSubText[index]
+                                )
+                              }
                             }}
                           />
                           <TrashIcon

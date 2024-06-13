@@ -90,3 +90,8 @@ export interface TodoOverviewProps {
 export interface FooterProps {
   lang: any;
 }
+
+export interface CalendarViewProps {
+  TodoList: TodoItem[];
+  lang: any;
+}

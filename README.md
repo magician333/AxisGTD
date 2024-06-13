@@ -72,9 +72,9 @@ Feature
 
 - [ ] Synchronization
 
-- [ ] Calendar view
+- [x] Calendar view
 
-- [ ] Support Multi-language
+- [x] Support Multi-language
 
 
 Thanks to the following open source projects

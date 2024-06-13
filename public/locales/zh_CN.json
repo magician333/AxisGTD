@@ -28,6 +28,13 @@
     "addtodo_type_name_3":"紧急不重要",
     "addtodo_type_name_4":"不紧急不重要",
     "addtodo_button":"添加",
+  
+    "calendar_title":"日历视图",
+    "calendar_des":"日历视图查看Todo信息",
+    "calendar_week":["日", "一", "二", "三", "四", "五", "六"],
+    "calendar_tab1":"当日创建",
+    "calendar_tab2":"当日完成",
+    "calendar_tab3":"当日截止日期",
 
     "setting_title":"设置",
     "setting_des":"在这里设置AxisGTD",
@@ -54,8 +61,6 @@
     "setting_importdata_dialog_upload_button":"上传",
     "setting_importdata_dialog_tab_original":"原始数据",
     "setting_importdata_dialog_tab_import":"上传数据",
-    "setting_importdata_dialog_todo_deadline":"无截止日期",
-    "setting_importdata_dialog_todo_subtodo":"个子任务",
     "setting_importdata_dialog_info":"原始数据和上传数据不一致，请选择一个数据覆盖",
     "setting_importdata_dialog_button":"确认",
     "setting_cleardata_label":"数据清除",
@@ -98,6 +103,12 @@
     "todo_subtodo_dialog_progressbar":"已完成 ",
     "todo_subtodo_dialog_progresstip":"查看完成进度",
     "todo_delete":"删除",
+
+    
+    "todooverview_uncompleted":"未完成",
+    "todooverview_completed":"已完成",
+    "todooverview_deadline": "无截止日期",
+    "todooverview_subtodo": "个子任务",
 
     "toast_deadline_title":"截止日期",
     "toast_deadline_content_1":"已经到达",

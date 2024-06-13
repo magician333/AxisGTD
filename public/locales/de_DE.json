@@ -28,7 +28,10 @@
   "addtodo_type_name_2": "Wichtig aber nicht dringend",
   "addtodo_type_name_3": "Dringend aber nicht wichtig",
   "addtodo_type_name_4": "Weiterhin wichtig und dringend",
-  "addtodo_button": "Todo hinzufügen",
+  "addtodo_button": "Todo hinzufüg",
+
+  "calendar_title": "Kalenderansicht",
+  "calendar_des": "Zeige Todo-Informationen in der Kalenderansicht",
 
   "setting_title": "Einstellungen",
   "setting_des": "Passe AxisGTD deinen Wünschen an",

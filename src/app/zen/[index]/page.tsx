@@ -11,19 +11,13 @@ import Link from "next/link";
 import { TodoItem } from "../../Interface";
 import { useParams } from "next/navigation";
 import localForage from "localforage";
+import { levelColor } from "@/app/DeafultProps";
 
 function Zen() {
   const router = useParams<{ index: string }>();
   const [countdownTime, setCountdownTime] = useState(1800000);
   const [isCountdownActive, setIsCountdownActive] = useState(true);
   const [todo, setTodo] = useState<TodoItem>();
-  const LevelColor = [
-    "bg-[#E03B3B]",
-    "bg-[#DD813C]",
-    "bg-[#3C7EDD]",
-    "bg-[#848484]",
-  ];
-
   const [lang, setLang] = useState<any>({});
   useLayoutEffect(() => {
     const setLanguage = async () => {
@@ -117,7 +111,7 @@ function Zen() {
         </p>
         <div
           className={
-            LevelColor[(todo?.level as number) - 1] + " w-full h-[1vh]"
+            levelColor.get((todo?.level as number)?.toString()) + " w-full h-[1vh]"
           }
         ></div>
       </div>

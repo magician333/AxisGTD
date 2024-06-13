@@ -18,6 +18,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useLayoutEffect, useState } from "react";
 import {
   BellIcon,
+  CalendarIcon,
   Crosshair1Icon,
   EnvelopeClosedIcon,
   FileTextIcon,
@@ -49,6 +50,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -76,6 +78,8 @@ import localForage from "localforage";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
+import CalendarView from "./CalendarView";
+import TodoOverview from "./TodoOverView";
 
 function TODOForm({ addTodo, TodoList, lang }: TODOFormProps) {
   const [value, setValue] = useState<string>("");
@@ -155,27 +159,6 @@ function TODOForm({ addTodo, TodoList, lang }: TODOFormProps) {
   );
 }
 
-function TodoOverview({ item, lang }: TodoOverviewProps) {
-  return (
-    <div className="flex space-y-2 flex-col items-baseline p-2 mt-2 mb-3 shadow ml-2 mr-2 dark:border">
-      <div className="flex items-center ml-2">
-        <p>{item.index + "."}</p>
-        <p className="w-96 text-nowrap truncate">{item.text}</p>
-      </div>
-      <div className="flex items-center justify-between space-x-2 ml-2 pr-4 w-full">
-        <Checkbox checked={item.completed} />
-        <div className="flex items-center space-x-1">
-          <BellIcon />{" "}
-          <p>{item.deadline === "" ? lang["setting_importdata_dialog_todo_deadline"] : item.deadline}</p>
-        </div>
-        <div className="flex items-center space-x-1">
-          <TokensIcon />
-          <p>{item.sub.length}{lang["setting_importdata_dialog_todo_subtodo"]}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Navbar({
   addTodo,
@@ -302,6 +285,22 @@ function Navbar({
         <Drawer>
           <DrawerTrigger asChild>
             <Button variant="outline" className="border-none shadow-none">
+              <CalendarIcon className="w-[1rem] h-[1rem]" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
+            <DrawerHeader>
+              <DrawerTitle>{lang["calendar_title"]}</DrawerTitle>
+              <DrawerDescription>{lang["calendar_des"]}</DrawerDescription>
+            </DrawerHeader>
+            <CalendarView TodoList={TodoList} lang={lang} />
+          </DrawerContent>
+        </Drawer>
+
+
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline" className="border-none shadow-none">
               <PlusCircledIcon className="w-[1rem] h-[1rem]" />
             </Button>
           </DrawerTrigger>
@@ -369,7 +368,7 @@ function Navbar({
                     <SelectContent>
                       <SelectItem value="en_US">English</SelectItem>
                       <SelectItem value="zh_CN">简体中文</SelectItem>
-                      <SelectItem value="de_DE">Deutsch</SelectItem>
+                      <SelectItem value="de_DE" disabled>Deutsch</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -472,7 +471,7 @@ function Navbar({
                           <DialogDescription>
                             {lang["setting_importdata_dialog_des"]}
                           </DialogDescription>
-                          <div className="flex flex-col">
+                          <div className="flex flex-col w-full">
                             <form
                               onSubmit={handleFileupload}
                               className="flex space-x-2"
@@ -509,22 +508,22 @@ function Navbar({
                               <p className="font-light text-sm">
                                 {dataImportInfo}
                               </p>
-                              <TabsContent value="original">
-                                <ScrollArea className="h-[30vh]">
+                              <TabsContent value="original" className="w-full">
+                                <ScrollArea className="h-[30vh] w-full">
                                   {TodoList.map((item: TodoItem, index) => {
                                     return (
-                                      <div key={index}>
+                                      <div key={index} className="w-[24vw]">
                                         <TodoOverview item={item} lang={lang} />
                                       </div>
                                     );
                                   })}
                                 </ScrollArea>
                               </TabsContent>
-                              <TabsContent value="import">
-                                <ScrollArea className="h-[30vh]">
+                              <TabsContent value="import" className="w-full">
+                                <ScrollArea className="h-[30vh] w-full">
                                   {secTodoList.map((item: TodoItem, index) => {
                                     return (
-                                      <div key={index}>
+                                      <div key={index} className="w-[24vw]">
                                         <TodoOverview item={item} lang={lang} />
                                       </div>
                                     );

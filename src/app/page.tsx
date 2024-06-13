@@ -8,6 +8,7 @@ import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from "./Interface";
 import Todo from "./Todo";
 import localForage from "localforage";
 import { ToastAction } from "@/components/ui/toast";
+import { TodoColor, levelColor } from "./DeafultProps";
 
 const Home: React.FC = () => {
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);
@@ -36,25 +37,25 @@ const Home: React.FC = () => {
               level: 1,
               title: langData["axis_name_1"],
               des: langData["axis_des_1"],
-              color: "bg-[#E03B3B]",
+              color: levelColor.get("1") as string,
             },
             {
               level: 2,
               title: langData["axis_name_2"],
               des: langData["axis_des_2"],
-              color: "bg-[#DD813C]",
+              color: levelColor.get("2") as string,
             },
             {
               level: 3,
               title: langData["axis_name_3"],
               des: langData["axis_des_3"],
-              color: "bg-[#3C7EDD]",
+              color: levelColor.get("3") as string,
             },
             {
               level: 4,
               title: langData["axis_name_4"],
               des: langData["axis_des_4"],
-              color: "bg-[#848484]",
+              color: levelColor.get("4") as string,
             },
           ]);
         }
