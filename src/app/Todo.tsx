@@ -62,7 +62,6 @@ function Todo({
   const [value, setValue] = useState<string>("");
   const [reviseText, setReviseText] = useState<string>(todo.text)
   const [isRevise, setIsRevise] = useState<boolean>(false)
-
   const [reviseSubText, setReviseSubText] = useState<string[]>(todo.sub.map(sub => sub.text))
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,6 +78,10 @@ function Todo({
       completed: false,
     };
     addSub(todo.index, newSubTodoItem);
+
+    const tmpSub = [...reviseSubText, value]
+    setReviseSubText(tmpSub)
+
     setValue("");
   };
 
@@ -289,7 +292,7 @@ function Todo({
                         setValue(e.target.value);
                       }}
                     />
-                    <Button variant="outline">
+                    <Button variant="outline" type="submit">
                       {lang["todo_subtodo_dialog_add_button"]}
                     </Button>
                   </form>
@@ -327,6 +330,7 @@ function Todo({
                 <ScrollArea className="h-[36vh]">
                   {
                     todo.sub?.map((item, index) => {
+
                       return (
                         <div
                           key={index}
