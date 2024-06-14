@@ -17,7 +17,6 @@ import {
 import { useTheme } from "next-themes";
 import { useEffect, useLayoutEffect, useState } from "react";
 import {
-  BellIcon,
   CalendarIcon,
   Crosshair1Icon,
   EnvelopeClosedIcon,
@@ -28,7 +27,6 @@ import {
   MoonIcon,
   PlusCircledIcon,
   SunIcon,
-  TokensIcon,
 } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -37,7 +35,6 @@ import {
   NavProps,
   TODOFormProps,
   TodoItem,
-  TodoOverviewProps,
 } from "./Interface";
 import { Button } from "@/components/ui/button";
 import {
@@ -77,7 +74,6 @@ import {
 import localForage from "localforage";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Checkbox } from "@/components/ui/checkbox";
 import CalendarView from "./CalendarView";
 import TodoOverview from "./TodoOverView";
 
@@ -214,8 +210,10 @@ function Navbar({
 
   const ImportData = () => {
     if (dataType === "original") {
+      updateStorage([])
       updateStorage(TodoList);
     } else {
+      updateStorage([])
       updateStorage(secTodoList);
     }
     setSecTodoList([]);

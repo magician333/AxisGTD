@@ -122,7 +122,7 @@ export default function CalendarView({ TodoList, lang }: CalendarViewProps) {
             </TabsContent>
 
             <TabsContent value="completed">
-              <ScrollArea className="h-36 w-full">
+              <ScrollArea className="h-[35vh] w-full">
                 {
                   TodoList.map((item, index) => {
                     if (new Date(item.completedtime).toDateString() === selectedDate.toDateString()) {
@@ -136,7 +136,7 @@ export default function CalendarView({ TodoList, lang }: CalendarViewProps) {
             </TabsContent>
 
             <TabsContent value="deadline">
-              <ScrollArea className="h-36 w-full">
+              <ScrollArea className="h-[35vh] w-full">
                 {
                   TodoList.map((item, index) => {
                     if (new Date(item.deadline === "" ? null : JSON.parse(item.deadline)).toDateString() === selectedDate.toDateString()) {

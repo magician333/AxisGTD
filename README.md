@@ -33,6 +33,12 @@ Screenshot
 
 ![board](./screenshot/AxisGTD%20Homepage_Board.png)
 
+
+##### Calendar View
+
+![calendarview](./screenshot/AxisGTD_Calendarview.png)
+
+
 ##### Sub Todo
 
 ![sub](./screenshot/AxisGTD%20SubTodo.png)
@@ -69,8 +75,6 @@ Feature
 - [x] Migration to indexdb
 
 - [x] Deadline notification
-
-- [ ] Synchronization
 
 - [x] Calendar view
 
