@@ -32,6 +32,10 @@
 
   "calendar_title": "Kalenderansicht",
   "calendar_des": "Zeige Todo-Informationen in der Kalenderansicht",
+  "calendar_week": ["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam"],
+  "calendar_tab1": "Erstellt",
+  "calendar_tab2": "Abgeschlossen",
+  "calendar_tab3": "Fälligkeit",
 
   "setting_title": "Einstellungen",
   "setting_des": "Passe AxisGTD deinen Wünschen an",
@@ -58,8 +62,6 @@
   "setting_importdata_dialog_upload_button": "Daten hochladen",
   "setting_importdata_dialog_tab_original": "Originaldaten",
   "setting_importdata_dialog_tab_import": "Hochgeladene Daten",
-  "setting_importdata_dialog_todo_deadline": "Kein Ablaufdatum",
-  "setting_importdata_dialog_todo_subtodo": " Sub-Todo(s)",
   "setting_importdata_dialog_info": "Wähle die Daten, die du behalten möchtest",
   "setting_importdata_dialog_button": "Bestätigen",
   "setting_cleardata_label": "Daten löschen",
@@ -103,6 +105,11 @@
   "todo_subtodo_dialog_progressbar": "Fortschritt: ",
   "todo_subtodo_dialog_progresstip": "Sieh dir deinen Fortschritt an",
   "todo_delete": "Todo löschen",
+
+  "todooverview_uncompleted": "Unvollständig",
+  "todooverview_completed": "Abgeschlossen",
+  "todooverview_deadline": "Keine Frist",
+  "todooverview_subtodo": " Unter-Todo(s)",
 
   "toast_deadline_title": "Deadline Benachrichtigung",
   "toast_deadline_content_1": "Die Deadline für dein ",

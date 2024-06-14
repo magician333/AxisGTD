@@ -368,7 +368,7 @@ function Navbar({
                     <SelectContent>
                       <SelectItem value="en_US">English</SelectItem>
                       <SelectItem value="zh_CN">简体中文</SelectItem>
-                      <SelectItem value="de_DE" disabled>Deutsch</SelectItem>
+                      <SelectItem value="de_DE">Deutsch</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
