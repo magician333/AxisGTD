@@ -80,6 +80,9 @@ Feature
 
 - [x] Support Multi-language
 
+- [x] Notify in advance 
+
+- [] Duplicate notification
 
 Thanks to the following open source projects
 ---

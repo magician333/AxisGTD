@@ -92,51 +92,61 @@ const Home: React.FC = () => {
 
   let timers: NodeJS.Timeout[] = [];
 
+
   useEffect(() => {
     const createTimers = () => {
       timers.forEach(clearTimeout);
       timers = [];
       TODOList.forEach((item) => {
-        if (item.deadline !== "") {
-          const remainingTime =
-            Date.parse(JSON.parse(item.deadline)) - Date.now();
-          if (remainingTime <= 0) {
-            //deadline gone
+        if (item.deadline) {
+          const deadlineDate = new Date(JSON.parse(item.deadline));
+          const remainingTime = deadlineDate.getTime() - Date.now() - item.ahead;
+          if (remainingTime <= 0 && !item.isRemind) {
+            handleReminder(item);
+            setIsRemind(item.index, true);
             return;
+          } else if (!item.isRemind) {
+            const intervalId = setTimeout(() => {
+              handleReminder(item);
+              setIsRemind(item.index, true);
+            }, remainingTime);
+            timers.push(intervalId);
+            setIntervals(timers);
           }
-          const intervalId = setTimeout(() => {
-            toast(lang["toast_deadline_title"] + item.deadline, {
-              description:
-                lang["toast_deadline_content_1"] +
-                item.text +
-                lang["toast_deadline_content_2"],
-              action: (
-                <ToastAction
-                  altText={lang["toast_deadline_button"]}
-                  onClick={() => completedTODO(item.index)}
-                >
-                  {lang["toast_deadline_button"]}
-                </ToastAction>
-              ),
-            });
-            new Notification(lang["toast_deadline_title"] + item.deadline, {
-              body:
-                lang["toast_deadline_content_1"] +
-                item.text +
-                lang["toast_deadline_content_2"],
-              icon: "/icons/icon-circle.png",
-            });
-          }, remainingTime);
-          timers.push(intervalId);
-          setIntervals(timers);
         }
       });
     };
+
     createTimers();
     return () => {
-      timers.forEach(clearTimeout);
+      timers.forEach(clearTimeout)
     };
   }, [TODOList]);
+
+  const handleReminder = (item: TodoItem) => {
+    toast(lang["toast_deadline_title"] + item.deadline, {
+      description:
+        lang["toast_deadline_content_1"] +
+        item.text +
+        lang["toast_deadline_content_2"],
+      action: (
+        <ToastAction
+          altText={lang["toast_deadline_button"]}
+          onClick={() => completedTODO(item.index)}
+        >
+          {lang["toast_deadline_button"]}
+        </ToastAction>
+      ),
+    });
+    new Notification(lang["toast_deadline_title"] + item.deadline, {
+      body:
+        lang["toast_deadline_content_1"] +
+        item.text +
+        lang["toast_deadline_content_2"],
+      icon: "/icons/icon-circle.png",
+    });
+  }
+
 
   useEffect(() => {
     const displayCompletedStorage = localStorage.getItem("displayCompleted");
@@ -219,7 +229,9 @@ const Home: React.FC = () => {
       completed: false,
       level: level,
       pin: false,
+      isRemind: false,
       deadline: "",
+      ahead: 0,
       tags: [],
       createdtime: nowTime,
       completedtime: 0,
@@ -324,14 +336,36 @@ const Home: React.FC = () => {
     UpdateStorage(newTodoList);
   };
 
+  const setIsRemind = (index: number, flag: boolean) => {
+
+    const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index);
+    if (todo) {
+      todo.isRemind = flag;
+    }
+    UpdateStorage(newTodoList);
+  }
+
   const setDeadline = (index: number, deadline: string) => {
     const newTodoList = [...TODOList];
     const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
       todo.deadline = deadline;
+      todo.isRemind = false;
     }
     UpdateStorage(newTodoList);
   };
+
+  const setAhead = (index: number, ahead: string) => {
+    let time = Number(ahead.substring(1));
+    const newTodoList = [...TODOList];
+    const todo = newTodoList.find((item) => item.index === index);
+    if (todo) {
+      todo.ahead = time;
+    }
+    UpdateStorage(newTodoList);
+  }
+
 
   const addSub = (index: number, sub: SubTodoItem) => {
     const newTodoList = [...TODOList];
@@ -523,6 +557,7 @@ const Home: React.FC = () => {
                                 reLevel={reLevel}
                                 reSort={reSort}
                                 setDeadline={setDeadline}
+                                setAhead={setAhead}
                                 addSub={addSub}
                                 completedSubTODO={completedSubTodo}
                                 delSubTodo={delSubTodo}
@@ -578,6 +613,7 @@ const Home: React.FC = () => {
                               reLevel={reLevel}
                               reSort={reSort}
                               setDeadline={setDeadline}
+                              setAhead={setAhead}
                               addSub={addSub}
                               completedSubTODO={completedSubTodo}
                               delSubTodo={delSubTodo}

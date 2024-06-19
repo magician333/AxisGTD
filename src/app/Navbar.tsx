@@ -563,7 +563,7 @@ function Navbar({
                         {lang["setting_cleardata_dialog_des"]}
                       </DialogDescription>
                       <DialogFooter>
-                        <DialogClose>
+                        <DialogClose asChild>
                           <Button>{lang["setting_cleardata_dialog_cancelbutton"]}</Button>
                         </DialogClose>
                         <DialogClose asChild>

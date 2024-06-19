@@ -93,6 +93,12 @@
     "todo_deadline":"截至日期",
     "todo_deadline_dialog_title":"设置任务截止日期",
     "todo_deadline_dialog_des":"设置截止日期，AxisGTD 会在指定时间到达时通知您。",
+  "todo_deadline_dialog_ahead":"设置提前通知",
+  "todo_deadline_dialog_ahead_1":"准时通知",
+  "todo_deadline_dialog_ahead_2":"提前15分钟",
+  "todo_deadline_dialog_ahead_3":"提前30分钟",
+  "todo_deadline_dialog_ahead_4":"提前1小时",
+  "todo_deadline_dialog_ahead_5":"提前1天",
     "todo_deadline_dialog_button":"确认",
     "todo_subtodo":"子任务",
     "todo_subtodos":"个子任务",
@@ -103,6 +109,10 @@
     "todo_subtodo_dialog_progressbar":"已完成 ",
     "todo_subtodo_dialog_progresstip":"查看完成进度",
     "todo_delete":"删除",
+  "todo_delete_dialog_title": "确定删除任务吗？",
+  "todo_delete_dialog_des":"这个操作不可恢复。",
+  "todo_delete_dialog_cancelbutton":"取消",
+  "todo_delete_dialog_delbutton":"删除",
 
     
     "todooverview_uncompleted":"未完成",

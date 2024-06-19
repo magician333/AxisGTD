@@ -8,7 +8,9 @@ export interface TodoItem {
   level: number;
   tags: string[];
   pin: boolean;
+  isRemind: boolean;
   deadline: string;
+  ahead: number;
   createdtime: number;
   completedtime: number;
   sub: SubTodoItem[];
@@ -27,6 +29,7 @@ export interface TodoProps {
   reLevel: (index: number, targetLevel: number) => void;
   reSort: (index: number, targetIndex: number) => void;
   setDeadline: (index: number, deadline: string) => void;
+  setAhead: (index: number, ahead: string) => void;
   addSub: (index: number, sub: SubTodoItem) => void;
   completedSubTODO: (index: number, subIndex: number) => void;
   delSubTodo: (index: number, subIndex: number) => void;

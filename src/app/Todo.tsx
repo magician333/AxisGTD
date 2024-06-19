@@ -30,6 +30,7 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -38,6 +39,9 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { TodoColor } from "./DeafultProps";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { Switch } from "@/components/ui/switch";
 
 function Todo({
   todo,
@@ -49,6 +53,7 @@ function Todo({
   tagOptions,
   reLevel,
   setDeadline,
+  setAhead,
   droppedLevel,
   droppedIndex,
   reSort,
@@ -215,7 +220,7 @@ function Todo({
                 {lang["todo_deadline_dialog_des"]}
               </DialogDescription>
             </DialogHeader>
-            <div className="flex flex-col items-center justify-center space-y-5">
+            <div className="flex items-center justify-center space-x-1">
               <DateTimePicker
                 granularity="second"
                 ref={datetimePicker}
@@ -225,32 +230,44 @@ function Todo({
                     : new Date(JSON.parse(todo.deadline))
                 }
               />
-              <DialogClose>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    if (datetimePicker.current?.jsDate) {
-                      if (
-                        (datetimePicker.current?.jsDate?.getTime() as number) -
-                        new Date().getTime() >=
-                        0
-                      ) {
-                        setDeadline(
-                          todo.index,
-                          JSON.stringify(
-                            datetimePicker.current?.jsDate?.toLocaleString()
-                          )
-                        );
-                      }
-                    } else {
-                      setDeadline(todo.index, "");
-                    }
-                  }}
-                >
-                  {lang["todo_deadline_dialog_button"]}
-                </Button>
-              </DialogClose>
+              <Select onValueChange={(e) => { setAhead(todo.index, e) }} defaultValue="a0" value={todo.ahead ? "a" + String(todo.ahead) : "a0"}>
+                <SelectTrigger className="w-48 h-full">
+                  <SelectValue placeholder={lang["todo_deadline_dialog_ahead"]} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="a0">{lang["todo_deadline_dialog_ahead_1"]}</SelectItem>
+                  <SelectItem value="a900000">{lang["todo_deadline_dialog_ahead_2"]}</SelectItem>
+                  <SelectItem value="a1800000">{lang["todo_deadline_dialog_ahead_3"]}</SelectItem>
+                  <SelectItem value="a3600000">{lang["todo_deadline_dialog_ahead_4"]}</SelectItem>
+                  <SelectItem value="a86400000">{lang["todo_deadline_dialog_ahead_5"]}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+            <DialogClose asChild>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (datetimePicker.current?.jsDate) {
+                    if (
+                      (datetimePicker.current?.jsDate?.getTime() as number) -
+                      new Date().getTime() >=
+                      0
+                    ) {
+                      setDeadline(
+                        todo.index,
+                        JSON.stringify(
+                          datetimePicker.current?.jsDate?.toLocaleString()
+                        )
+                      );
+                    }
+                  } else {
+                    setDeadline(todo.index, "");
+                  }
+                }}
+              >
+                {lang["todo_deadline_dialog_button"]}
+              </Button>
+            </DialogClose>
           </DialogContent>
         </Dialog>
 
@@ -382,16 +399,43 @@ function Todo({
           </DialogContent>
         </Dialog>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <TrashIcon onClick={() => removeTODO(todo.index)} />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{lang["todo_delete"]}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Dialog>
+          <DialogTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <TrashIcon />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{lang["todo_delete"]}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              {lang["todo_delete_dialog_title"]}
+            </DialogHeader>
+            <DialogDescription>
+              {lang["todo_delete_dialog_des"]}
+            </DialogDescription>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button>{lang["todo_delete_dialog_cancelbutton"]}</Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    removeTODO(todo.index)
+                  }}
+                >
+                  {lang["todo_delete_dialog_delbutton"]}
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -8,13 +8,10 @@ function Footer({ lang }: FooterProps) {
 
   useEffect(() => {
     const mottos = lang["motto"]
-    // console.log(mottos)
-    //
     try {
       const randomIndex = Math.floor(Math.random() * mottos.length)
       setMotto(mottos[randomIndex])
     } catch {
-      console.log("Get mottos")
     }
   }, [lang])
   return (
