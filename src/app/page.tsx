@@ -236,6 +236,7 @@ const Home: React.FC = () => {
       createdtime: nowTime,
       completedtime: 0,
       sub: [],
+      trash: false
     };
     const newTodoList = [...TODOList, data];
     UpdateStorage(newTodoList);
@@ -265,16 +266,28 @@ const Home: React.FC = () => {
     UpdateStorage(newTodoList);
   };
 
-  const removeTODO = (index: number) => {
+  const trashTodo = (index: number) => {
     const newTodoList = [...TODOList];
-    const delIndex = newTodoList.findIndex((item) => item.index === index);
-    if (delIndex !== -1) {
-      newTodoList.map((item) => {
-        if (item.index > index) {
-          item.index = item.index - 1;
+    const todo = newTodoList.find((item) => item.index === index);
+    if (todo) {
+      todo.trash = true;
+    }
+    UpdateStorage(newTodoList);
+  }
+
+  const removeTodo = (indexList: number[]) => {
+
+
+
+    const newTodoList = [...TODOList];
+    while (indexList.length > 0) {
+      const index = indexList.shift()
+      if (index) {
+        const delIndex = newTodoList.findIndex((item) => item.index === index);
+        if (delIndex !== -1) {
+          newTodoList.splice(delIndex, 1);
         }
-      });
-      newTodoList.splice(delIndex, 1);
+      }
     }
     UpdateStorage(newTodoList);
   };
@@ -306,35 +319,6 @@ const Home: React.FC = () => {
     UpdateStorage(newTodoList);
   };
 
-  const reSort = (index: number, targetIndex: number) => {
-    const newTodoList = [...TODOList];
-    const todo = newTodoList.find((item) => item.index === index);
-    const tempIndex = targetIndex;
-    if (index === targetIndex) return;
-    else if (index > targetIndex) {
-      newTodoList.map((item) => {
-        if (item.index >= targetIndex && item.index < index) {
-          item.index = item.index + 1;
-        }
-      });
-      todo!.index = tempIndex;
-    } else {
-      newTodoList.map((item) => {
-        if (item.index <= targetIndex && item.index > index) {
-          item.index = item.index - 1;
-        }
-      });
-      todo!.index = tempIndex;
-    }
-
-    const sortBy = () => {
-      return (a: TodoItem, b: TodoItem) => {
-        return a["index"] - b["index"];
-      };
-    };
-    newTodoList.sort(sortBy());
-    UpdateStorage(newTodoList);
-  };
 
   const setIsRemind = (index: number, flag: boolean) => {
 
@@ -454,6 +438,7 @@ const Home: React.FC = () => {
             displayLang={displayLang}
             setDisplayLang={setDisplayLang}
             lang={lang}
+            removeTodo={removeTodo}
           />
         </div>
         <div
@@ -519,7 +504,7 @@ const Home: React.FC = () => {
                           searchText,
                           displayCompleted
                         );
-                        if (renderTodo && todo.pin) {
+                        if (renderTodo && todo.pin && !todo.trash) {
                           return (
                             <div
                               className={layoutModeClass.todoSize}
@@ -549,13 +534,12 @@ const Home: React.FC = () => {
                                 droppedLevel={droppedLevel}
                                 droppedIndex={droppedIndex}
                                 completedTODO={completedTODO}
-                                removeTODO={removeTODO}
+                                trashTodo={trashTodo}
                                 pinTodo={pinTodo}
                                 reviseTodo={reviseTodo}
                                 addTag={addTag}
                                 tagOptions={tagOptions}
                                 reLevel={reLevel}
-                                reSort={reSort}
                                 setDeadline={setDeadline}
                                 setAhead={setAhead}
                                 addSub={addSub}
@@ -575,7 +559,7 @@ const Home: React.FC = () => {
                         searchText,
                         displayCompleted
                       );
-                      if (renderTodo && !todo.pin) {
+                      if (renderTodo && !todo.pin && !todo.trash) {
                         return (
                           <div
                             className={layoutModeClass.todoSize}
@@ -605,13 +589,12 @@ const Home: React.FC = () => {
                               droppedLevel={droppedLevel}
                               droppedIndex={droppedIndex}
                               completedTODO={completedTODO}
-                              removeTODO={removeTODO}
+                              trashTodo={trashTodo}
                               pinTodo={pinTodo}
                               reviseTodo={reviseTodo}
                               addTag={addTag}
                               tagOptions={tagOptions}
                               reLevel={reLevel}
-                              reSort={reSort}
                               setDeadline={setDeadline}
                               setAhead={setAhead}
                               addSub={addSub}

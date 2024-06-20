@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import {
   BellIcon,
+  CrumpledPaperIcon,
   DrawingPinFilledIcon,
   DrawingPinIcon,
   LapTimerIcon,
@@ -40,13 +41,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { TodoColor } from "./DeafultProps";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@radix-ui/react-dropdown-menu";
-import { Switch } from "@/components/ui/switch";
 
 function Todo({
   todo,
   completedTODO,
-  removeTODO,
+  trashTodo,
   pinTodo,
   reviseTodo,
   addTag,
@@ -56,7 +55,6 @@ function Todo({
   setAhead,
   droppedLevel,
   droppedIndex,
-  reSort,
   addSub,
   completedSubTODO,
   delSubTodo,
@@ -105,7 +103,6 @@ function Todo({
         onDragEnd={(e) => {
           e.preventDefault();
           reLevel(todo.index, droppedLevel);
-          reSort(todo.index, droppedIndex);
         }}
       ></div>
       <div className="flex items-center ml-3 mr-3 mt-2 mb-2 space-x-2">
@@ -399,43 +396,16 @@ function Todo({
           </DialogContent>
         </Dialog>
 
-        <Dialog>
-          <DialogTrigger>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <TrashIcon />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{lang["todo_delete"]}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              {lang["todo_delete_dialog_title"]}
-            </DialogHeader>
-            <DialogDescription>
-              {lang["todo_delete_dialog_des"]}
-            </DialogDescription>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button>{lang["todo_delete_dialog_cancelbutton"]}</Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    removeTODO(todo.index)
-                  }}
-                >
-                  {lang["todo_delete_dialog_delbutton"]}
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <CrumpledPaperIcon onClick={() => trashTodo(todo.index)} />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{lang["todo_delete"]}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ export interface TodoItem {
   createdtime: number;
   completedtime: number;
   sub: SubTodoItem[];
+  trash: boolean;
 }
 
 export interface TodoProps {
@@ -22,12 +23,11 @@ export interface TodoProps {
   droppedLevel: number;
   droppedIndex: number;
   completedTODO: (index: number) => void;
-  removeTODO: (index: number) => void;
+  trashTodo: (index: number) => void;
   pinTodo: (index: number) => void;
   reviseTodo: (index: number, text: string) => void;
   addTag: (index: number, tags: string[]) => void;
   reLevel: (index: number, targetLevel: number) => void;
-  reSort: (index: number, targetIndex: number) => void;
   setDeadline: (index: number, deadline: string) => void;
   setAhead: (index: number, ahead: string) => void;
   addSub: (index: number, sub: SubTodoItem) => void;
@@ -55,6 +55,7 @@ export interface NavProps {
   displayCompleted: boolean;
   lang: any;
   updateStorage: (todolist: TodoItem[]) => void;
+  removeTodo: (indexList: number[]) => void;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
@@ -97,4 +98,11 @@ export interface FooterProps {
 export interface CalendarViewProps {
   TodoList: TodoItem[];
   lang: any;
+}
+
+export interface TrashProps {
+  TodoList: TodoItem[];
+  lang: any;
+  updateStorage: (todolist: TodoItem[]) => void;
+  removeTodo: (indexList: number[]) => void;
 }

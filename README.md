@@ -82,7 +82,9 @@ Feature
 
 - [x] Notify in advance 
 
-- [] Duplicate notification
+- [ ] Duplicate notification
+
+- [x] Trash
 
 Thanks to the following open source projects
 ---
@@ -91,6 +93,7 @@ Thanks to the following open source projects
 * [shadcn/ui](https://github.com/shadcn-ui/ui)
 * [shadcn-ui-expansions](https://github.com/hsuanyi-chou/shadcn-ui-expansions)
 * [localForage](https://github.com/localForage/localForage)
+* [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
 
 
 Donate me

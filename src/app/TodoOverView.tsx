@@ -6,11 +6,12 @@ import { Badge } from "@/components/ui/badge";
 export default function TodoOverview({ item, lang }: TodoOverviewProps) {
 
   return (
-    <div className="shadow ml-2 mr-2 dark:border w-full">
+    <div className="shadow ml-2 mr-2 dark:border w-full"
+      style={{ opacity: item.completed ? "0.2" : "1" }}>
       <div className={"h-1 w-full rounded-t " + levelColor.get((item.level).toString())}></div>
-      <div className="flex space-y-2 flex-col items-baseline p-2 mt-2 mb-3 ml-2 mr-2">
-        <div className="flex items-center ml-2">
-          <p className="w-96 text-nowrap truncate">{item.text}</p>
+      <div className="flex space-y-2 flex-col items-baseline p-2 mt-2 mb-3 ml-2 mr-2 w-full">
+        <div className="flex items-center ml-2 mr-2 justify-center w-full">
+          <p className="w-[100vw] text-nowrap truncate">{item.text}</p>
         </div>
         <div className="flex space-x-1 overflow-x-hidden w-full break-normal">
           {item.tags.map((tag, index) => {

@@ -19,6 +19,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import {
   CalendarIcon,
   Crosshair1Icon,
+  CrumpledPaperIcon,
   EnvelopeClosedIcon,
   FileTextIcon,
   GitHubLogoIcon,
@@ -27,6 +28,7 @@ import {
   MoonIcon,
   PlusCircledIcon,
   SunIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -76,6 +78,7 @@ import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CalendarView from "./CalendarView";
 import TodoOverview from "./TodoOverView";
+import Trash from "./Trash";
 
 function TODOForm({ addTodo, TodoList, lang }: TODOFormProps) {
   const [value, setValue] = useState<string>("");
@@ -159,6 +162,7 @@ function TODOForm({ addTodo, TodoList, lang }: TODOFormProps) {
 function Navbar({
   addTodo,
   TodoList,
+  removeTodo,
   updateStorage,
   setTODOList,
   setSearchText,
@@ -295,6 +299,20 @@ function Navbar({
           </DrawerContent>
         </Drawer>
 
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline" className="border-none shadow-none">
+              <TrashIcon className="w-[1rem] h-[1rem]" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
+            <DrawerHeader>
+              <DrawerTitle>{lang["trash_title"]}</DrawerTitle>
+              <DrawerDescription>{lang["trash_des"]}</DrawerDescription>
+            </DrawerHeader>
+            <Trash TodoList={TodoList} lang={lang} updateStorage={updateStorage} removeTodo={removeTodo} />
+          </DrawerContent>
+        </Drawer>
 
         <Drawer>
           <DrawerTrigger asChild>
@@ -633,7 +651,7 @@ function Navbar({
                         height={200}
                       />
                     </div>
-                    <DialogClose>
+                    <DialogClose asChild>
                       <Button variant="outline">{lang["setting_donate_dialog_button"]}</Button>
                     </DialogClose>
                   </DialogContent>
@@ -664,7 +682,7 @@ function Navbar({
                         </p>
                       </ScrollArea>
                     </div>
-                    <DialogClose>
+                    <DialogClose asChild>
                       <Button variant="outline">{lang["setting_privacypolicy_dialog_button"]}</Button>
                     </DialogClose>
                   </DialogContent>
@@ -707,7 +725,7 @@ function Navbar({
                         </Label>
                       </Link>
                     </div>
-                    <DialogClose>
+                    <DialogClose asChild>
                       <Button variant="outline">{lang["setting_contact_dialog_button"]}</Button>
                     </DialogClose>
                   </DialogContent>

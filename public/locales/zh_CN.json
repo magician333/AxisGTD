@@ -108,11 +108,18 @@
     "todo_subtodo_dialog_add_button":"添加",
     "todo_subtodo_dialog_progressbar":"已完成 ",
     "todo_subtodo_dialog_progresstip":"查看完成进度",
-    "todo_delete":"删除",
-  "todo_delete_dialog_title": "确定删除任务吗？",
-  "todo_delete_dialog_des":"这个操作不可恢复。",
-  "todo_delete_dialog_cancelbutton":"取消",
-  "todo_delete_dialog_delbutton":"删除",
+    "todo_delete":"丢弃",
+  
+    "trash_title":"垃圾箱",
+    "trash_des":"你可以在这里恢复或删除丢弃的任务。",
+    "trash_button_select1":"选择全部",
+    "trash_button_select2":"取消全选",
+    "trash_button_restore":"还原",
+    "trash_button_delete":"删除",
+    "trash_delete_dialog_title": "你确定要删除吗？",
+    "trash_delete_dialog_des":"这个操作无法恢复！",
+    "trash_delete_dialog_cancelbutton":"取消",
+    "trash_delete_dialog_delbutton":"删除",
 
     
     "todooverview_uncompleted":"未完成",
