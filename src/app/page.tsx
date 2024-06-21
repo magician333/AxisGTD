@@ -275,9 +275,17 @@ const Home: React.FC = () => {
     UpdateStorage(newTodoList);
   }
 
+  const restoreTodo = (indexList: number[]) => {
+    indexList.map((index) => {
+      const newTodoList = [...TODOList];
+      const todo = newTodoList.find((item) => item.index === index);
+      if (todo) {
+        todo.trash = false;
+      }
+      UpdateStorage(newTodoList);
+    })
+  }
   const removeTodo = (indexList: number[]) => {
-
-
 
     const newTodoList = [...TODOList];
     while (indexList.length > 0) {
@@ -439,6 +447,7 @@ const Home: React.FC = () => {
             setDisplayLang={setDisplayLang}
             lang={lang}
             removeTodo={removeTodo}
+            restoreTodo={restoreTodo}
           />
         </div>
         <div

@@ -127,6 +127,11 @@ function Todo({
             }
           }}
           onBlur={() => {
+            if (reviseText === "") {
+              setReviseText(todo.text)
+              setIsRevise(false)
+              return
+            }
             if (reviseText !== todo.text) {
               reviseTodo(todo.index, reviseText)
             }
@@ -367,11 +372,16 @@ function Todo({
                             }}
                             disabled={item.completed}
                             onChange={(e) => {
-                              const tmp = [...reviseSubText]
-                              tmp[index] = e.target.value
-                              setReviseSubText(tmp)
+                              const temp = [...reviseSubText]
+                              temp[index] = e.target.value
+                              setReviseSubText(temp)
                             }}
                             onBlur={() => {
+                              if (reviseSubText[index] === "") {
+                                const temp = [...reviseSubText]
+                                temp[index] = item.text
+                                setReviseSubText(temp)
+                              }
                               if (reviseSubText[index] !== item.text) {
                                 reviseSubTodo(
                                   todo.index,

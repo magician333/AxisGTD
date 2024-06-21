@@ -56,17 +56,24 @@ export interface NavProps {
   lang: any;
   updateStorage: (todolist: TodoItem[]) => void;
   removeTodo: (indexList: number[]) => void;
+  restoreTodo: (indexList: number[]) => void;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setDisplayLang: React.Dispatch<React.SetStateAction<string>>;
   setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-export interface TODOFormProps {
-  addTodo: (index: number, text: string, level: number) => void;
+export interface SidebarProps {
   TodoList: TodoItem[];
   lang: any;
+  displayLang: string;
+  layoutType: string;
+  displayCompleted: boolean;
+  updateStorage: (todolist: TodoItem[]) => void;
+  setLayoutType: React.Dispatch<React.SetStateAction<string>>;
+  setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+  setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisplayLang: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface LayoutClasses {
@@ -103,6 +110,7 @@ export interface CalendarViewProps {
 export interface TrashProps {
   TodoList: TodoItem[];
   lang: any;
-  updateStorage: (todolist: TodoItem[]) => void;
   removeTodo: (indexList: number[]) => void;
+  restoreTodo: (indexList: number[]) => void;
 }
+

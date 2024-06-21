@@ -52,9 +52,6 @@ function Zen() {
         );
         setTodo(todo);
       })
-      .then(() => {
-        console.log("Can't find todo");
-      });
   }, []);
 
   useEffect(() => {

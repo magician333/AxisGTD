@@ -48,11 +48,13 @@ Screenshot
 ![deadline](./screenshot/AxisGTD%20Deadline.png)
 
 
-### Zen Mode
+#### Zen Mode
 
 ![zen](./screenshot//AxisGTD%20Zen%20Mode.png)
 
+#### Trash
 
+![trash](./screenshot/AxisGTD_Trash.png)
 
 Feature
 ---

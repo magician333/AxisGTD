@@ -5,9 +5,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import { unstable_batchedUpdates } from "react-dom";
 
-export default function Trash({ TodoList, lang, removeTodo, updateStorage }: TrashProps) {
+export default function Trash({ TodoList, lang, removeTodo, restoreTodo }: TrashProps) {
   const [checkedList, setCheckedList] = useState<number[]>([])
   const [selectedAll, setSelectedAll] = useState<boolean>(true)
 
@@ -21,21 +20,15 @@ export default function Trash({ TodoList, lang, removeTodo, updateStorage }: Tra
       setCheckedList(temp)
     }
   }
+
   const delChecked = () => {
-    removeTodo(checkedList)
-    setCheckedList([])
+    removeTodo(checkedList);
+    setCheckedList([]);
   };
 
   const restore = () => {
-    checkedList.map((index) => {
-      const newTodoList = [...TodoList];
-      const todo = newTodoList.find((item) => item.index === index);
-      if (todo) {
-        todo.trash = false;
-      }
-      updateStorage(newTodoList);
-    })
-    setCheckedList([])
+    restoreTodo(checkedList);
+    setCheckedList([]);
   }
 
   const checkall = (type: boolean) => {
@@ -67,6 +60,7 @@ export default function Trash({ TodoList, lang, removeTodo, updateStorage }: Tra
       setSelectedAll(true);
     }
   }, [checkedList, TodoList])
+
   return (
     <>
       <div className="w-[35vw] mr-2 ml-2 mb-2">
