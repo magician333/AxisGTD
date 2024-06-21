@@ -99,13 +99,16 @@ const Home: React.FC = () => {
       timers = [];
       TODOList.forEach((item) => {
         if (item.deadline) {
+          let ahead = item.ahead
+          if (ahead === undefined) {
+            ahead = 0
+          }
           const deadlineDate = new Date(JSON.parse(item.deadline));
-          const remainingTime = deadlineDate.getTime() - Date.now() - item.ahead;
-          if (remainingTime <= 0 && !item.isRemind) {
-            handleReminder(item);
-            setIsRemind(item.index, true);
+          const remainingTime = deadlineDate.getTime() - Date.now() - ahead;
+          if (remainingTime < 0 && !item.isRemind) {
             return;
-          } else if (!item.isRemind) {
+          }
+          if (!item.isRemind) {
             const intervalId = setTimeout(() => {
               handleReminder(item);
               setIsRemind(item.index, true);

@@ -34,7 +34,6 @@ export default function CalendarView({ TodoList, lang }: CalendarViewProps) {
     return TList.includes(checkDay.toDateString());
   }
 
-
   return (
     <>
       <div className="flex space-x-10 h-[40vh] items-start justify-center">
@@ -63,11 +62,16 @@ export default function CalendarView({ TodoList, lang }: CalendarViewProps) {
               {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day, index) => {
                 const currentDay = new Date(date.getFullYear(), date.getMonth(), day);
                 return (
-                  <tr key={index} className="flex items-center justify-center rounded hover:bg-zinc-100 space-x-2"
-                    style={{ backgroundColor: selectedDate.toDateString() === currentDay.toDateString() ? "#d4d4d8" : "" }}>
+                  <tr key={index} className="flex items-center justify-center rounded hover:bg-zinc-100 space-x-2 pt-1"
+                    style={{
+                      backgroundColor: selectedDate.toDateString() === currentDay.toDateString() ? "#09090b" : "",
+                      color: selectedDate.toDateString() === currentDay.toDateString()
+                        ? "#FFFFFF" : "",
+                    }}
+                  >
                     <td className="flex flex-col space-y-0" onClick={() => { handleDateClick(day) }}>
                       <p className="text-center font-medium">{day}</p>
-                      <div className="flex h-3 items-center justify-center">
+                      <div className="flex h-4 items-center justify-center">
                         {displayDot(createdTimeList, currentDay)
                           ? <div className="text-TodoUnCompleted"><DotFilledIcon className="size-3" /></div> : <div></div>}
                         {displayDot(completedTimeList, currentDay)

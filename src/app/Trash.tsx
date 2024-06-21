@@ -32,17 +32,12 @@ export default function Trash({ TodoList, lang, removeTodo, restoreTodo }: Trash
   }
 
   const checkall = (type: boolean) => {
-    if (type) {
-      const trashTodoIndices = TodoList
-        .filter((todo) => todo.trash)
-        .map((trashTodo) => trashTodo.index);
-      setCheckedList(trashTodoIndices)
-    }
-    else {
-      setCheckedList([]);
-    }
-    setSelectedAll(!selectedAll);
-  }
+    const trashTodoIndices = type
+      ? TodoList.filter((todo) => todo.trash).map((trashTodo) => trashTodo.index)
+      : [];
+    setCheckedList(trashTodoIndices);
+    setSelectedAll(type);
+  };
 
   useEffect(() => {
     const areArraysEqual = (arr1: number[], arr2: number[]) => {
@@ -53,19 +48,21 @@ export default function Trash({ TodoList, lang, removeTodo, restoreTodo }: Trash
     const trashTodoIndices = TodoList
       .filter((todo) => todo.trash)
       .map((trashTodo) => trashTodo.index);
-    if (areArraysEqual(trashTodoIndices, checkedList)) {
-      setSelectedAll(false);
+    if (checkedList.length !== 0) {
+      if (areArraysEqual(trashTodoIndices, checkedList)) {
+        setSelectedAll(false);
+      }
+      else {
+        setSelectedAll(true);
+      }
     }
-    else {
-      setSelectedAll(true);
-    }
-  }, [checkedList, TodoList])
+  }, [TodoList])
 
   return (
     <>
       <div className="w-[35vw] mr-2 ml-2 mb-2">
         <div className="flex space-x-2 w-full items-baseline">
-          <Button variant="outline" onClick={() => checkall(selectedAll)}>{selectedAll ? lang["trash_button_select1"] : lang["trash_button_select2"]}</Button>
+          <Button variant="outline" disabled={checkedList.length === 0} onClick={() => checkall(selectedAll)}>{selectedAll ? lang["trash_button_select1"] : lang["trash_button_select2"]}</Button>
           <Button variant="outline" onClick={restore} disabled={checkedList.length === 0}>{lang["trash_button_restore"]}</Button>
           <Dialog>
             <DialogTrigger asChild>
