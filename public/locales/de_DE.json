@@ -1,5 +1,5 @@
 {
-  "lang":"de_DE",
+  "lang": "de_DE",
 
   "axis_name_1": "Wichtig und Dringend",
   "axis_name_2": "Wichtig aber nicht dringend",
@@ -71,7 +71,6 @@
   "setting_cleardata_dialog_des": "Dies wird alle Daten endgültig löschen. Bitte stellen Sie sicher, dass Sie wichtige Informationen gesichert haben.",
   "setting_cleardata_dialog_cancelbutton": "Abbrechen",
   "setting_cleardata_dialog_clearbutton": "Daten löschen",
-
   "setting_about_label": "Über AxisGTD",
   "setting_about_des": "AxisGTD ist eine minimalistische und entspannte TodoList App, die dir dabei hilft, deine Todos effektiv priorisiert. Es ist ein mächtiges Werkzeug in deiner persönlichen Produktivitäts-Suite. Verwende es als Teil eines ausgewogenen Arbeitsablaufs, erfasse Todos innerhalb der App und kehre zurück, um sie als abgeschlossen zu markieren, wenn du deine Aufgaben erledigst.",
   "setting_note_label": "Wichtiger Hinweis:",
@@ -87,6 +86,18 @@
   "setting_contact_dialog_des": "Für Fragen oder Feedback zögere nicht, uns unter den folgenden Methoden zu kontaktieren:",
   "setting_contact_dialog_email": "E-Mail",
   "setting_contact_dialog_button": "OK",
+  "setting_sync_label": "Daten-Synchronisierung",
+  "setting_sync_des": "Erstellen Sie Ihren eigenen Server für die Datensynchronisierung.",
+  "setting_sync_urlinput": "Bitte geben Sie die URL ein.",
+  "setting_sync_push": "Senden",
+  "setting_sync_pull": "Abrufen",
+  "setting_sync_dialog_title": "Daten abrufen",
+  "setting_sync_dialog_des": "Wiederherstellen von Todos vom Synchronisationsserver",
+  "setting_sync_dialog_time": "Server-Datenzeit:",
+  "setting_sync_dialog_tab_original": "Ursprüngliche Daten",
+  "setting_sync_dialog_tab_pull": "Abgerufene Daten",
+  "setting_sync_dialog_info": "Wählen Sie die Daten aus, die Sie beibehalten möchten",
+  "setting_sync_dialog_button": "OK",
 
   "todo_tag_add_placeholder": "Stichworte hinzufügen",
   "todo_tag_noresult": "Keine Stichworte gefunden",
@@ -147,26 +158,24 @@
   "zen_notification_title": "Zen-Modus abgeschlossen",
   "zen_notification_content": "Ihr fokussierte Arbeitszeitraum bei AxisGTD ist nun vorüber. Nehmen Sie eine wohlverdiente Pause!",
 
-  "motto":[
-  "Wo gehobelt wird, da fallen Späne.",
-  "Die Zeit heilen alle Wunden.",
-  "Arbeit macht frei.",
-  "Zeit ist das edelste Gut, das uns bleibt.",
-  "Die besten Jahre des Lebens sind die, die wir mit der größten Leidenschaft leben.",
-  "Ein guter Anfang ist halber Erfolg.",
-  "Die Zeit ist ein guter Arzt, aber ein schlechter Apotheker.",
-  "Gute Arbeit verdient Riesenlöhne.",
-  "Die Wurzel aller Ordnung ist die Zeit.",
-  "Ein Mann, der nicht arbeitet, ist wie ein Boot ohne Ruder.",
-  "Die Zeit ist ein flüchtiger Gast.",
-  "Wer heute nicht arbeitet, dem wird auch morgen nicht gegeben.",
-  "Die besten Pläne sind nichts wert, wenn man sie nicht in die Tat umsetzt.",
-  "Wer seine Zeit rettet, rettet sein Leben.",
-  "Arbeit teilt das Leben.",
-  "Zeit ist Geld.",
-  "Wer arbeitet, wird belohnt.",
-  "Die Zeit ist der größte Dieb, wenn du nicht aufpasst."
-]
+  "motto": [
+    "Wo gehobelt wird, da fallen Späne.",
+    "Die Zeit heilen alle Wunden.",
+    "Arbeit macht frei.",
+    "Zeit ist das edelste Gut, das uns bleibt.",
+    "Die besten Jahre des Lebens sind die, die wir mit der größten Leidenschaft leben.",
+    "Ein guter Anfang ist halber Erfolg.",
+    "Die Zeit ist ein guter Arzt, aber ein schlechter Apotheker.",
+    "Gute Arbeit verdient Riesenlöhne.",
+    "Die Wurzel aller Ordnung ist die Zeit.",
+    "Ein Mann, der nicht arbeitet, ist wie ein Boot ohne Ruder.",
+    "Die Zeit ist ein flüchtiger Gast.",
+    "Wer heute nicht arbeitet, dem wird auch morgen nicht gegeben.",
+    "Die besten Pläne sind nichts wert, wenn man sie nicht in die Tat umsetzt.",
+    "Wer seine Zeit rettet, rettet sein Leben.",
+    "Arbeit teilt das Leben.",
+    "Zeit ist Geld.",
+    "Wer arbeitet, wird belohnt.",
+    "Die Zeit ist der größte Dieb, wenn du nicht aufpasst."
+  ]
 }
-
-

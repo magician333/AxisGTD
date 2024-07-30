@@ -87,6 +87,8 @@ Feature
 - [ ] Duplicate notification
 
 - [x] Trash
+  
+- [x] Sync Data ([*Build your own server](https://github.com/magician333/AxisGTDSync)) 
 
 Thanks to the following open source projects
 ---

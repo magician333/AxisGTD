@@ -1,6 +1,12 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Toaster, toast } from "sonner";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
@@ -20,6 +26,7 @@ const Home: React.FC = () => {
   const [droppedIndex, setDroppedIndex] = useState<number>(0);
   const [intervals, setIntervals] = useState<NodeJS.Timeout[]>([]);
   const [areaCard, setAreaCard] = useState<AreaProps[]>([]);
+  const [syncUrl, setSyncUrl] = useState<string>("");
 
   const [lang, setLang] = useState<any>({});
 
@@ -92,16 +99,15 @@ const Home: React.FC = () => {
 
   let timers: NodeJS.Timeout[] = [];
 
-
   useEffect(() => {
     const createTimers = () => {
       timers.forEach(clearTimeout);
       timers = [];
       TODOList.forEach((item) => {
         if (item.deadline) {
-          let ahead = item.ahead
+          let ahead = item.ahead;
           if (ahead === undefined) {
-            ahead = 0
+            ahead = 0;
           }
           const deadlineDate = new Date(JSON.parse(item.deadline));
           const remainingTime = deadlineDate.getTime() - Date.now() - ahead;
@@ -122,7 +128,7 @@ const Home: React.FC = () => {
 
     createTimers();
     return () => {
-      timers.forEach(clearTimeout)
+      timers.forEach(clearTimeout);
     };
   }, [TODOList]);
 
@@ -148,8 +154,7 @@ const Home: React.FC = () => {
         lang["toast_deadline_content_2"],
       icon: "/icons/icon-circle.png",
     });
-  }
-
+  };
 
   useEffect(() => {
     const displayCompletedStorage = localStorage.getItem("displayCompleted");
@@ -161,8 +166,8 @@ const Home: React.FC = () => {
   }, []);
 
   const displayTodo = useMemo(() => {
-    return TODOList
-  }, [TODOList])
+    return TODOList;
+  }, [TODOList]);
 
   const layoutModeClass = useMemo(() => {
     const baseClass: LayoutClasses = {
@@ -173,7 +178,7 @@ const Home: React.FC = () => {
       todoGrid: "grid-cols-2 grid-rows-2",
       colorbrandWidth: "w-[49vw]",
       mainOverflow: "",
-    }
+    };
     switch (layoutType) {
       case "axis":
         return {
@@ -183,8 +188,8 @@ const Home: React.FC = () => {
           todoSize: "w-[23vw]",
           todoGrid: "grid-cols-2 grid-rows-2",
           colorbrandWidth: "w-[49vw]",
-          mainOverflow: ""
-        }
+          mainOverflow: "",
+        };
       case "kanban":
         return {
           boardGird: "grid-cols-4 grid-rows-1",
@@ -194,10 +199,9 @@ const Home: React.FC = () => {
           todoGrid: "",
           colorbrandWidth: "w-[24vw]",
           mainOverflow: "",
-        }
+        };
       case "board":
         return {
-
           boardGird: "grid-cols-1 grid-rows-4",
           boardSize: "w-[95vw] h-[90vh]",
           scrollareaHeight: "h-[80vh]",
@@ -205,19 +209,66 @@ const Home: React.FC = () => {
           todoGrid: "grid-cols-4 grid-rows-1",
           colorbrandWidth: "w-[95vw]",
           mainOverflow: "overflow-y-auto",
-        }
+        };
       default:
-        return baseClass
+        return baseClass;
     }
-  }, [layoutType])
+  }, [layoutType]);
 
+  const tagOptions = useMemo(
+    () => [
+      { label: "Work", value: "Work" },
+      { label: "Study", value: "Study" },
+      { label: "Life", value: "Life" },
+      { label: "Other", value: "Other" },
+    ],
+    []
+  );
 
-  const tagOptions = useMemo(() => [
-    { label: "Work", value: "Work" },
-    { label: "Study", value: "Study" },
-    { label: "Life", value: "Life" },
-    { label: "Other", value: "Other" },
-  ], []);
+  const pushData = async () => {
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Todolist: JSON.stringify(TODOList),
+        Time: Date.now(),
+        Config: JSON.stringify({
+          language: localStorage.getItem("language"),
+          layout: localStorage.getItem("layout"),
+          displayCompleted: localStorage.getItem("displayCompleted"),
+        }),
+      }),
+    };
+    await fetch(syncUrl, options)
+      .then((item) => {
+        toast("Push Success", { description: "Push to server success" });
+      })
+      .catch((err) => {
+        toast("Push Failed!", { description: err });
+      });
+  };
+
+  const pullData = async () => {
+    const rawresponse = await fetch(syncUrl);
+    const response = await rawresponse.json();
+    try {
+      const todolistData = JSON.parse(response["Todolist"]) as TodoItem[];
+      const configData = JSON.parse(response["Config"]);
+      setTODOList(todolistData);
+      localForage.setItem("TODOList", todolistData);
+      setDisplayLang(configData["language"]);
+      localStorage.setItem("language", configData["language"]);
+      setLayoutType(configData["layout"]);
+      localStorage.setItem("layout", configData["layout"]);
+      setDisplayCompleted(configData["displayCompleted"]);
+      localStorage.setItem("displayCompleted", configData["displayCompleted"]);
+    } catch {
+      console.log("error data");
+    }
+  };
 
   const UpdateStorage = (dataList: TodoItem[]) => {
     setTODOList(dataList);
@@ -239,7 +290,7 @@ const Home: React.FC = () => {
       createdtime: nowTime,
       completedtime: 0,
       sub: [],
-      trash: false
+      trash: false,
     };
     const newTodoList = [...TODOList, data];
     UpdateStorage(newTodoList);
@@ -276,7 +327,7 @@ const Home: React.FC = () => {
       todo.trash = true;
     }
     UpdateStorage(newTodoList);
-  }
+  };
 
   const restoreTodo = (indexList: number[]) => {
     indexList.map((index) => {
@@ -286,13 +337,12 @@ const Home: React.FC = () => {
         todo.trash = false;
       }
       UpdateStorage(newTodoList);
-    })
-  }
+    });
+  };
   const removeTodo = (indexList: number[]) => {
-
     const newTodoList = [...TODOList];
     while (indexList.length > 0) {
-      const index = indexList.shift()
+      const index = indexList.shift();
       if (index) {
         const delIndex = newTodoList.findIndex((item) => item.index === index);
         if (delIndex !== -1) {
@@ -330,16 +380,14 @@ const Home: React.FC = () => {
     UpdateStorage(newTodoList);
   };
 
-
   const setIsRemind = (index: number, flag: boolean) => {
-
     const newTodoList = [...TODOList];
     const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
       todo.isRemind = flag;
     }
     UpdateStorage(newTodoList);
-  }
+  };
 
   const setDeadline = (index: number, deadline: string) => {
     const newTodoList = [...TODOList];
@@ -359,8 +407,7 @@ const Home: React.FC = () => {
       todo.ahead = time;
     }
     UpdateStorage(newTodoList);
-  }
-
+  };
 
   const addSub = (index: number, sub: SubTodoItem) => {
     const newTodoList = [...TODOList];
@@ -371,10 +418,7 @@ const Home: React.FC = () => {
     UpdateStorage(newTodoList);
   };
 
-  const completedSubTodo = (
-    index: number,
-    subIndex: number,
-  ) => {
+  const completedSubTodo = (index: number, subIndex: number) => {
     const newTodoList = [...TODOList];
     const todo = newTodoList.find((item) => item.index === index);
     if (todo) {
@@ -411,7 +455,12 @@ const Home: React.FC = () => {
   };
 
   const shouldRenderTodo = useCallback(
-    (todo: TodoItem, item: AreaProps, searchText: string, displayCompleted: boolean) => {
+    (
+      todo: TodoItem,
+      item: AreaProps,
+      searchText: string,
+      displayCompleted: boolean
+    ) => {
       const hasSearchText =
         todo.text.includes(searchText) ||
         todo.tags.some((tag) => tag.includes(searchText));
@@ -419,14 +468,11 @@ const Home: React.FC = () => {
         return todo.level === item.level && hasSearchText;
       }
       return (
-        todo.completed === false &&
-        todo.level === item.level &&
-        hasSearchText
+        todo.completed === false && todo.level === item.level && hasSearchText
       );
     },
     [TODOList, displayCompleted, layoutType]
   );
-
 
   return (
     <>
@@ -451,6 +497,10 @@ const Home: React.FC = () => {
             lang={lang}
             removeTodo={removeTodo}
             restoreTodo={restoreTodo}
+            syncUrl={syncUrl}
+            setSyncUrl={setSyncUrl}
+            pushData={pushData}
+            pullData={pullData}
           />
         </div>
         <div
@@ -508,62 +558,61 @@ const Home: React.FC = () => {
                       " grid mt-2 ml-2 mr-2 mb-2 justify-items-center"
                     }
                   >
-                    {
-                      displayTodo.map((todo, index) => {
-                        const renderTodo = shouldRenderTodo(
-                          todo,
-                          item,
-                          searchText,
-                          displayCompleted
-                        );
-                        if (renderTodo && todo.pin && !todo.trash) {
-                          return (
-                            <div
-                              className={layoutModeClass.todoSize}
-                              key={index}
-                              data-index={todo.index}
-                              onDragOver={(e) => {
-                                e.preventDefault();
-                              }}
-                              onDrop={(e) => {
-                                const dropTodoTarget = e.target as HTMLElement;
-                                let currentTodo = dropTodoTarget;
-                                while (currentTodo) {
-                                  if (currentTodo.dataset.index) {
-                                    setDroppedIndex(
-                                      parseInt(currentTodo.dataset.index)
-                                    );
-                                    break;
-                                  }
-                                  currentTodo =
-                                    currentTodo.parentElement as HTMLElement;
+                    {displayTodo.map((todo, index) => {
+                      const renderTodo = shouldRenderTodo(
+                        todo,
+                        item,
+                        searchText,
+                        displayCompleted
+                      );
+                      if (renderTodo && todo.pin && !todo.trash) {
+                        return (
+                          <div
+                            className={layoutModeClass.todoSize}
+                            key={index}
+                            data-index={todo.index}
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                            }}
+                            onDrop={(e) => {
+                              const dropTodoTarget = e.target as HTMLElement;
+                              let currentTodo = dropTodoTarget;
+                              while (currentTodo) {
+                                if (currentTodo.dataset.index) {
+                                  setDroppedIndex(
+                                    parseInt(currentTodo.dataset.index)
+                                  );
+                                  break;
                                 }
-                              }}
-                            >
-                              <Todo
-                                key={index}
-                                todo={todo}
-                                droppedLevel={droppedLevel}
-                                droppedIndex={droppedIndex}
-                                completedTODO={completedTODO}
-                                trashTodo={trashTodo}
-                                pinTodo={pinTodo}
-                                reviseTodo={reviseTodo}
-                                addTag={addTag}
-                                tagOptions={tagOptions}
-                                reLevel={reLevel}
-                                setDeadline={setDeadline}
-                                setAhead={setAhead}
-                                addSub={addSub}
-                                completedSubTODO={completedSubTodo}
-                                delSubTodo={delSubTodo}
-                                reviseSubTodo={reviseSubTodo}
-                                lang={lang}
-                              />
-                            </div>
-                          );
-                        }
-                      })}
+                                currentTodo =
+                                  currentTodo.parentElement as HTMLElement;
+                              }
+                            }}
+                          >
+                            <Todo
+                              key={index}
+                              todo={todo}
+                              droppedLevel={droppedLevel}
+                              droppedIndex={droppedIndex}
+                              completedTODO={completedTODO}
+                              trashTodo={trashTodo}
+                              pinTodo={pinTodo}
+                              reviseTodo={reviseTodo}
+                              addTag={addTag}
+                              tagOptions={tagOptions}
+                              reLevel={reLevel}
+                              setDeadline={setDeadline}
+                              setAhead={setAhead}
+                              addSub={addSub}
+                              completedSubTODO={completedSubTodo}
+                              delSubTodo={delSubTodo}
+                              reviseSubTodo={reviseSubTodo}
+                              lang={lang}
+                            />
+                          </div>
+                        );
+                      }
+                    })}
                     {displayTodo.map((todo, index) => {
                       const renderTodo = shouldRenderTodo(
                         todo,

@@ -14,10 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import {
-  SidebarProps,
-  TodoItem,
-} from "./Interface";
+import { SidebarProps, TodoItem } from "./Interface";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -39,17 +36,33 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import localForage from "localforage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TodoOverview from "./TodoOverView";
 import Image from "next/image";
 
-export default function Sidebar({ lang, TodoList, displayLang, layoutType, displayCompleted, updateStorage, setLayoutType, setTODOList, setDisplayLang, setDisplayCompleted }: SidebarProps) {
-
+export default function Sidebar({
+  lang,
+  TodoList,
+  displayLang,
+  layoutType,
+  displayCompleted,
+  updateStorage,
+  setLayoutType,
+  setTODOList,
+  setDisplayLang,
+  setDisplayCompleted,
+  syncUrl,
+  setSyncUrl,
+  pushData,
+  pullData,
+}: SidebarProps) {
   const [fileContent, setFileContent] = useState<string>("");
   const [dataType, setDataType] = useState<string>("import");
   const [dataImportInfo, setDataImportInfo] = useState<string>("");
   const [secTodoList, setSecTodoList] = useState<TodoItem[]>([]);
+  const [pullTodoList, setPullTodoList] = useState<TodoItem[]>([]);
+  const [pullDataTime, setPullDataTime] = useState<number>(0);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -74,42 +87,82 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
     try {
       setSecTodoList(JSON.parse(fileContent) as TodoItem[]);
       if (TodoList !== secTodoList) {
-        setDataImportInfo(
-          lang["setting_importdata_dialog_info"]
-        );
+        setDataImportInfo(lang["setting_importdata_dialog_info"]);
       }
     } catch {
-      toast(lang["toast_nouploadfile_title"], { description: lang["toast_nouploadfile_content"] });
+      toast(lang["toast_nouploadfile_title"], {
+        description: lang["toast_nouploadfile_content"],
+      });
     }
   };
 
   const reIndexTodo = (Data: TodoItem[]) => {
     let index = 1;
     for (const item in Data) {
-      Data[item].index = index
-      index += 1
+      Data[item].index = index;
+      index += 1;
     }
-    return Data
-  }
+    return Data;
+  };
 
-  const ImportData = () => {
-    if (dataType === "original") {
-      updateStorage([])
-      updateStorage(reIndexTodo(TodoList));
+  const ImportData = (
+    type: string,
+    originalTodolist: TodoItem[],
+    newTodoList: TodoItem[]
+  ) => {
+    if (type === "original") {
+      updateStorage([]);
+      updateStorage(reIndexTodo(originalTodolist));
     } else {
-      updateStorage([])
-      updateStorage(reIndexTodo(secTodoList));
+      updateStorage([]);
+      updateStorage(reIndexTodo(newTodoList));
     }
     setFileContent("");
     setSecTodoList([]);
   };
+
+  const isPullData = (type: string) => {
+    if (type === "original") {
+      return;
+    } else {
+      pullData();
+    }
+    setPullTodoList([]);
+  };
+
+  const handlePull = async () => {
+    await fetch(syncUrl)
+      .then(async (rawresponse) => {
+        await rawresponse.json().then((response) => {
+          try {
+            const todolistData = JSON.parse(response["Todolist"]) as TodoItem[];
+
+            setPullTodoList(todolistData);
+            setPullDataTime(JSON.parse(response["Time"]));
+          } catch {
+            console.log("error");
+          }
+        });
+      })
+      .catch((err) => {
+        toast("Pull Failed", { description: err });
+        return;
+      });
+  };
+
+  useEffect(() => {
+    const syncurl = (localStorage.getItem("syncUrl") as string) || "";
+    setSyncUrl(syncurl);
+  }, []);
 
   return (
     <>
       <ScrollArea className="h-[90vh] overflow-y-hidden">
         <div className="mt-5 space-y-5 flex flex-col items-baseline ml-4 mr-4">
           <div>
-            <p className="text-l font-semibold">{lang["setting_setlayout_label"]}</p>
+            <p className="text-l font-semibold">
+              {lang["setting_setlayout_label"]}
+            </p>
             <p className="text-xs font-thin mb-2">
               {lang["setting_setlayout_des"]}
             </p>
@@ -125,15 +178,23 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                 <SelectValue placeholder="Set layout"></SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="axis">{lang["setting_setlayout_name_1"]}</SelectItem>
-                <SelectItem value="kanban">{lang["setting_setlayout_name_2"]}</SelectItem>
-                <SelectItem value="board">{lang["setting_setlayout_name_3"]}</SelectItem>
+                <SelectItem value="axis">
+                  {lang["setting_setlayout_name_1"]}
+                </SelectItem>
+                <SelectItem value="kanban">
+                  {lang["setting_setlayout_name_2"]}
+                </SelectItem>
+                <SelectItem value="board">
+                  {lang["setting_setlayout_name_3"]}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <p className="text-l font-semibold">{lang["setting_setlanguage_label"]}</p>
+            <p className="text-l font-semibold">
+              {lang["setting_setlanguage_label"]}
+            </p>
             <p className="text-xs font-thin mb-2">
               {lang["setting_setlanguage_des"]}
             </p>
@@ -146,7 +207,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder={lang["setting_setlanguage_label"]}></SelectValue>
+                <SelectValue
+                  placeholder={lang["setting_setlanguage_label"]}
+                ></SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en_US">English</SelectItem>
@@ -168,14 +231,19 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
               onClick={() => {
                 Notification.requestPermission().then((result) => {
                   if (result === "granted") {
-                    toast(lang["toast_notification_premission_available_title"], {
-                      description:
-                        lang["toast_notification_premission_available_content"],
-                    });
+                    toast(
+                      lang["toast_notification_premission_available_title"],
+                      {
+                        description:
+                          lang[
+                            "toast_notification_premission_available_content"
+                          ],
+                      }
+                    );
                   } else if (result === "denied") {
                     toast(lang["toast_notification_premission_denied_title"], {
                       description:
-                        lang["toast_notification_premission_denied_content"]
+                        lang["toast_notification_premission_denied_content"],
                     });
                   }
                 });
@@ -186,7 +254,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
           </div>
 
           <div>
-            <p className="text-l font-semibold">{lang["setting_displaycompleted_label"]}</p>
+            <p className="text-l font-semibold">
+              {lang["setting_displaycompleted_label"]}
+            </p>
             <p className="text-xs font-thin mb-2">
               {lang["setting_displaycompleted_des"]}
             </p>
@@ -204,7 +274,113 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
           </div>
 
           <div>
-            <p className="text-l font-semibold">{lang["setting_exportdata_label"]}</p>
+            <p className="text-l font-semibold">{lang["setting_sync_label"]}</p>
+            <p className="text-xs font-thin mb-2">{lang["setting_sync_des"]}</p>
+            <div className="space-y-2">
+              <Input
+                className="w-72"
+                placeholder={lang["setting_sync_urlinput"]}
+                value={syncUrl}
+                type="url"
+                onChange={(e) => setSyncUrl(e.target.value)}
+              />
+
+              <div className="flex space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    localStorage.setItem("syncUrl", syncUrl);
+                    pushData();
+                  }}
+                >
+                  {lang["setting_sync_push"]}
+                </Button>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        localStorage.setItem("syncUrl", syncUrl);
+                        handlePull();
+                      }}
+                    >
+                      {lang["setting_sync_pull"]}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      {lang["setting_sync_dialog_title"]}
+                    </DialogHeader>
+                    <DialogDescription>
+                      {lang["setting_sync_dialog_des"]}
+                    </DialogDescription>
+                    <div className="flex flex-col w-full">
+                      <p className="text-sm font-semibold text-zinc-400">
+                        {lang["setting_sync_dialog_time"]}
+                        {new Date(pullDataTime).toLocaleDateString() +
+                          " " +
+                          new Date(pullDataTime).toLocaleTimeString()}
+                      </p>
+                      <Tabs
+                        onValueChange={(e) => setDataType(e)}
+                        defaultValue="original"
+                        className="w-full pt-2"
+                      >
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="original">
+                            {lang["setting_sync_dialog_tab_original"]}
+                          </TabsTrigger>
+                          <TabsTrigger value="import">
+                            {lang["setting_sync_dialog_tab_pull"]} -
+                          </TabsTrigger>
+                        </TabsList>
+
+                        <p className="font-light text-sm">{dataImportInfo}</p>
+                        <TabsContent value="original" className="w-full">
+                          <ScrollArea className="h-[30vh] w-full">
+                            {TodoList.map((item: TodoItem, index) => {
+                              return (
+                                <div key={index} className="w-[24vw]">
+                                  <TodoOverview item={item} lang={lang} />
+                                </div>
+                              );
+                            })}
+                          </ScrollArea>
+                        </TabsContent>
+                        <TabsContent value="import" className="w-full">
+                          <ScrollArea className="h-[30vh] w-full">
+                            {pullTodoList.map((item: TodoItem, index) => {
+                              return (
+                                <div key={index} className="w-[24vw]">
+                                  <TodoOverview item={item} lang={lang} />
+                                </div>
+                              );
+                            })}
+                          </ScrollArea>
+                        </TabsContent>
+                      </Tabs>
+                    </div>
+                    <DialogClose asChild>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          isPullData(dataType);
+                        }}
+                      >
+                        {lang["setting_sync_dialog_button"]}
+                      </Button>
+                    </DialogClose>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-l font-semibold">
+              {lang["setting_exportdata_label"]}
+            </p>
             <p className="text-xs font-thin mb-2">
               {lang["setting_exportdata_des"]}
             </p>
@@ -231,7 +407,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
           </div>
 
           <div>
-            <p className="text-l font-semibold">{lang["setting_importdata_label"]}</p>
+            <p className="text-l font-semibold">
+              {lang["setting_importdata_label"]}
+            </p>
             <p className="text-xs font-thin mb-2">
               {lang["setting_importdata_des"]}
             </p>
@@ -250,7 +428,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <DialogHeader>{lang["setting_importdata_dialog_title"]}</DialogHeader>
+                    <DialogHeader>
+                      {lang["setting_importdata_dialog_title"]}
+                    </DialogHeader>
                     <DialogDescription>
                       {lang["setting_importdata_dialog_des"]}
                     </DialogDescription>
@@ -288,9 +468,7 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                           </TabsTrigger>
                         </TabsList>
 
-                        <p className="font-light text-sm">
-                          {dataImportInfo}
-                        </p>
+                        <p className="font-light text-sm">{dataImportInfo}</p>
                         <TabsContent value="original" className="w-full">
                           <ScrollArea className="h-[30vh] w-full">
                             {TodoList.map((item: TodoItem, index) => {
@@ -319,7 +497,7 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                       <Button
                         variant="outline"
                         onClick={() => {
-                          ImportData();
+                          ImportData(dataType, TodoList, secTodoList);
                         }}
                       >
                         {lang["setting_importdata_dialog_button"]}
@@ -332,13 +510,17 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
           </div>
 
           <div>
-            <p className="text-l font-semibold">{lang["setting_cleardata_label"]}</p>
+            <p className="text-l font-semibold">
+              {lang["setting_cleardata_label"]}
+            </p>
             <p className="text-xs font-thin mb-2">
               {lang["setting_cleardata_des"]}
             </p>
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline">{lang["setting_cleardata_button"]}</Button>
+                <Button variant="outline">
+                  {lang["setting_cleardata_button"]}
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -349,7 +531,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                 </DialogDescription>
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button>{lang["setting_cleardata_dialog_cancelbutton"]}</Button>
+                    <Button>
+                      {lang["setting_cleardata_dialog_cancelbutton"]}
+                    </Button>
                   </DialogClose>
                   <DialogClose asChild>
                     <Button
@@ -371,7 +555,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
           </div>
 
           <div>
-            <p className="text-l font-semibold mb-2">{lang["setting_about_label"]}</p>
+            <p className="text-l font-semibold mb-2">
+              {lang["setting_about_label"]}
+            </p>
             <p className="break-words font-light text-sm whitespace-pre-wrap">
               {lang["setting_about_des"]}
             </p>
@@ -392,7 +578,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                   <TooltipTrigger asChild>
                     <HeartIcon className="size-5" />
                   </TooltipTrigger>
-                  <TooltipContent>{lang["setting_donate_dialog_title"]}</TooltipContent>
+                  <TooltipContent>
+                    {lang["setting_donate_dialog_title"]}
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </DialogTrigger>
@@ -419,7 +607,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                 />
               </div>
               <DialogClose asChild>
-                <Button variant="outline">{lang["setting_donate_dialog_button"]}</Button>
+                <Button variant="outline">
+                  {lang["setting_donate_dialog_button"]}
+                </Button>
               </DialogClose>
             </DialogContent>
           </Dialog>
@@ -431,13 +621,17 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                   <TooltipTrigger asChild>
                     <FileTextIcon className="size-5" />
                   </TooltipTrigger>
-                  <TooltipContent>{lang["setting_privacypolicy_dialog_title"]}</TooltipContent>
+                  <TooltipContent>
+                    {lang["setting_privacypolicy_dialog_title"]}
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{lang["setting_privacypolicy_dialog_title"]}</DialogTitle>
+                <DialogTitle>
+                  {lang["setting_privacypolicy_dialog_title"]}
+                </DialogTitle>
                 <DialogDescription>
                   {lang["setting_privacypolicy_dialog_des"]}
                 </DialogDescription>
@@ -450,7 +644,9 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                 </ScrollArea>
               </div>
               <DialogClose asChild>
-                <Button variant="outline">{lang["setting_privacypolicy_dialog_button"]}</Button>
+                <Button variant="outline">
+                  {lang["setting_privacypolicy_dialog_button"]}
+                </Button>
               </DialogClose>
             </DialogContent>
           </Dialog>
@@ -462,13 +658,17 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                   <TooltipTrigger asChild>
                     <EnvelopeClosedIcon />
                   </TooltipTrigger>
-                  <TooltipContent>{lang["setting_contact_dialog_title"]}</TooltipContent>
+                  <TooltipContent>
+                    {lang["setting_contact_dialog_title"]}
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{lang["setting_contact_dialog_title"]}</DialogTitle>
+                <DialogTitle>
+                  {lang["setting_contact_dialog_title"]}
+                </DialogTitle>
                 <DialogDescription>
                   {lang["setting_contact_dialog_des"]}
                 </DialogDescription>
@@ -479,7 +679,10 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                   className="flex space-x-3 items-center"
                 >
                   <EnvelopeClosedIcon className="size-5" />
-                  <Label>{lang["setting_contact_dialog_email"]} : magician333333@gmail.com</Label>
+                  <Label>
+                    {lang["setting_contact_dialog_email"]} :
+                    magician333333@gmail.com
+                  </Label>
                 </Link>
                 <Link
                   href="https://github.com/magician333/AxisGTD"
@@ -487,18 +690,18 @@ export default function Sidebar({ lang, TodoList, displayLang, layoutType, displ
                   className="flex space-x-3 items-center"
                 >
                   <GitHubLogoIcon className="size-5" />
-                  <Label>
-                    Github : https://github.com/magician333/AxisGTD
-                  </Label>
+                  <Label>Github : https://github.com/magician333/AxisGTD</Label>
                 </Link>
               </div>
               <DialogClose asChild>
-                <Button variant="outline">{lang["setting_contact_dialog_button"]}</Button>
+                <Button variant="outline">
+                  {lang["setting_contact_dialog_button"]}
+                </Button>
               </DialogClose>
             </DialogContent>
           </Dialog>
         </div>
       </ScrollArea>
     </>
-  )
+  );
 }

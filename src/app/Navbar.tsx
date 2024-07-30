@@ -27,9 +27,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import {
-  NavProps,
-} from "./Interface";
+import { NavProps } from "./Interface";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -68,9 +66,12 @@ function Navbar({
   displayCompleted,
   displayLang,
   setDisplayLang,
-  lang
+  syncUrl,
+  setSyncUrl,
+  pushData,
+  pullData,
+  lang,
 }: NavProps) {
-
   const { setTheme } = useTheme();
   const [value, setValue] = useState<string>("");
   const [level, setLevel] = useState<number>(0);
@@ -190,7 +191,12 @@ function Navbar({
               <DrawerTitle>{lang["trash_title"]}</DrawerTitle>
               <DrawerDescription>{lang["trash_des"]}</DrawerDescription>
             </DrawerHeader>
-            <Trash TodoList={TodoList} lang={lang} removeTodo={removeTodo} restoreTodo={restoreTodo} />
+            <Trash
+              TodoList={TodoList}
+              lang={lang}
+              removeTodo={removeTodo}
+              restoreTodo={restoreTodo}
+            />
           </DrawerContent>
         </Drawer>
 
@@ -226,20 +232,33 @@ function Navbar({
                   <Select onValueChange={(e) => setLevel(Number(e))}>
                     <SelectTrigger className="space-x-2 w-[30vh]">
                       <Crosshair1Icon />
-                      <SelectValue placeholder={lang["addtodo_type_placeholder"]}></SelectValue>
+                      <SelectValue
+                        placeholder={lang["addtodo_type_placeholder"]}
+                      ></SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="1">{lang["addtodo_type_name_1"]}</SelectItem>
-                        <SelectItem value="2">{lang["addtodo_type_name_2"]}</SelectItem>
-                        <SelectItem value="3">{lang["addtodo_type_name_3"]}</SelectItem>
-                        <SelectItem value="4">{lang["addtodo_type_name_4"]}</SelectItem>
+                        <SelectItem value="1">
+                          {lang["addtodo_type_name_1"]}
+                        </SelectItem>
+                        <SelectItem value="2">
+                          {lang["addtodo_type_name_2"]}
+                        </SelectItem>
+                        <SelectItem value="3">
+                          {lang["addtodo_type_name_3"]}
+                        </SelectItem>
+                        <SelectItem value="4">
+                          {lang["addtodo_type_name_4"]}
+                        </SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <DrawerClose className="flex  items-center justify-center" asChild>
+              <DrawerClose
+                className="flex  items-center justify-center"
+                asChild
+              >
                 <Button type="submit" variant="outline">
                   {lang["addtodo_button"]}
                 </Button>
@@ -255,11 +274,26 @@ function Navbar({
             </Button>
           </SheetTrigger>
           <SheetContent>
-            <SheetHeader className="text-2xl">{lang["setting_title"]}</SheetHeader>
-            <SheetDescription>
-              {lang["setting_des"]}
-            </SheetDescription>
-            <Sidebar lang={lang} TodoList={TodoList} updateStorage={updateStorage} setLayoutType={setLayoutType} setTODOList={setTODOList} layoutType={layoutType} displayCompleted={displayCompleted} displayLang={displayLang} setDisplayCompleted={setDisplayCompleted} setDisplayLang={setDisplayLang} />
+            <SheetHeader className="text-2xl">
+              {lang["setting_title"]}
+            </SheetHeader>
+            <SheetDescription>{lang["setting_des"]}</SheetDescription>
+            <Sidebar
+              lang={lang}
+              TodoList={TodoList}
+              updateStorage={updateStorage}
+              setLayoutType={setLayoutType}
+              setTODOList={setTODOList}
+              layoutType={layoutType}
+              displayCompleted={displayCompleted}
+              displayLang={displayLang}
+              setDisplayCompleted={setDisplayCompleted}
+              setDisplayLang={setDisplayLang}
+              syncUrl={syncUrl}
+              setSyncUrl={setSyncUrl}
+              pushData={pushData}
+              pullData={pullData}
+            />
           </SheetContent>
         </Sheet>
       </div>

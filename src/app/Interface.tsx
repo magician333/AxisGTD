@@ -33,11 +33,7 @@ export interface TodoProps {
   addSub: (index: number, sub: SubTodoItem) => void;
   completedSubTODO: (index: number, subIndex: number) => void;
   delSubTodo: (index: number, subIndex: number) => void;
-  reviseSubTodo: (
-    index: number,
-    subIndex: number,
-    text: string
-  ) => void;
+  reviseSubTodo: (index: number, subIndex: number, text: string) => void;
   lang: any;
 }
 
@@ -53,15 +49,19 @@ export interface NavProps {
   layoutType: string;
   displayLang: string;
   displayCompleted: boolean;
+  syncUrl: string;
   lang: any;
+  pushData: () => void;
   updateStorage: (todolist: TodoItem[]) => void;
   removeTodo: (indexList: number[]) => void;
   restoreTodo: (indexList: number[]) => void;
+  pullData: () => void;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setDisplayLang: React.Dispatch<React.SetStateAction<string>>;
   setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setSyncUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 export interface SidebarProps {
   TodoList: TodoItem[];
@@ -69,11 +69,15 @@ export interface SidebarProps {
   displayLang: string;
   layoutType: string;
   displayCompleted: boolean;
+  syncUrl: string;
   updateStorage: (todolist: TodoItem[]) => void;
+  pushData: () => void;
+  pullData: () => void;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   setDisplayLang: React.Dispatch<React.SetStateAction<string>>;
+  setSyncUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface LayoutClasses {
@@ -113,4 +117,3 @@ export interface TrashProps {
   removeTodo: (indexList: number[]) => void;
   restoreTodo: (indexList: number[]) => void;
 }
-
