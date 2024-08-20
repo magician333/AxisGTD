@@ -10,7 +10,13 @@ import React, {
 import { Toaster, toast } from "sonner";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
-import { AreaProps, LayoutClasses, SubTodoItem, TodoItem } from "./Interface";
+import {
+  AreaProps,
+  LayoutClasses,
+  SubTodoItem,
+  syncConfigProps,
+  TodoItem,
+} from "./Interface";
 import Todo from "./Todo";
 import localForage from "localforage";
 import { ToastAction } from "@/components/ui/toast";
@@ -27,6 +33,7 @@ const Home: React.FC = () => {
   const [intervals, setIntervals] = useState<NodeJS.Timeout[]>([]);
   const [areaCard, setAreaCard] = useState<AreaProps[]>([]);
   const [syncUrl, setSyncUrl] = useState<string>("");
+  const [syncID, setSyncID] = useState<string>("");
 
   const [lang, setLang] = useState<any>({});
 
@@ -242,32 +249,42 @@ const Home: React.FC = () => {
         }),
       }),
     };
-    await fetch(syncUrl, options)
-      .then((item) => {
-        toast("Push Success", { description: "Push to server success" });
-      })
-      .catch((err) => {
-        toast("Push Failed!", { description: err });
+    const response = await fetch(`${syncUrl}\\sync\\${syncID}`, options);
+    if (!response.ok) {
+      toast(lang["sync_push_fail_title"], {
+        description: lang["sync_push_fail_des"],
       });
+    } else {
+      toast(lang["sync_push_ok_title"], {
+        description: lang["sync_push_ok_des"],
+      });
+    }
   };
 
-  const pullData = async () => {
-    const rawresponse = await fetch(syncUrl);
-    const response = await rawresponse.json();
-    try {
-      const todolistData = JSON.parse(response["Todolist"]) as TodoItem[];
-      const configData = JSON.parse(response["Config"]);
-      setTODOList(todolistData);
-      localForage.setItem("TODOList", todolistData);
-      setDisplayLang(configData["language"]);
-      localStorage.setItem("language", configData["language"]);
-      setLayoutType(configData["layout"]);
-      localStorage.setItem("layout", configData["layout"]);
-      setDisplayCompleted(configData["displayCompleted"]);
-      localStorage.setItem("displayCompleted", configData["displayCompleted"]);
-    } catch {
-      console.log("error data");
-    }
+  const pullData = async (
+    todolistData: TodoItem[],
+    configData: syncConfigProps,
+    time: number
+  ) => {
+    setTODOList(todolistData);
+    localForage.setItem("TODOList", todolistData);
+
+    setDisplayLang(configData["language"]);
+    localStorage.setItem("language", configData["language"]);
+    setLayoutType(configData["layout"]);
+    localStorage.setItem("layout", configData["layout"]);
+    setDisplayCompleted(configData["displayCompleted"]);
+    localStorage.setItem(
+      "displayCompleted",
+      JSON.stringify(configData["displayCompleted"])
+    );
+    const syncTime =
+      new Date(time).toLocaleTimeString() +
+      " " +
+      new Date(time).toLocaleDateString();
+    toast(lang["sync_pull_ok_title"], {
+      description: lang["sync_pull_ok_des"] + syncTime,
+    });
   };
 
   const UpdateStorage = (dataList: TodoItem[]) => {
@@ -501,6 +518,8 @@ const Home: React.FC = () => {
             setSyncUrl={setSyncUrl}
             pushData={pushData}
             pullData={pullData}
+            syncID={syncID}
+            setSyncID={setSyncID}
           />
         </div>
         <div

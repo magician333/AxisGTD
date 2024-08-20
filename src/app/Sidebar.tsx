@@ -36,7 +36,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import localForage from "localforage";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TodoOverview from "./TodoOverView";
 import Image from "next/image";
@@ -52,17 +52,11 @@ export default function Sidebar({
   setTODOList,
   setDisplayLang,
   setDisplayCompleted,
-  syncUrl,
-  setSyncUrl,
-  pushData,
-  pullData,
 }: SidebarProps) {
   const [fileContent, setFileContent] = useState<string>("");
   const [dataType, setDataType] = useState<string>("import");
   const [dataImportInfo, setDataImportInfo] = useState<string>("");
   const [secTodoList, setSecTodoList] = useState<TodoItem[]>([]);
-  const [pullTodoList, setPullTodoList] = useState<TodoItem[]>([]);
-  const [pullDataTime, setPullDataTime] = useState<number>(0);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -120,40 +114,6 @@ export default function Sidebar({
     setFileContent("");
     setSecTodoList([]);
   };
-
-  const isPullData = (type: string) => {
-    if (type === "original") {
-      return;
-    } else {
-      pullData();
-    }
-    setPullTodoList([]);
-  };
-
-  const handlePull = async () => {
-    await fetch(syncUrl)
-      .then(async (rawresponse) => {
-        await rawresponse.json().then((response) => {
-          try {
-            const todolistData = JSON.parse(response["Todolist"]) as TodoItem[];
-
-            setPullTodoList(todolistData);
-            setPullDataTime(JSON.parse(response["Time"]));
-          } catch {
-            console.log("error");
-          }
-        });
-      })
-      .catch((err) => {
-        toast("Pull Failed", { description: err });
-        return;
-      });
-  };
-
-  useEffect(() => {
-    const syncurl = (localStorage.getItem("syncUrl") as string) || "";
-    setSyncUrl(syncurl);
-  }, []);
 
   return (
     <>
@@ -271,110 +231,6 @@ export default function Sidebar({
                 );
               }}
             />
-          </div>
-
-          <div>
-            <p className="text-l font-semibold">{lang["setting_sync_label"]}</p>
-            <p className="text-xs font-thin mb-2">{lang["setting_sync_des"]}</p>
-            <div className="space-y-2">
-              <Input
-                className="w-72"
-                placeholder={lang["setting_sync_urlinput"]}
-                value={syncUrl}
-                type="url"
-                onChange={(e) => setSyncUrl(e.target.value)}
-              />
-
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    localStorage.setItem("syncUrl", syncUrl);
-                    pushData();
-                  }}
-                >
-                  {lang["setting_sync_push"]}
-                </Button>
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        localStorage.setItem("syncUrl", syncUrl);
-                        handlePull();
-                      }}
-                    >
-                      {lang["setting_sync_pull"]}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      {lang["setting_sync_dialog_title"]}
-                    </DialogHeader>
-                    <DialogDescription>
-                      {lang["setting_sync_dialog_des"]}
-                    </DialogDescription>
-                    <div className="flex flex-col w-full">
-                      <p className="text-sm font-semibold text-zinc-400">
-                        {lang["setting_sync_dialog_time"]}
-                        {new Date(pullDataTime).toLocaleDateString() +
-                          " " +
-                          new Date(pullDataTime).toLocaleTimeString()}
-                      </p>
-                      <Tabs
-                        onValueChange={(e) => setDataType(e)}
-                        defaultValue="original"
-                        className="w-full pt-2"
-                      >
-                        <TabsList className="grid w-full grid-cols-2">
-                          <TabsTrigger value="original">
-                            {lang["setting_sync_dialog_tab_original"]}
-                          </TabsTrigger>
-                          <TabsTrigger value="import">
-                            {lang["setting_sync_dialog_tab_pull"]} -
-                          </TabsTrigger>
-                        </TabsList>
-
-                        <p className="font-light text-sm">{dataImportInfo}</p>
-                        <TabsContent value="original" className="w-full">
-                          <ScrollArea className="h-[30vh] w-full">
-                            {TodoList.map((item: TodoItem, index) => {
-                              return (
-                                <div key={index} className="w-[24vw]">
-                                  <TodoOverview item={item} lang={lang} />
-                                </div>
-                              );
-                            })}
-                          </ScrollArea>
-                        </TabsContent>
-                        <TabsContent value="import" className="w-full">
-                          <ScrollArea className="h-[30vh] w-full">
-                            {pullTodoList.map((item: TodoItem, index) => {
-                              return (
-                                <div key={index} className="w-[24vw]">
-                                  <TodoOverview item={item} lang={lang} />
-                                </div>
-                              );
-                            })}
-                          </ScrollArea>
-                        </TabsContent>
-                      </Tabs>
-                    </div>
-                    <DialogClose asChild>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          isPullData(dataType);
-                        }}
-                      >
-                        {lang["setting_sync_dialog_button"]}
-                      </Button>
-                    </DialogClose>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
           </div>
 
           <div>

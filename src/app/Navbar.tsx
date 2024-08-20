@@ -22,7 +22,9 @@ import {
   HamburgerMenuIcon,
   MoonIcon,
   PlusCircledIcon,
+  QuestionMarkCircledIcon,
   SunIcon,
+  SymbolIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
@@ -50,7 +52,8 @@ import Image from "next/image";
 import CalendarView from "./CalendarView";
 import Trash from "./Trash";
 import Sidebar from "./Sidebar";
-import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
+import SyncView from "./SyncView";
+import Link from "next/link";
 
 function Navbar({
   addTodo,
@@ -70,6 +73,8 @@ function Navbar({
   setSyncUrl,
   pushData,
   pullData,
+  syncID,
+  setSyncID,
   lang,
 }: NavProps) {
   const { setTheme } = useTheme();
@@ -131,74 +136,6 @@ function Navbar({
             setSearchText(e.target.value);
           }}
         />
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="border-none shadow-none">
-              <SunIcon className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <MoonIcon className="absolute h-[1rem] w-[1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">{lang["theme_label"]}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => {
-                setTheme("light");
-              }}
-            >
-              {lang["theme_light"]}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setTheme("dark");
-              }}
-            >
-              {lang["theme_dark"]}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setTheme("system");
-              }}
-            >
-              {lang["theme_system"]}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="outline" className="border-none shadow-none">
-              <CalendarIcon className="w-[1rem] h-[1rem]" />
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
-            <DrawerHeader>
-              <DrawerTitle>{lang["calendar_title"]}</DrawerTitle>
-              <DrawerDescription>{lang["calendar_des"]}</DrawerDescription>
-            </DrawerHeader>
-            <CalendarView TodoList={TodoList} lang={lang} />
-          </DrawerContent>
-        </Drawer>
-
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="outline" className="border-none shadow-none">
-              <TrashIcon className="w-[1rem] h-[1rem]" />
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
-            <DrawerHeader>
-              <DrawerTitle>{lang["trash_title"]}</DrawerTitle>
-              <DrawerDescription>{lang["trash_des"]}</DrawerDescription>
-            </DrawerHeader>
-            <Trash
-              TodoList={TodoList}
-              lang={lang}
-              removeTodo={removeTodo}
-              restoreTodo={restoreTodo}
-            />
-          </DrawerContent>
-        </Drawer>
 
         <Drawer>
           <DrawerTrigger asChild>
@@ -267,6 +204,105 @@ function Navbar({
           </DrawerContent>
         </Drawer>
 
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="border-none shadow-none">
+              <SunIcon className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <MoonIcon className="absolute h-[1rem] w-[1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">{lang["theme_label"]}</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => {
+                setTheme("light");
+              }}
+            >
+              {lang["theme_light"]}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setTheme("dark");
+              }}
+            >
+              {lang["theme_dark"]}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setTheme("system");
+              }}
+            >
+              {lang["theme_system"]}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline" className="border-none shadow-none">
+              <CalendarIcon className="w-[1rem] h-[1rem]" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
+            <DrawerHeader className="text-center flex flex-col items-center">
+              <DrawerTitle>{lang["calendar_title"]}</DrawerTitle>
+              <DrawerDescription>{lang["calendar_des"]}</DrawerDescription>
+            </DrawerHeader>
+            <CalendarView TodoList={TodoList} lang={lang} />
+          </DrawerContent>
+        </Drawer>
+
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline" className="border-none shadow-none">
+              <SymbolIcon className="w-[1rem] h-[1rem]" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
+            <DrawerHeader className="text-center flex flex-col items-center">
+              <DrawerTitle>{lang["sync_label"]}</DrawerTitle>
+              <DrawerDescription className="flex items-center">
+                {lang["sync_des"]}
+                <Link href="https://github.com/magician333/AxisGTDSync">
+                  <QuestionMarkCircledIcon />
+                </Link>
+              </DrawerDescription>
+            </DrawerHeader>
+            <SyncView
+              TodoList={TodoList}
+              lang={lang}
+              syncUrl={syncUrl}
+              setSyncUrl={setSyncUrl}
+              pushData={pushData}
+              pullData={pullData}
+              addTodo={addTodo}
+              updateStorage={updateStorage}
+              syncID={syncID}
+              setSyncID={setSyncID}
+            />
+          </DrawerContent>
+        </Drawer>
+
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline" className="border-none shadow-none">
+              <TrashIcon className="w-[1rem] h-[1rem]" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="flex items-center flex-col pt-3 pb-10 space-y-3">
+            <DrawerHeader className="text-center flex flex-col items-center">
+              <DrawerTitle>{lang["trash_title"]}</DrawerTitle>
+              <DrawerDescription>{lang["trash_des"]}</DrawerDescription>
+            </DrawerHeader>
+            <Trash
+              TodoList={TodoList}
+              lang={lang}
+              removeTodo={removeTodo}
+              restoreTodo={restoreTodo}
+            />
+          </DrawerContent>
+        </Drawer>
+
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" className="border-none shadow-none">
@@ -289,10 +325,6 @@ function Navbar({
               displayLang={displayLang}
               setDisplayCompleted={setDisplayCompleted}
               setDisplayLang={setDisplayLang}
-              syncUrl={syncUrl}
-              setSyncUrl={setSyncUrl}
-              pushData={pushData}
-              pullData={pullData}
             />
           </SheetContent>
         </Sheet>

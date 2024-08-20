@@ -55,13 +55,19 @@ export interface NavProps {
   updateStorage: (todolist: TodoItem[]) => void;
   removeTodo: (indexList: number[]) => void;
   restoreTodo: (indexList: number[]) => void;
-  pullData: () => void;
+  pullData: (
+    todolistData: TodoItem[],
+    configData: syncConfigProps,
+    time: number
+  ) => void;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setDisplayLang: React.Dispatch<React.SetStateAction<string>>;
   setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   setSyncUrl: React.Dispatch<React.SetStateAction<string>>;
+  syncID: string;
+  setSyncID: React.Dispatch<React.SetStateAction<string>>;
 }
 export interface SidebarProps {
   TodoList: TodoItem[];
@@ -69,15 +75,12 @@ export interface SidebarProps {
   displayLang: string;
   layoutType: string;
   displayCompleted: boolean;
-  syncUrl: string;
   updateStorage: (todolist: TodoItem[]) => void;
-  pushData: () => void;
-  pullData: () => void;
+
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   setDisplayLang: React.Dispatch<React.SetStateAction<string>>;
-  setSyncUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface LayoutClasses {
@@ -116,4 +119,33 @@ export interface TrashProps {
   lang: any;
   removeTodo: (indexList: number[]) => void;
   restoreTodo: (indexList: number[]) => void;
+}
+
+export interface SyncViewProps {
+  TodoList: TodoItem[];
+  syncUrl: string;
+  syncID: string;
+  setSyncID: React.Dispatch<React.SetStateAction<string>>;
+  setSyncUrl: React.Dispatch<React.SetStateAction<string>>;
+  lang: any;
+  addTodo: (index: number, text: string, level: number) => void;
+  updateStorage: (todolist: TodoItem[]) => void;
+  pushData: () => void;
+  pullData: (
+    todolistData: TodoItem[],
+    configData: syncConfigProps,
+    time: number
+  ) => void;
+}
+
+export interface historyProps {
+  todolist: string;
+  config: string;
+  time: number;
+}
+
+export interface syncConfigProps {
+  language: string;
+  layout: string;
+  displayCompleted: boolean;
 }
