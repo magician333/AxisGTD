@@ -100,12 +100,43 @@ export default function SyncView({
     try {
       const rawresponse = await fetch(`${syncUrl}\\id\\${syncID}`);
       if (!rawresponse.ok) {
-        throw new Error("Network response was not ok");
+        toast(lang["sync_pull_fail_title"], {
+          description: lang["sync_pull_fail_des"],
+        });
       }
       const response = JSON.parse(await rawresponse.json());
       setHistory(response);
     } catch {
-      console.log("get history error");
+      toast(lang["sync_pull_fail_title"], {
+        description: lang["sync_pull_fail_des"],
+      });
+    }
+  };
+
+  const handleDeleteHistory = async (time: number) => {
+    try {
+      const rawresponse = await fetch(
+        `${syncUrl}\\delete\\${syncID}\\${time}`,
+        { method: "DELETE" }
+      );
+      if (!rawresponse.ok) {
+        toast(lang["sync_history_del_fail_title"], {
+          description: lang["sync_history_del_fail_des"],
+        });
+      } else {
+        handlePullHistory();
+        toast(lang["sync_history_del_ok_title"], {
+          description:
+            lang["sync_history_del_ok_des"] +
+            new Date(time).toLocaleDateString() +
+            " " +
+            new Date(time).toLocaleTimeString(),
+        });
+      }
+    } catch {
+      toast(lang["sync_history_del_fail_title"], {
+        description: lang["sync_history_del_fail_des"],
+      });
     }
   };
 
@@ -225,9 +256,15 @@ export default function SyncView({
         </div>
         <Separator />
         <div className="">
-          <Button variant="outline" onClick={handlePullHistory}>
-            {lang["sync_history_button"]}
-          </Button>
+          <div className="space-y-1">
+            <Button variant="outline" onClick={handlePullHistory}>
+              {lang["sync_history_button"]}
+            </Button>
+            <p className="text-xs text-zinc-500">
+              {lang["sync_history_button_des"]}
+            </p>
+          </div>
+
           <ScrollArea className="h-64 mt-2">
             <Table>
               <TableHeader>
@@ -267,7 +304,7 @@ export default function SyncView({
                               variant="outline"
                               className="border-none shadow-none"
                             >
-                              {JSON.parse(his.todolist).length}{" "}
+                              {JSON.parse(his.todolist).length}
                               {lang["sync_history_table_pieces"]}
                             </Button>
                           </PopoverTrigger>
@@ -318,19 +355,43 @@ export default function SyncView({
                         </Button>
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="border-none shadow-none"
-                          onClick={(e) =>
-                            toast("Comming Soon", {
-                              description:
-                                "This feature will be implemented in the next version",
-                            })
-                          }
-                        >
-                          <CrossCircledIcon />
-                        </Button>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="border-none shadow-none"
+                            >
+                              <CrossCircledIcon />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>
+                                {lang["sync_history_del_dialog_title"]}
+                              </DialogTitle>
+                            </DialogHeader>
+                            {lang["sync_history_del_dialog_des"]}
+                            {new Date(his.time).toLocaleDateString() +
+                              "\t" +
+                              new Date(his.time).toLocaleTimeString()}
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button>
+                                  {lang["sync_history_del_dialog_cancelbutton"]}
+                                </Button>
+                              </DialogClose>
+                              <DialogClose asChild>
+                                <Button
+                                  variant="outline"
+                                  onClick={(e) => handleDeleteHistory(his.time)}
+                                >
+                                  {lang["sync_history_del_dialog_okbutton"]}
+                                </Button>
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
                   );
