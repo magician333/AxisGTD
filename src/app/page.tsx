@@ -34,15 +34,25 @@ const Home: React.FC = () => {
   const [areaCard, setAreaCard] = useState<AreaProps[]>([]);
   const [syncUrl, setSyncUrl] = useState<string>("");
   const [syncID, setSyncID] = useState<string>("");
+  const [hideFunc, setHideFunc] = useState<string[]>([]);
 
   const [lang, setLang] = useState<any>({});
 
-  useLayoutEffect(() => {
-    const setLanguage = async () => {
-      let localLang = localStorage.getItem("language") as string;
-      localLang = localLang || "en_US";
-      setDisplayLang(localLang);
+  useEffect(() => {
+    let localLang = localStorage.getItem("language") as string;
+    localLang = localLang || "en_US";
+    setDisplayLang(localLang);
 
+    let hideNav = (localStorage.getItem("hideNavbar") as string) || "";
+    try {
+      setHideFunc(JSON.parse(hideNav));
+    } catch {
+      setHideFunc([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    const setLanguage = async () => {
       await import("../../public/locales/" + displayLang + ".json").then(
         (langData) => {
           setLang(langData.default);
@@ -243,12 +253,14 @@ const Home: React.FC = () => {
         Todolist: JSON.stringify(TODOList),
         Time: Date.now(),
         Config: JSON.stringify({
-          language: localStorage.getItem("language"),
-          layout: localStorage.getItem("layout"),
-          displayCompleted: localStorage.getItem("displayCompleted"),
+          language: displayLang,
+          layout: layoutType,
+          displayCompleted: displayCompleted,
+          hideNav: hideFunc,
         }),
       }),
     };
+    console.log(options);
     const response = await fetch(`${syncUrl}\\sync\\${syncID}`, options);
     if (!response.ok) {
       toast(lang["sync_push_fail_title"], {
@@ -269,15 +281,41 @@ const Home: React.FC = () => {
     setTODOList(todolistData);
     localForage.setItem("TODOList", todolistData);
 
-    setDisplayLang(configData["language"]);
-    localStorage.setItem("language", configData["language"]);
-    setLayoutType(configData["layout"]);
-    localStorage.setItem("layout", configData["layout"]);
-    setDisplayCompleted(configData["displayCompleted"]);
-    localStorage.setItem(
-      "displayCompleted",
-      JSON.stringify(configData["displayCompleted"])
-    );
+    if (configData["language"] !== undefined) {
+      setDisplayLang(configData["language"]);
+      localStorage.setItem("language", configData["language"]);
+    } else {
+      setDisplayLang("en_US");
+      localStorage.setItem("language", "en_US");
+    }
+
+    if (configData["layout"] !== undefined) {
+      setLayoutType(configData["layout"]);
+      localStorage.setItem("layout", configData["layout"]);
+    } else {
+      setLayoutType("axis");
+      localStorage.setItem("layout", "axis");
+    }
+
+    if (configData["displayCompleted"] !== undefined) {
+      setDisplayCompleted(configData["displayCompleted"]);
+      localStorage.setItem(
+        "displayCompleted",
+        JSON.stringify(configData["displayCompleted"])
+      );
+    } else {
+      setDisplayCompleted(true);
+      localStorage.setItem("displayCompleted", JSON.stringify(true));
+    }
+
+    if (configData["hideNav"] !== undefined) {
+      setHideFunc(configData["hideNav"]);
+      localStorage.setItem("hideNavbar", JSON.stringify(configData["hideNav"]));
+    } else {
+      setHideFunc([]);
+      localStorage.setItem("hideNavbar", JSON.stringify([]));
+    }
+
     const syncTime =
       new Date(time).toLocaleTimeString() +
       " " +
@@ -520,6 +558,8 @@ const Home: React.FC = () => {
             pullData={pullData}
             syncID={syncID}
             setSyncID={setSyncID}
+            hideFunc={hideFunc}
+            setHideFunc={setHideFunc}
           />
         </div>
         <div

@@ -75,6 +75,8 @@ function Navbar({
   pullData,
   syncID,
   setSyncID,
+  hideFunc,
+  setHideFunc,
   lang,
 }: NavProps) {
   const { setTheme } = useTheme();
@@ -206,7 +208,11 @@ function Navbar({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="border-none shadow-none">
+            <Button
+              variant="outline"
+              className="border-none shadow-none"
+              style={{ display: hideFunc.includes("theme") ? "none" : "" }}
+            >
               <SunIcon className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <MoonIcon className="absolute h-[1rem] w-[1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">{lang["theme_label"]}</span>
@@ -239,7 +245,11 @@ function Navbar({
 
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="outline" className="border-none shadow-none">
+            <Button
+              variant="outline"
+              className="border-none shadow-none"
+              style={{ display: hideFunc.includes("calendar") ? "none" : "" }}
+            >
               <CalendarIcon className="w-[1rem] h-[1rem]" />
             </Button>
           </DrawerTrigger>
@@ -254,7 +264,11 @@ function Navbar({
 
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="outline" className="border-none shadow-none">
+            <Button
+              variant="outline"
+              className="border-none shadow-none"
+              style={{ display: hideFunc.includes("sync") ? "none" : "" }}
+            >
               <SymbolIcon className="w-[1rem] h-[1rem]" />
             </Button>
           </DrawerTrigger>
@@ -285,7 +299,11 @@ function Navbar({
 
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="outline" className="border-none shadow-none">
+            <Button
+              variant="outline"
+              className="border-none shadow-none"
+              style={{ display: hideFunc.includes("trash") ? "none" : "" }}
+            >
               <TrashIcon className="w-[1rem] h-[1rem]" />
             </Button>
           </DrawerTrigger>
@@ -325,6 +343,8 @@ function Navbar({
               displayLang={displayLang}
               setDisplayCompleted={setDisplayCompleted}
               setDisplayLang={setDisplayLang}
+              hideFunc={hideFunc}
+              setHideFunc={setHideFunc}
             />
           </SheetContent>
         </Sheet>

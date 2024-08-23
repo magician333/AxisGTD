@@ -50,6 +50,7 @@ export interface NavProps {
   displayLang: string;
   displayCompleted: boolean;
   syncUrl: string;
+  hideFunc: string[];
   lang: any;
   pushData: () => void;
   updateStorage: (todolist: TodoItem[]) => void;
@@ -68,6 +69,7 @@ export interface NavProps {
   setSyncUrl: React.Dispatch<React.SetStateAction<string>>;
   syncID: string;
   setSyncID: React.Dispatch<React.SetStateAction<string>>;
+  setHideFunc: React.Dispatch<React.SetStateAction<string[]>>;
 }
 export interface SidebarProps {
   TodoList: TodoItem[];
@@ -75,8 +77,9 @@ export interface SidebarProps {
   displayLang: string;
   layoutType: string;
   displayCompleted: boolean;
+  hideFunc: string[];
   updateStorage: (todolist: TodoItem[]) => void;
-
+  setHideFunc: React.Dispatch<React.SetStateAction<string[]>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setDisplayCompleted: React.Dispatch<React.SetStateAction<boolean>>;
@@ -148,4 +151,5 @@ export interface syncConfigProps {
   language: string;
   layout: string;
   displayCompleted: boolean;
+  hideNav: string[];
 }

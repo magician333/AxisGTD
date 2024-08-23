@@ -52,6 +52,8 @@ export default function Sidebar({
   setTODOList,
   setDisplayLang,
   setDisplayCompleted,
+  hideFunc,
+  setHideFunc,
 }: SidebarProps) {
   const [fileContent, setFileContent] = useState<string>("");
   const [dataType, setDataType] = useState<string>("import");
@@ -231,6 +233,94 @@ export default function Sidebar({
                 );
               }}
             />
+          </div>
+
+          <div>
+            <p className="text-l font-semibold">
+              {lang["setting_hidenav_title"]}
+            </p>
+            <p className="text-xs font-thin mb-2">
+              {lang["setting_hidenav_des"]}
+            </p>
+
+            <div className="flex flex-col space-y-1 w-40">
+              <div className="flex items-center space-x-2 justify-between">
+                <Label className="text-sm font-semibold">
+                  {lang["setting_hidenav_item_theme"]}
+                </Label>
+                <Switch
+                  checked={hideFunc.includes("theme")}
+                  onCheckedChange={(e) => {
+                    const temp = [...hideFunc];
+                    if (hideFunc.includes("theme")) {
+                      temp.splice(temp.indexOf("theme"), 1);
+                      setHideFunc(temp);
+                    } else {
+                      temp.push("theme");
+                      setHideFunc(temp);
+                    }
+                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                  }}
+                />
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <Label className="text-sm font-semibold">
+                  {lang["setting_hidenav_item_calendar"]}
+                </Label>
+                <Switch
+                  checked={hideFunc.includes("calendar")}
+                  onCheckedChange={(e) => {
+                    const temp = [...hideFunc];
+                    if (hideFunc.includes("calendar")) {
+                      temp.splice(temp.indexOf("calendar"), 1);
+                      setHideFunc(temp);
+                    } else {
+                      temp.push("calendar");
+                      setHideFunc(temp);
+                    }
+                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                  }}
+                />
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <Label className="text-sm font-semibold">
+                  {lang["setting_hidenav_item_sync"]}
+                </Label>
+                <Switch
+                  checked={hideFunc.includes("sync")}
+                  onCheckedChange={(e) => {
+                    const temp = [...hideFunc];
+                    if (hideFunc.includes("sync")) {
+                      temp.splice(temp.indexOf("sync"), 1);
+                      setHideFunc(temp);
+                    } else {
+                      temp.push("sync");
+                      setHideFunc(temp);
+                    }
+                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                  }}
+                />
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <Label className="text-sm font-semibold">
+                  {lang["setting_hidenav_item_trash"]}
+                </Label>
+                <Switch
+                  checked={hideFunc.includes("trash")}
+                  onCheckedChange={(e) => {
+                    const temp = [...hideFunc];
+                    if (hideFunc.includes("trash")) {
+                      temp.splice(temp.indexOf("trash"), 1);
+                      setHideFunc(temp);
+                    } else {
+                      temp.push("trash");
+                      setHideFunc(temp);
+                    }
+                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           <div>

@@ -104,9 +104,10 @@ export default function SyncView({
           description: lang["sync_pull_fail_des"],
         });
       }
-      const response = JSON.parse(await rawresponse.json());
+      const response = await rawresponse.json();
       setHistory(response);
-    } catch {
+    } catch (error) {
+      console.log(error);
       toast(lang["sync_pull_fail_title"], {
         description: lang["sync_pull_fail_des"],
       });
@@ -400,7 +401,14 @@ export default function SyncView({
             </Table>
           </ScrollArea>
 
-          <div className="w-full flex justify-center mt-1">
+          <div className="w-full flex flex-col items-center justify-center mt-1">
+            <p
+              className="text-zinc-500 text-sm"
+              style={{ display: history === undefined ? "none" : "" }}
+            >
+              {history?.length}
+              {lang["sync_history_num"]}
+            </p>
             <p className=" text-zinc-500 text-sm">{lang["sync_history_des"]}</p>
           </div>
         </div>
