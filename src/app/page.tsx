@@ -12,6 +12,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import {
   AreaProps,
+  HideNavProps,
   LayoutClasses,
   SubTodoItem,
   syncConfigProps,
@@ -34,7 +35,12 @@ const Home: React.FC = () => {
   const [areaCard, setAreaCard] = useState<AreaProps[]>([]);
   const [syncUrl, setSyncUrl] = useState<string>("");
   const [syncID, setSyncID] = useState<string>("");
-  const [hideFunc, setHideFunc] = useState<string[]>([]);
+  const [hideFunc, setHideFunc] = useState<HideNavProps>({
+    theme: false,
+    calendar: false,
+    sync: false,
+    trash: false,
+  });
 
   const [lang, setLang] = useState<any>({});
 
@@ -47,7 +53,12 @@ const Home: React.FC = () => {
     try {
       setHideFunc(JSON.parse(hideNav));
     } catch {
-      setHideFunc([]);
+      setHideFunc({
+        theme: false,
+        calendar: false,
+        sync: false,
+        trash: false,
+      });
     }
   }, []);
 
@@ -312,7 +323,12 @@ const Home: React.FC = () => {
       setHideFunc(configData["hideNav"]);
       localStorage.setItem("hideNavbar", JSON.stringify(configData["hideNav"]));
     } else {
-      setHideFunc([]);
+      setHideFunc({
+        theme: false,
+        calendar: false,
+        sync: false,
+        trash: false,
+      });
       localStorage.setItem("hideNavbar", JSON.stringify([]));
     }
 

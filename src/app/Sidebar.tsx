@@ -249,16 +249,19 @@ export default function Sidebar({
                   {lang["setting_hidenav_item_theme"]}
                 </Label>
                 <Switch
-                  checked={hideFunc.includes("theme")}
+                  checked={hideFunc.theme}
                   onCheckedChange={(e) => {
-                    const temp = [...hideFunc];
-                    if (hideFunc.includes("theme")) {
-                      temp.splice(temp.indexOf("theme"), 1);
-                      setHideFunc(temp);
-                    } else {
-                      temp.push("theme");
-                      setHideFunc(temp);
-                    }
+                    const temp = hideFunc;
+                    temp.theme = !temp.theme;
+                    setHideFunc(temp);
+                    // const temp = [...hideFunc];
+                    // if (hideFunc.theme) {
+                    //   temp.splice(temp.indexOf("theme"), 1);
+                    //   setHideFunc(temp);
+                    // } else {
+                    //   temp.push("theme");
+                    //   setHideFunc(temp);
+                    // }
                     localStorage.setItem("hideNavbar", JSON.stringify(temp));
                   }}
                 />
@@ -268,16 +271,11 @@ export default function Sidebar({
                   {lang["setting_hidenav_item_calendar"]}
                 </Label>
                 <Switch
-                  checked={hideFunc.includes("calendar")}
+                  checked={hideFunc.calendar}
                   onCheckedChange={(e) => {
-                    const temp = [...hideFunc];
-                    if (hideFunc.includes("calendar")) {
-                      temp.splice(temp.indexOf("calendar"), 1);
-                      setHideFunc(temp);
-                    } else {
-                      temp.push("calendar");
-                      setHideFunc(temp);
-                    }
+                    const temp = hideFunc;
+                    temp.calendar = !temp.calendar;
+                    setHideFunc(temp);
                     localStorage.setItem("hideNavbar", JSON.stringify(temp));
                   }}
                 />
@@ -287,16 +285,11 @@ export default function Sidebar({
                   {lang["setting_hidenav_item_sync"]}
                 </Label>
                 <Switch
-                  checked={hideFunc.includes("sync")}
+                  checked={hideFunc.sync}
                   onCheckedChange={(e) => {
-                    const temp = [...hideFunc];
-                    if (hideFunc.includes("sync")) {
-                      temp.splice(temp.indexOf("sync"), 1);
-                      setHideFunc(temp);
-                    } else {
-                      temp.push("sync");
-                      setHideFunc(temp);
-                    }
+                    const temp = hideFunc;
+                    temp.sync = !temp.sync;
+                    setHideFunc(temp);
                     localStorage.setItem("hideNavbar", JSON.stringify(temp));
                   }}
                 />
@@ -306,16 +299,11 @@ export default function Sidebar({
                   {lang["setting_hidenav_item_trash"]}
                 </Label>
                 <Switch
-                  checked={hideFunc.includes("trash")}
+                  checked={hideFunc.trash}
                   onCheckedChange={(e) => {
-                    const temp = [...hideFunc];
-                    if (hideFunc.includes("trash")) {
-                      temp.splice(temp.indexOf("trash"), 1);
-                      setHideFunc(temp);
-                    } else {
-                      temp.push("trash");
-                      setHideFunc(temp);
-                    }
+                    const temp = hideFunc;
+                    temp.trash = !temp.trash;
+                    setHideFunc(temp);
                     localStorage.setItem("hideNavbar", JSON.stringify(temp));
                   }}
                 />
