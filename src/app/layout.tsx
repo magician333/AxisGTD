@@ -75,9 +75,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8032561724273374"
+          crossOrigin="anonymous"
+        ></script>
+      </head>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased min-w-[1920px]",
+          "bg-background font-sans antialiased ",
           fontSans.variable
         )}
       >
