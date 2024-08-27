@@ -107,7 +107,6 @@ export default function SyncView({
       const response = await rawresponse.json();
       setHistory(response);
     } catch (error) {
-      console.log(error);
       toast(lang["sync_pull_fail_title"], {
         description: lang["sync_pull_fail_des"],
       });
