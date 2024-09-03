@@ -51,6 +51,8 @@
   "setting_notification_button": "Enable",
   "setting_displaycompleted_label": "Show Completed Todos",
   "setting_displaycompleted_des": "Toggle on to view completed todos",
+  "setting_customtags_label": "Custom Tags",
+  "setting_customtags_des": "You can customize the required tags here",
   "setting_hidenav_title": "Hide Navbar function",
   "setting_hidenav_des": "If you feel that there are too many functions on the navigation bar, you can choose to hide them",
   "setting_hidenav_item_theme": "Theme",

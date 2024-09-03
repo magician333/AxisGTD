@@ -40,7 +40,13 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { TodoColor } from "./DeafultProps";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function Todo({
   todo,
@@ -63,9 +69,11 @@ function Todo({
 }: TodoProps) {
   const datetimePicker = useRef<DateTimePickerRef>(null);
   const [value, setValue] = useState<string>("");
-  const [reviseText, setReviseText] = useState<string>(todo.text)
-  const [isRevise, setIsRevise] = useState<boolean>(false)
-  const [reviseSubText, setReviseSubText] = useState<string[]>(todo.sub.map(sub => sub.text))
+  const [reviseText, setReviseText] = useState<string>(todo.text);
+  const [isRevise, setIsRevise] = useState<boolean>(false);
+  const [reviseSubText, setReviseSubText] = useState<string[]>(
+    todo.sub.map((sub) => sub.text)
+  );
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!value) return;
@@ -82,8 +90,8 @@ function Todo({
     };
     addSub(todo.index, newSubTodoItem);
 
-    const tmpSub = [...reviseSubText, value]
-    setReviseSubText(tmpSub)
+    const tmpSub = [...reviseSubText, value];
+    setReviseSubText(tmpSub);
 
     setValue("");
   };
@@ -95,7 +103,11 @@ function Todo({
     >
       <div
         className="w-full h-[1vh] rounded-t"
-        style={{ backgroundColor: todo.completed ? TodoColor.get("completed") : TodoColor.get("uncompleted") }}
+        style={{
+          backgroundColor: todo.completed
+            ? TodoColor.get("completed")
+            : TodoColor.get("uncompleted"),
+        }}
         draggable
         onDragOver={(e) => {
           e.preventDefault();
@@ -118,24 +130,24 @@ function Todo({
           value={reviseText}
           style={{
             textDecoration: todo.completed ? "line-through" : "",
-            boxShadow: isRevise ? "0 1px 2px 0 #ff3333" : ""
+            boxShadow: isRevise ? "0 1px 2px 0 #ff3333" : "",
           }}
           onChange={(e) => {
-            setReviseText(e.target.value)
+            setReviseText(e.target.value);
             if (e.target.value !== todo.text) {
-              setIsRevise(true)
+              setIsRevise(true);
             }
           }}
           onBlur={() => {
             if (reviseText === "") {
-              setReviseText(todo.text)
-              setIsRevise(false)
-              return
+              setReviseText(todo.text);
+              setIsRevise(false);
+              return;
             }
             if (reviseText !== todo.text) {
-              reviseTodo(todo.index, reviseText)
+              reviseTodo(todo.index, reviseText);
             }
-            setIsRevise(false)
+            setIsRevise(false);
           }}
         />
       </div>
@@ -184,7 +196,6 @@ function Todo({
           </Tooltip>
         </TooltipProvider>
 
-
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -232,16 +243,34 @@ function Todo({
                     : new Date(JSON.parse(todo.deadline))
                 }
               />
-              <Select onValueChange={(e) => { setAhead(todo.index, e) }} defaultValue="a0" value={todo.ahead ? "a" + String(todo.ahead) : "a0"}>
+              <Select
+                onValueChange={(e) => {
+                  setAhead(todo.index, e);
+                }}
+                defaultValue="a0"
+                value={todo.ahead ? "a" + String(todo.ahead) : "a0"}
+              >
                 <SelectTrigger className="w-48 h-full">
-                  <SelectValue placeholder={lang["todo_deadline_dialog_ahead"]} />
+                  <SelectValue
+                    placeholder={lang["todo_deadline_dialog_ahead"]}
+                  />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="a0">{lang["todo_deadline_dialog_ahead_1"]}</SelectItem>
-                  <SelectItem value="a900000">{lang["todo_deadline_dialog_ahead_2"]}</SelectItem>
-                  <SelectItem value="a1800000">{lang["todo_deadline_dialog_ahead_3"]}</SelectItem>
-                  <SelectItem value="a3600000">{lang["todo_deadline_dialog_ahead_4"]}</SelectItem>
-                  <SelectItem value="a86400000">{lang["todo_deadline_dialog_ahead_5"]}</SelectItem>
+                  <SelectItem value="a0">
+                    {lang["todo_deadline_dialog_ahead_1"]}
+                  </SelectItem>
+                  <SelectItem value="a900000">
+                    {lang["todo_deadline_dialog_ahead_2"]}
+                  </SelectItem>
+                  <SelectItem value="a1800000">
+                    {lang["todo_deadline_dialog_ahead_3"]}
+                  </SelectItem>
+                  <SelectItem value="a3600000">
+                    {lang["todo_deadline_dialog_ahead_4"]}
+                  </SelectItem>
+                  <SelectItem value="a86400000">
+                    {lang["todo_deadline_dialog_ahead_5"]}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -252,7 +281,7 @@ function Todo({
                   if (datetimePicker.current?.jsDate) {
                     if (
                       (datetimePicker.current?.jsDate?.getTime() as number) -
-                      new Date().getTime() >=
+                        new Date().getTime() >=
                       0
                     ) {
                       setDeadline(
@@ -334,12 +363,12 @@ function Todo({
                         {lang["todo_subtodo_dialog_progressbar"]}{" "}
                         {todo.sub.length > 0
                           ? Math.round(
-                            (todo.sub.filter(
-                              (item) => item.completed === true
-                            ).length /
-                              todo.sub.length) *
-                            100
-                          )
+                              (todo.sub.filter(
+                                (item) => item.completed === true
+                              ).length /
+                                todo.sub.length) *
+                                100
+                            )
                           : 0}{" "}
                         %
                       </p>
@@ -347,59 +376,57 @@ function Todo({
                   </Tooltip>
                 </TooltipProvider>
                 <ScrollArea className="h-[36vh]">
-                  {
-                    todo.sub?.map((item, index) => {
+                  {todo.sub?.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="group flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2"
+                      >
+                        <Checkbox
+                          checked={item.completed}
+                          onCheckedChange={() =>
+                            completedSubTODO(todo.index, item.index)
+                          }
+                        />
 
-                      return (
-                        <div
-                          key={index}
-                          className="group flex space-x-3 items-center mb-2 mr-5 ml-5 mt-2"
-                        >
-                          <Checkbox
-                            checked={item.completed}
-                            onCheckedChange={() =>
-                              completedSubTODO(todo.index, item.index)
+                        <Input
+                          value={reviseSubText[index]}
+                          className="border-none shadow-none overflow-x-auto"
+                          style={{
+                            textDecoration: item.completed
+                              ? "line-through"
+                              : "",
+                          }}
+                          disabled={item.completed}
+                          onChange={(e) => {
+                            const temp = [...reviseSubText];
+                            temp[index] = e.target.value;
+                            setReviseSubText(temp);
+                          }}
+                          onBlur={() => {
+                            if (reviseSubText[index] === "") {
+                              const temp = [...reviseSubText];
+                              temp[index] = item.text;
+                              setReviseSubText(temp);
                             }
-                          />
-
-                          <Input
-                            value={reviseSubText[index]}
-                            className="border-none shadow-none overflow-x-auto"
-                            style={{
-                              textDecoration: item.completed
-                                ? "line-through"
-                                : "",
-                            }}
-                            disabled={item.completed}
-                            onChange={(e) => {
-                              const temp = [...reviseSubText]
-                              temp[index] = e.target.value
-                              setReviseSubText(temp)
-                            }}
-                            onBlur={() => {
-                              if (reviseSubText[index] === "") {
-                                const temp = [...reviseSubText]
-                                temp[index] = item.text
-                                setReviseSubText(temp)
-                              }
-                              if (reviseSubText[index] !== item.text) {
-                                reviseSubTodo(
-                                  todo.index,
-                                  item.index,
-                                  reviseSubText[index]
-                                )
-                              }
-                            }}
-                          />
-                          <TrashIcon
-                            onClick={() => {
-                              delSubTodo(todo.index, item.index);
-                            }}
-                            className="opacity-0 group-hover:opacity-100"
-                          />
-                        </div>
-                      );
-                    })}
+                            if (reviseSubText[index] !== item.text) {
+                              reviseSubTodo(
+                                todo.index,
+                                item.index,
+                                reviseSubText[index]
+                              );
+                            }
+                          }}
+                        />
+                        <TrashIcon
+                          onClick={() => {
+                            delSubTodo(todo.index, item.index);
+                          }}
+                          className="opacity-0 group-hover:opacity-100"
+                        />
+                      </div>
+                    );
+                  })}
                 </ScrollArea>
               </div>
             </DialogHeader>

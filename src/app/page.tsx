@@ -22,6 +22,7 @@ import Todo from "./Todo";
 import localForage from "localforage";
 import { ToastAction } from "@/components/ui/toast";
 import { TodoColor, levelColor } from "./DeafultProps";
+import { Option } from "@/components/ui/MultipleSelector";
 
 const Home: React.FC = () => {
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);
@@ -41,6 +42,12 @@ const Home: React.FC = () => {
     sync: false,
     trash: false,
   });
+  const [tagOptions, setTagOptions] = useState<Option[]>([
+    { label: "Work", value: "Work" },
+    { label: "Study", value: "Study" },
+    { label: "Life", value: "Life" },
+    { label: "Other", value: "Other" },
+  ]);
 
   const [lang, setLang] = useState<any>({});
 
@@ -49,7 +56,7 @@ const Home: React.FC = () => {
     localLang = localLang || "en_US";
     setDisplayLang(localLang);
 
-    let hideNav = (localStorage.getItem("hideNavbar") as string) || "";
+    let hideNav = (localStorage.getItem("hideNav") as string) || "";
     try {
       setHideFunc(JSON.parse(hideNav));
     } catch {
@@ -59,6 +66,18 @@ const Home: React.FC = () => {
         sync: false,
         trash: false,
       });
+    }
+
+    let tags = (localStorage.getItem("tags") as string) || "";
+    try {
+      setTagOptions(JSON.parse(tags));
+    } catch {
+      setTagOptions([
+        { label: "Work", value: "Work" },
+        { label: "Study", value: "Study" },
+        { label: "Life", value: "Life" },
+        { label: "Other", value: "Other" },
+      ]);
     }
   }, []);
 
@@ -243,16 +262,6 @@ const Home: React.FC = () => {
     }
   }, [layoutType]);
 
-  const tagOptions = useMemo(
-    () => [
-      { label: "Work", value: "Work" },
-      { label: "Study", value: "Study" },
-      { label: "Life", value: "Life" },
-      { label: "Other", value: "Other" },
-    ],
-    []
-  );
-
   const pushData = async () => {
     const options = {
       method: "POST",
@@ -268,10 +277,10 @@ const Home: React.FC = () => {
           layout: layoutType,
           displayCompleted: displayCompleted,
           hideNav: hideFunc,
+          tags: tagOptions,
         }),
       }),
     };
-    console.log(options);
     const response = await fetch(`${syncUrl}\\sync\\${syncID}`, options);
     if (!response.ok) {
       toast(lang["sync_push_fail_title"], {
@@ -292,45 +301,35 @@ const Home: React.FC = () => {
     setTODOList(todolistData);
     localForage.setItem("TODOList", todolistData);
 
-    if (configData["language"] !== undefined) {
-      setDisplayLang(configData["language"]);
-      localStorage.setItem("language", configData["language"]);
-    } else {
-      setDisplayLang("en_US");
-      localStorage.setItem("language", "en_US");
-    }
-
-    if (configData["layout"] !== undefined) {
-      setLayoutType(configData["layout"]);
-      localStorage.setItem("layout", configData["layout"]);
-    } else {
-      setLayoutType("axis");
-      localStorage.setItem("layout", "axis");
-    }
-
-    if (configData["displayCompleted"] !== undefined) {
-      setDisplayCompleted(configData["displayCompleted"]);
+    const setProps = (
+      stateFunc: React.Dispatch<React.SetStateAction<any>>,
+      flag: keyof syncConfigProps,
+      defaultValue: any
+    ) => {
+      const value =
+        configData[flag] !== undefined ? configData[flag] : defaultValue;
+      stateFunc(value);
       localStorage.setItem(
-        "displayCompleted",
-        JSON.stringify(configData["displayCompleted"])
+        flag,
+        typeof value === "string" ? value : JSON.stringify(value)
       );
-    } else {
-      setDisplayCompleted(true);
-      localStorage.setItem("displayCompleted", JSON.stringify(true));
-    }
+    };
 
-    if (configData["hideNav"] !== undefined) {
-      setHideFunc(configData["hideNav"]);
-      localStorage.setItem("hideNavbar", JSON.stringify(configData["hideNav"]));
-    } else {
-      setHideFunc({
-        theme: false,
-        calendar: false,
-        sync: false,
-        trash: false,
-      });
-      localStorage.setItem("hideNavbar", JSON.stringify([]));
-    }
+    setProps(setDisplayLang, "language", "en_US");
+    setProps(setLayoutType, "layout", "axis");
+    setProps(setDisplayCompleted, "displayCompleted", true);
+    setProps(setHideFunc, "hideNav", {
+      theme: false,
+      calendar: false,
+      sync: false,
+      trash: false,
+    });
+    setProps(setTagOptions, "tags", [
+      { label: "Work", value: "Work" },
+      { label: "Study", value: "Study" },
+      { label: "Life", value: "Life" },
+      { label: "Other", value: "Other" },
+    ]);
 
     const syncTime =
       new Date(time).toLocaleTimeString() +
@@ -576,6 +575,8 @@ const Home: React.FC = () => {
             setSyncID={setSyncID}
             hideFunc={hideFunc}
             setHideFunc={setHideFunc}
+            tagOptions={tagOptions}
+            setTagOptions={setTagOptions}
           />
         </div>
         <div

@@ -56,13 +56,12 @@ export default function SyncView({
       return;
     } else {
       const rawresponse = await fetch(`${syncUrl}\\sync\\${syncID}`);
-      console.log(rawresponse.ok);
       if (!rawresponse.ok) {
         toast(lang["sync_pull_fail_title"], {
           description: lang["sync_pull_fail_des"],
         });
       }
-      const response = JSON.parse(await rawresponse.json());
+      const response = await rawresponse.json();
       try {
         const todolistData = JSON.parse(response["todolist"]);
         const configData = JSON.parse(response["config"]);
@@ -84,12 +83,14 @@ export default function SyncView({
           description: lang["sync_pull_fail_des"],
         });
       }
-      const response = JSON.parse(await rawresponse.json());
-      const todolistData = JSON.parse(response.todolist);
+
+      const response = await rawresponse.json();
+
+      const todolistData = JSON.parse(response["todolist"]);
       const time = response.time;
       setPullTodoList(todolistData);
       setPullDataTime(time);
-    } catch {
+    } catch (error) {
       toast(lang["sync_pull_fail_title"], {
         description: lang["sync_pull_fail_des"],
       });

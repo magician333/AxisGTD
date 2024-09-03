@@ -50,6 +50,8 @@
   "setting_notification_button": "开启",
   "setting_displaycompleted_label": "显示已完成的任务",
   "setting_displaycompleted_des": "如果只想关注已完成的待办事项，可以打开此开关",
+  "setting_customtags_label": "自定义标签",
+  "setting_customtags_des": "你可以在这里自定义标签",
   "setting_hidenav_title": "隐藏导航栏功能",
   "setting_hidenav_des": "如果你觉得导航栏上功能太多可以选择隐藏项目",
   "setting_hidenav_item_theme": "主题",

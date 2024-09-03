@@ -51,6 +51,7 @@ export interface NavProps {
   displayCompleted: boolean;
   syncUrl: string;
   hideFunc: HideNavProps;
+  tagOptions: Option[];
   lang: any;
   pushData: () => void;
   updateStorage: (todolist: TodoItem[]) => void;
@@ -61,6 +62,7 @@ export interface NavProps {
     configData: syncConfigProps,
     time: number
   ) => void;
+  setTagOptions: React.Dispatch<React.SetStateAction<Option[]>>;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
@@ -78,7 +80,10 @@ export interface SidebarProps {
   layoutType: string;
   displayCompleted: boolean;
   hideFunc: HideNavProps;
+  tagOptions: Option[];
   updateStorage: (todolist: TodoItem[]) => void;
+  setTagOptions: React.Dispatch<React.SetStateAction<Option[]>>;
+
   setHideFunc: React.Dispatch<React.SetStateAction<HideNavProps>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
@@ -152,6 +157,7 @@ export interface syncConfigProps {
   layout: string;
   displayCompleted: boolean;
   hideNav: HideNavProps;
+  tags: Option[];
 }
 
 export interface HideNavProps {

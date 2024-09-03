@@ -40,6 +40,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TodoOverview from "./TodoOverView";
 import Image from "next/image";
+import MultipleSelector from "@/components/ui/MultipleSelector";
 
 export default function Sidebar({
   lang,
@@ -54,6 +55,8 @@ export default function Sidebar({
   setDisplayCompleted,
   hideFunc,
   setHideFunc,
+  tagOptions,
+  setTagOptions,
 }: SidebarProps) {
   const [fileContent, setFileContent] = useState<string>("");
   const [dataType, setDataType] = useState<string>("import");
@@ -237,6 +240,26 @@ export default function Sidebar({
 
           <div>
             <p className="text-l font-semibold">
+              {lang["setting_customtags_label"]}
+            </p>
+            <p className="text-xs font-thin mb-2">
+              {lang["setting_customtags_des"]}
+            </p>
+
+            <MultipleSelector
+              options={tagOptions}
+              value={tagOptions}
+              creatable
+              className="border w-72"
+              onChange={(e) => {
+                setTagOptions(e);
+                localStorage.setItem("tags", JSON.stringify(e));
+              }}
+            />
+          </div>
+
+          <div>
+            <p className="text-l font-semibold">
               {lang["setting_hidenav_title"]}
             </p>
             <p className="text-xs font-thin mb-2">
@@ -254,15 +277,7 @@ export default function Sidebar({
                     const temp = hideFunc;
                     temp.theme = !temp.theme;
                     setHideFunc(temp);
-                    // const temp = [...hideFunc];
-                    // if (hideFunc.theme) {
-                    //   temp.splice(temp.indexOf("theme"), 1);
-                    //   setHideFunc(temp);
-                    // } else {
-                    //   temp.push("theme");
-                    //   setHideFunc(temp);
-                    // }
-                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                    localStorage.setItem("hideNav", JSON.stringify(temp));
                   }}
                 />
               </div>
@@ -276,7 +291,7 @@ export default function Sidebar({
                     const temp = hideFunc;
                     temp.calendar = !temp.calendar;
                     setHideFunc(temp);
-                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                    localStorage.setItem("hideNav", JSON.stringify(temp));
                   }}
                 />
               </div>
@@ -290,7 +305,7 @@ export default function Sidebar({
                     const temp = hideFunc;
                     temp.sync = !temp.sync;
                     setHideFunc(temp);
-                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                    localStorage.setItem("hideNav", JSON.stringify(temp));
                   }}
                 />
               </div>
@@ -304,7 +319,7 @@ export default function Sidebar({
                     const temp = hideFunc;
                     temp.trash = !temp.trash;
                     setHideFunc(temp);
-                    localStorage.setItem("hideNavbar", JSON.stringify(temp));
+                    localStorage.setItem("hideNav", JSON.stringify(temp));
                   }}
                 />
               </div>

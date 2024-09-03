@@ -51,6 +51,8 @@
   "setting_notification_button": "Aktivieren",
   "setting_displaycompleted_label": "Abgeschlossene Todos anzeigen",
   "setting_displaycompleted_des": "Einblenden, um abgeschlossene Todos zu sehen",
+  "setting_customtags_label": "Benutzerdefinierte Tags",
+  "setting_customtags_des": "Hier können Sie Tags selbst definieren.",
   "setting_hidenav_title": "Funktion zur Verbergung der Navigationsleiste",
   "setting_hidenav_des": "Wenn Ihnen die Navigationsleiste zu überladen erscheint, können Sie die Funktionen ausblenden wählen",
   "setting_hidenav_item_theme": "Thema",

@@ -78,6 +78,8 @@ function Navbar({
   hideFunc,
   setHideFunc,
   lang,
+  tagOptions,
+  setTagOptions,
 }: NavProps) {
   const { setTheme } = useTheme();
   const [value, setValue] = useState<string>("");
@@ -345,6 +347,8 @@ function Navbar({
               setDisplayLang={setDisplayLang}
               hideFunc={hideFunc}
               setHideFunc={setHideFunc}
+              tagOptions={tagOptions}
+              setTagOptions={setTagOptions}
             />
           </SheetContent>
         </Sheet>
