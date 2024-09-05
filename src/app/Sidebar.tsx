@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { SidebarProps, TodoItem } from "./Interface";
+import { SidebarProps, syncConfigProps, TodoItem } from "./Interface";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -62,6 +62,7 @@ export default function Sidebar({
   const [dataType, setDataType] = useState<string>("import");
   const [dataImportInfo, setDataImportInfo] = useState<string>("");
   const [secTodoList, setSecTodoList] = useState<TodoItem[]>([]);
+  const [secConfig, setSecConfig] = useState<syncConfigProps>();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -84,7 +85,8 @@ export default function Sidebar({
   const handleFileupload = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      setSecTodoList(JSON.parse(fileContent) as TodoItem[]);
+      setSecTodoList(JSON.parse(fileContent)["todolist"] as TodoItem[]);
+      setSecConfig(JSON.parse(fileContent)["config"] as syncConfigProps);
       if (TodoList !== secTodoList) {
         setDataImportInfo(lang["setting_importdata_dialog_info"]);
       }
@@ -115,6 +117,39 @@ export default function Sidebar({
     } else {
       updateStorage([]);
       updateStorage(reIndexTodo(newTodoList));
+
+      const setProps = (
+        stateFunc: React.Dispatch<React.SetStateAction<any>>,
+        flag: keyof syncConfigProps,
+        defaultValue: any
+      ) => {
+        if (!secConfig) {
+          return;
+        }
+        const value =
+          secConfig[flag] !== undefined ? secConfig[flag] : defaultValue;
+        stateFunc(value);
+        localStorage.setItem(
+          flag,
+          typeof value === "string" ? value : JSON.stringify(value)
+        );
+      };
+
+      setProps(setDisplayLang, "language", "en_US");
+      setProps(setLayoutType, "layout", "axis");
+      setProps(setDisplayCompleted, "displayCompleted", true);
+      setProps(setHideFunc, "hideNav", {
+        theme: false,
+        calendar: false,
+        sync: false,
+        trash: false,
+      });
+      setProps(setTagOptions, "tags", [
+        { label: "Work", value: "Work" },
+        { label: "Study", value: "Study" },
+        { label: "Life", value: "Life" },
+        { label: "Other", value: "Other" },
+      ]);
     }
     setFileContent("");
     setSecTodoList([]);
@@ -337,8 +372,18 @@ export default function Sidebar({
             <Button
               variant="outline"
               onClick={() => {
-                const date = Date.now().toString();
-                const blob = new Blob([JSON.stringify(TodoList)], {
+                const jsonData = JSON.stringify({
+                  todolist: TodoList,
+                  config: {
+                    language: displayLang,
+                    layout: layoutType,
+                    displayCompleted: displayCompleted,
+                    hideNav: hideFunc,
+                    tags: tagOptions,
+                  },
+                });
+                const date = new Date(Date.now()).toISOString();
+                const blob = new Blob([jsonData], {
                   type: "application/json",
                 });
                 const url = URL.createObjectURL(blob);

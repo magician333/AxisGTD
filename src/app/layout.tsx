@@ -23,7 +23,6 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "AxisGTD",
-    // startUpImage: [],
   },
   formatDetection: {
     telephone: false,
