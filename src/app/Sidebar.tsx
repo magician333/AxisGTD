@@ -53,6 +53,7 @@ export default function Sidebar({
   setTODOList,
   setDisplayLang,
   setDisplayCompleted,
+  toggleDisplayCompleted,
   hideFunc,
   setHideFunc,
   tagOptions,
@@ -214,6 +215,7 @@ export default function Sidebar({
               <SelectContent>
                 <SelectItem value="en_US">English</SelectItem>
                 <SelectItem value="zh_CN">简体中文</SelectItem>
+                <SelectItem value="zh_TW">繁體中文</SelectItem>
                 <SelectItem value="de_DE">Deutsch</SelectItem>
               </SelectContent>
             </Select>
@@ -265,6 +267,7 @@ export default function Sidebar({
               checked={displayCompleted}
               onCheckedChange={(e) => {
                 setDisplayCompleted(e);
+                toggleDisplayCompleted(e);
                 localStorage.setItem(
                   "displayCompleted",
                   (!displayCompleted).toString()

@@ -47,6 +47,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import { ToastAction } from "@/components/ui/toast";
 
 function Todo({
   todo,
@@ -64,6 +66,7 @@ function Todo({
   addSub,
   completedSubTODO,
   delSubTodo,
+  restoreTodo,
   reviseSubTodo,
   lang,
 }: TodoProps) {
@@ -89,13 +92,13 @@ function Todo({
       completed: false,
     };
     addSub(todo.index, newSubTodoItem);
-
     const tmpSub = [...reviseSubText, value];
     setReviseSubText(tmpSub);
-
     setValue("");
   };
-
+  useEffect(() => {
+    setReviseSubText(todo.sub.map((item) => item.text));
+  }, [todo.sub]);
   return (
     <div
       className="shadow-md rounded bg-white mb-2 ml-1 mr-1 dark:bg-zinc-950 border"
@@ -436,7 +439,22 @@ function Todo({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <CrumpledPaperIcon onClick={() => trashTodo(todo.index)} />
+              <CrumpledPaperIcon
+                onClick={() => {
+                  trashTodo(todo.index);
+                  toast(lang["todo_delete_tip"], {
+                    description: lang["todo_delete_tip_des"],
+                    action: (
+                      <ToastAction
+                        altText={lang["todo_delete_undo"]}
+                        onClick={() => restoreTodo([todo.index])}
+                      >
+                        {lang["todo_delete_undo"]}
+                      </ToastAction>
+                    ),
+                  });
+                }}
+              />
             </TooltipTrigger>
             <TooltipContent>
               <p>{lang["todo_delete"]}</p>

@@ -67,6 +67,7 @@ function Navbar({
   layoutType,
   setDisplayCompleted,
   displayCompleted,
+  toggleDisplayCompleted,
   displayLang,
   setDisplayLang,
   syncUrl,
@@ -344,6 +345,7 @@ function Navbar({
               displayCompleted={displayCompleted}
               displayLang={displayLang}
               setDisplayCompleted={setDisplayCompleted}
+              toggleDisplayCompleted={toggleDisplayCompleted}
               setDisplayLang={setDisplayLang}
               hideFunc={hideFunc}
               setHideFunc={setHideFunc}

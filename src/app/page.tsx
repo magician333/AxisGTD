@@ -11,6 +11,7 @@ import { Toaster, toast } from "sonner";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import {
+  AreaDisplayCompletedProps,
   AreaProps,
   HideNavProps,
   LayoutClasses,
@@ -21,8 +22,10 @@ import {
 import Todo from "./Todo";
 import localForage from "localforage";
 import { ToastAction } from "@/components/ui/toast";
-import { TodoColor, levelColor } from "./DeafultProps";
+import { levelColor } from "./DeafultProps";
 import { Option } from "@/components/ui/MultipleSelector";
+import { CircleBackslashIcon, CircleIcon } from "@radix-ui/react-icons";
+import { json } from "stream/consumers";
 
 const Home: React.FC = () => {
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);
@@ -42,6 +45,7 @@ const Home: React.FC = () => {
     sync: false,
     trash: false,
   });
+
   const [tagOptions, setTagOptions] = useState<Option[]>([
     { label: "Work", value: "Work" },
     { label: "Study", value: "Study" },
@@ -81,35 +85,82 @@ const Home: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {}, []);
   useEffect(() => {
     const setLanguage = async () => {
       await import("../../public/locales/" + displayLang + ".json").then(
         (langData) => {
           setLang(langData.default);
+          const areaDisplayCompletedStorage = localStorage.getItem(
+            "AreaDisplayCompleted"
+          );
+          var areaDisplayCompleted: AreaDisplayCompletedProps[];
+          if (areaDisplayCompletedStorage) {
+            areaDisplayCompleted = JSON.parse(areaDisplayCompletedStorage);
+          } else {
+            areaDisplayCompleted = [
+              {
+                level: 1,
+                status: true,
+              },
+              {
+                level: 2,
+                status: true,
+              },
+              {
+                level: 3,
+                status: true,
+              },
+              {
+                level: 4,
+                status: true,
+              },
+            ];
+          }
           setAreaCard([
             {
               level: 1,
               title: langData["axis_name_1"],
               des: langData["axis_des_1"],
               color: levelColor.get("1") as string,
+              displayCompleted: areaDisplayCompleted.find(
+                (item) => item.level == 1
+              )?.status
+                ? true
+                : false,
             },
             {
               level: 2,
               title: langData["axis_name_2"],
               des: langData["axis_des_2"],
               color: levelColor.get("2") as string,
+              displayCompleted: areaDisplayCompleted.find(
+                (item) => item.level == 2
+              )?.status
+                ? true
+                : false,
             },
             {
               level: 3,
               title: langData["axis_name_3"],
               des: langData["axis_des_3"],
               color: levelColor.get("3") as string,
+              displayCompleted: areaDisplayCompleted.find(
+                (item) => item.level == 3
+              )?.status
+                ? true
+                : false,
             },
             {
               level: 4,
               title: langData["axis_name_4"],
               des: langData["axis_des_4"],
               color: levelColor.get("4") as string,
+              displayCompleted: areaDisplayCompleted.find(
+                (item) => item.level == 4
+              )?.status
+                ? true
+                : false,
             },
           ]);
         }
@@ -524,17 +575,18 @@ const Home: React.FC = () => {
     UpdateStorage(newTodoList);
   };
 
+  const toggleDisplayCompleted = (status: boolean) => {
+    areaCard.map((item) => {
+      item.displayCompleted = status;
+    });
+  };
+
   const shouldRenderTodo = useCallback(
-    (
-      todo: TodoItem,
-      item: AreaProps,
-      searchText: string,
-      displayCompleted: boolean
-    ) => {
+    (todo: TodoItem, item: AreaProps, searchText: string) => {
       const hasSearchText =
         todo.text.includes(searchText) ||
         todo.tags.some((tag) => tag.includes(searchText));
-      if (displayCompleted) {
+      if (item.displayCompleted) {
         return todo.level === item.level && hasSearchText;
       }
       return (
@@ -562,6 +614,7 @@ const Home: React.FC = () => {
             layoutType={layoutType}
             setDisplayCompleted={setDisplayCompleted}
             displayCompleted={displayCompleted}
+            toggleDisplayCompleted={toggleDisplayCompleted}
             displayLang={displayLang}
             setDisplayLang={setDisplayLang}
             lang={lang}
@@ -617,9 +670,34 @@ const Home: React.FC = () => {
               >
                 <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between">
                   <div className="flex justify-center flex-col mt-1">
-                    <p className=" text-white text-l font-semibold">
-                      {item.title}
-                    </p>
+                    <div className="flex space-x-2 items-center">
+                      <p className=" text-white text-l font-semibold">
+                        {item.title}
+                      </p>
+                      <div
+                        className="text-white"
+                        onClick={() => {
+                          item.displayCompleted = !item.displayCompleted;
+
+                          const areaDisplayCompletedData = areaCard.map(
+                            (area) => ({
+                              level: area.level,
+                              status: area.displayCompleted,
+                            })
+                          );
+                          localStorage.setItem(
+                            "AreaDisplayCompleted",
+                            JSON.stringify(areaDisplayCompletedData)
+                          );
+                        }}
+                      >
+                        {item.displayCompleted ? (
+                          <CircleIcon />
+                        ) : (
+                          <CircleBackslashIcon />
+                        )}
+                      </div>
+                    </div>
                     <p className=" text-white text-xs font-light">{item.des}</p>
                   </div>
                 </div>
@@ -638,8 +716,7 @@ const Home: React.FC = () => {
                       const renderTodo = shouldRenderTodo(
                         todo,
                         item,
-                        searchText,
-                        displayCompleted
+                        searchText
                       );
                       if (renderTodo && todo.pin && !todo.trash) {
                         return (
@@ -682,6 +759,7 @@ const Home: React.FC = () => {
                               addSub={addSub}
                               completedSubTODO={completedSubTodo}
                               delSubTodo={delSubTodo}
+                              restoreTodo={restoreTodo}
                               reviseSubTodo={reviseSubTodo}
                               lang={lang}
                             />
@@ -693,8 +771,7 @@ const Home: React.FC = () => {
                       const renderTodo = shouldRenderTodo(
                         todo,
                         item,
-                        searchText,
-                        displayCompleted
+                        searchText
                       );
                       if (renderTodo && !todo.pin && !todo.trash) {
                         return (
@@ -737,6 +814,7 @@ const Home: React.FC = () => {
                               addSub={addSub}
                               completedSubTODO={completedSubTodo}
                               delSubTodo={delSubTodo}
+                              restoreTodo={restoreTodo}
                               reviseSubTodo={reviseSubTodo}
                               lang={lang}
                             />

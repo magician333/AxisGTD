@@ -161,6 +161,9 @@
   "todo_subtodo_dialog_progressbar": "Progress: ",
   "todo_subtodo_dialog_progresstip": "View how much you've accomplished",
   "todo_delete": "Discard Todo",
+  "todo_delete_tip": "Todo has been deleted",
+  "todo_delete_tip_des": "You can find it in the trash",
+  "todo_delete_undo": "Undo",
 
   "trash_title": "Trash",
   "trash_des": "You can restore or delete dropped Todo here.",

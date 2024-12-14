@@ -161,6 +161,9 @@
   "todo_subtodo_dialog_progressbar": "Fortschritt: ",
   "todo_subtodo_dialog_progresstip": "Sieh dir deinen Fortschritt an",
   "todo_delete": "Aufgabe verwerfen",
+  "todo_delete_tip": "Todo wurde gelöscht",
+  "todo_delete_tip_des": "Du findest es im Müll",
+  "todo_delete_undo": "Stornieren",
 
   "trash_title": "Papierkorb",
   "trash_des": "Hier können Sie gelöschte Todos wiederherstellen oder endgltig löschen.",

@@ -33,6 +33,7 @@ export interface TodoProps {
   addSub: (index: number, sub: SubTodoItem) => void;
   completedSubTODO: (index: number, subIndex: number) => void;
   delSubTodo: (index: number, subIndex: number) => void;
+  restoreTodo: (indexList: number[]) => void;
   reviseSubTodo: (index: number, subIndex: number, text: string) => void;
   lang: any;
 }
@@ -62,6 +63,8 @@ export interface NavProps {
     configData: syncConfigProps,
     time: number
   ) => void;
+  toggleDisplayCompleted: (status: boolean) => void;
+
   setTagOptions: React.Dispatch<React.SetStateAction<Option[]>>;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
@@ -82,8 +85,8 @@ export interface SidebarProps {
   hideFunc: HideNavProps;
   tagOptions: Option[];
   updateStorage: (todolist: TodoItem[]) => void;
+  toggleDisplayCompleted: (status: boolean) => void;
   setTagOptions: React.Dispatch<React.SetStateAction<Option[]>>;
-
   setHideFunc: React.Dispatch<React.SetStateAction<HideNavProps>>;
   setLayoutType: React.Dispatch<React.SetStateAction<string>>;
   setTODOList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
@@ -106,6 +109,7 @@ export interface AreaProps {
   title: string;
   des: string;
   color: string;
+  displayCompleted: boolean;
 }
 
 export interface TodoOverviewProps {
@@ -165,4 +169,9 @@ export interface HideNavProps {
   calendar: boolean;
   sync: boolean;
   trash: boolean;
+}
+
+export interface AreaDisplayCompletedProps {
+  level: number;
+  status: boolean;
 }

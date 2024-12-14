@@ -159,6 +159,9 @@
   "todo_subtodo_dialog_progressbar": "已完成 ",
   "todo_subtodo_dialog_progresstip": "查看完成进度",
   "todo_delete": "丢弃",
+  "todo_delete_tip": "任务已经被丢弃",
+  "todo_delete_tip_des": "你可以在垃圾箱查看丢弃的任务",
+  "todo_delete_undo": "撤销",
 
   "trash_title": "垃圾箱",
   "trash_des": "你可以在这里恢复或删除丢弃的任务",
