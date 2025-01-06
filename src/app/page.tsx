@@ -1,12 +1,6 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Toaster, toast } from "sonner";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
@@ -25,7 +19,6 @@ import { ToastAction } from "@/components/ui/toast";
 import { levelColor } from "./DeafultProps";
 import { Option } from "@/components/ui/MultipleSelector";
 import { CircleBackslashIcon, CircleIcon } from "@radix-ui/react-icons";
-import { json } from "stream/consumers";
 
 const Home: React.FC = () => {
   const [TODOList, setTODOList] = useState<TodoItem[]>([]);

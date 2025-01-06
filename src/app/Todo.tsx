@@ -31,7 +31,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -62,7 +61,6 @@ function Todo({
   setDeadline,
   setAhead,
   droppedLevel,
-  droppedIndex,
   addSub,
   completedSubTODO,
   delSubTodo,
@@ -97,8 +95,13 @@ function Todo({
     setValue("");
   };
   useEffect(() => {
-    setReviseSubText(todo.sub.map((item) => item.text));
-  }, [todo.sub]);
+    setReviseSubText((prev) => {
+      if (prev.length !== todo.sub.length) {
+        return todo.sub.map((sub) => sub.text);
+      }
+      return prev;
+    });
+  }, [todo.sub.length]);
   return (
     <div
       className="shadow-md rounded bg-white mb-2 ml-1 mr-1 dark:bg-zinc-950 border"
