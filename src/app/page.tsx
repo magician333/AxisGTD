@@ -661,9 +661,9 @@ const Home: React.FC = () => {
                   " h-full rounded-t "
                 }
               >
-                <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between">
-                  <div className="flex justify-center flex-col mt-1">
-                    <div className="flex space-x-2 items-center">
+                <div className=" ml-3 mb-1 rounded -z-10 flex items-center justify-between group">
+                  <div className="flex justify-center flex-col mt-1 ">
+                    <div className="flex space-x-2 items-center ">
                       <p className=" text-white text-l font-semibold">
                         {item.title}
                       </p>
@@ -685,9 +685,9 @@ const Home: React.FC = () => {
                         }}
                       >
                         {item.displayCompleted ? (
-                          <CircleIcon />
+                          <CircleIcon className="opacity-0 group-hover:opacity-100" />
                         ) : (
-                          <CircleBackslashIcon />
+                          <CircleBackslashIcon className="opacity-0 group-hover:opacity-100" />
                         )}
                       </div>
                     </div>
