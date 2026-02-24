@@ -54,6 +54,7 @@ import Trash from "./Trash";
 import Sidebar from "./Sidebar";
 import SyncView from "./SyncView";
 import Link from "next/link";
+import NavbarAd from './NavbarAd';
 
 function Navbar({
   addTodo,
@@ -132,6 +133,7 @@ function Navbar({
           height={24.1167}
         />
       </div>
+      <NavbarAd/>
 
       <div className="flex items-center space-x-2 mr-5">
         <Input
